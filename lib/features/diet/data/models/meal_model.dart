@@ -9,6 +9,8 @@ class MealModel extends MealEntity {
     required super.protein,
     required super.carbs,
     required super.fat,
+    super.quantity,
+    super.unit,
     super.alarmTime,
     super.consumedAt,
   });
@@ -16,12 +18,14 @@ class MealModel extends MealEntity {
   factory MealModel.fromJson(Map<String, dynamic> json) {
     print("MEAL ${json['name']} CONSUMED = ${json['consumedAt']}");
     return MealModel(
-      id: json['id'],
-      name: json['name'],
-      calories: (json['calories'] as num).toDouble(),
-      protein: (json['protein'] as num).toDouble(),
-      carbs: (json['carbs'] as num).toDouble(),
-      fat: (json['fat'] as num).toDouble(),
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      calories: (json['calories'] as num? ?? 0).toDouble(),
+      protein: (json['protein'] as num? ?? 0).toDouble(),
+      carbs: (json['carbs'] as num? ?? 0).toDouble(),
+      fat: (json['fat'] as num? ?? 0).toDouble(),
+      quantity: (json['quantity'] as num? ?? 100).toDouble(),
+      unit: json['unit'] ?? 'g',
       alarmTime: json['alarmTime'] != null
           ? json['alarmTime'] is Timestamp
                 ? (json['alarmTime'] as Timestamp).toDate()
@@ -43,6 +47,8 @@ class MealModel extends MealEntity {
       'protein': protein,
       'carbs': carbs,
       'fat': fat,
+      'quantity': quantity,
+      'unit': unit,
       'alarmTime': alarmTime?.toIso8601String(),
       'consumedAt': consumedAt?.toIso8601String(),
     };
@@ -56,6 +62,8 @@ class MealModel extends MealEntity {
       protein: entity.protein,
       carbs: entity.carbs,
       fat: entity.fat,
+      quantity: entity.quantity,
+      unit: entity.unit,
       alarmTime: entity.alarmTime,
       consumedAt: entity.consumedAt,
     );
@@ -69,6 +77,8 @@ class MealModel extends MealEntity {
       protein: protein,
       carbs: carbs,
       fat: fat,
+      quantity: quantity,
+      unit: unit,
       alarmTime: alarmTime,
       consumedAt: consumedAt,
     );

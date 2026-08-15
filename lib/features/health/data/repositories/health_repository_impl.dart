@@ -1,24 +1,44 @@
+import 'package:fitness_app/features/onboarding/domain/repositories/onboarding_repository.dart';
+
+import '../services/pedometer_service.dart';
+
 import '../../domain/entities/health_data_entity.dart';
 
 import '../../domain/repositories/health_repository.dart';
 
-import '../services/google_fit_service.dart';
+import '../../domain/utils/activity_estimator.dart';
 
 class HealthRepositoryImpl implements HealthRepository {
-  final GoogleFitService service;
+  final PedometerService _pedometerService;
+  final OnboardingRepository _onboardingRepository;
 
-  HealthRepositoryImpl(this.service);
+  HealthRepositoryImpl(
+    this._pedometerService,
+    this._onboardingRepository,
+  );
 
   @override
   Future<HealthDataEntity> getTodayHealthData() async {
-    final result = await service.fetchTodayData();
+    final steps = await _pedometerService.getTodaySteps();
+    final profile = await _onboardingRepository.getUserProfile();
+
+    final weight = profile?.weight ?? 70;
+    final height = profile?.height ?? 170;
+    final gender = profile?.gender ?? 'Male';
 
     return HealthDataEntity(
-      steps: result['steps'],
-
-      calories: result['calories'],
-
-      moveMinutes: (result['steps'] / 100).toInt(),
+      steps: steps,
+      calories: ActivityEstimator.calories(
+        steps: steps,
+        weightKg: weight,
+        heightCm: height,
+        gender: gender,
+      ).roundToDouble(),
+      moveMinutes: ActivityEstimator.moveMinutes(
+        steps: steps,
+        heightCm: height,
+        gender: gender,
+      ),
     );
   }
 }

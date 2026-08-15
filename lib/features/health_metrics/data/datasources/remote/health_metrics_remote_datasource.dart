@@ -5,6 +5,8 @@ abstract class HealthMetricsRemoteDataSource {
   Future<void> saveMetric(String uid, HealthMetricModel metric);
 
   Future<List<HealthMetricModel>> getMetrics(String uid);
+
+  Future<void> deleteMetric(String uid, HealthMetricModel metric);
 }
 
 class HealthMetricsRemoteDataSourceImpl
@@ -20,6 +22,16 @@ class HealthMetricsRemoteDataSourceImpl
         .doc(uid)
         .collection('health_metrics')
         .add(metric.toJson());
+  }
+
+  @override
+  Future<void> deleteMetric(String uid, HealthMetricModel metric) async {
+    await firestore
+        .collection('users')
+        .doc(uid)
+        .collection('health_metrics')
+        .doc(metric.id)
+        .delete();
   }
 
   @override

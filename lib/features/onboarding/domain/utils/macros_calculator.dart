@@ -20,6 +20,12 @@ class MacroCalculator {
         fatPercent = 0.25;
         break;
 
+      case 'Improve Strength':
+        proteinPercent = 0.35;
+        carbsPercent = 0.40;
+        fatPercent = 0.25;
+        break;
+
       case 'Improve Endurance':
         proteinPercent = 0.25;
         carbsPercent = 0.55;

@@ -41,7 +41,7 @@ A cross-platform Flutter fitness app for tracking workouts, planning meals, moni
 ### Health Tools
 - BMI, water intake, protein, and calorie calculators
 - Health metrics charts with `fl_chart`
-- Google Fit integration for steps and activity data
+- Step tracking with daily calories and move minutes estimation
 
 ---
 
@@ -77,7 +77,7 @@ lib/
 │   ├── food_scanner/      # Barcode scanning
 │   ├── health/            # Health data overview
 │   ├── health_calculator/ # BMI, protein, water, calories
-│   ├── health_metrics/    # Metrics charts & Google Fit
+│   ├── health_metrics/    # Metrics charts
 │   ├── ai_insights/       # Gemini-powered insights
 │   ├── streak/            # Workout streak tracking
 │   ├── profile/           # User profile & settings

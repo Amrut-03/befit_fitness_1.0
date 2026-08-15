@@ -34,13 +34,17 @@ class _NotificationPageState extends State<NotificationPage> {
   void initState() {
     super.initState();
 
+    final bloc = context.read<NotificationBloc>();
+
     /// LIVE UPDATE LISTENER
     notificationSubscription = NotificationService
         .instance
         .notificationStreamController
         .stream
         .listen((_) {
-          context.read<NotificationBloc>().add(LoadNotificationsEvent());
+          if (!mounted) return;
+
+          bloc.add(LoadNotificationsEvent());
         });
   }
 

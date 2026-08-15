@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fitness_app/firebase_options.dart';
 import 'package:fitness_app/features/ai_insights/presentation/bloc/ai_insights_bloc.dart';
 import 'package:fitness_app/features/body_part_selection/presentation/bloc/body_part_selection_bloc.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
@@ -22,51 +23,21 @@ import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   await Hive.initFlutter();
 
   Hive.registerAdapter(NotificationModelAdapter());
 
   await Hive.openBox<NotificationModel>('notifications');
-
   await init();
-
-  // final token =
-  //   await FirebaseMessaging
-  //       .instance
-  //       .getToken();
-
-  // print(
-  //   "FCM TOKEN: $token",
-  // );
-
-  // final settings =
-  //   await FirebaseMessaging.instance
-  //       .requestPermission();
-
-  // print(
-  //   'Permission: ${settings.authorizationStatus}',
-  // );
-
-  // FirebaseMessaging.onMessage.listen(
-  //   (message) {
-
-  //     print(
-  //       'MESSAGE RECEIVED: ${message.notification?.title}',
-  //     );
-
-  //     print(
-  //       'BODY: ${message.notification?.body}',
-  //     );
-  //   },
-  // );
 
   runApp(const MyApp());
 }
@@ -87,7 +58,6 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (_) => sl<HomeBloc>()..add(LoadHomeDashboard()),
             ),
-            BlocProvider(create: (_) => sl<AIInsightsBloc>()),
             BlocProvider(
               create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),
             ),

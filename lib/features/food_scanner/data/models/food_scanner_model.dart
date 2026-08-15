@@ -15,29 +15,31 @@ class FoodItemModel extends FoodItemEntity {
   factory FoodItemModel.fromJson(Map<String, dynamic> json) {
     final product = json['product'] ?? {};
 
-    double parse(dynamic value) {
+    double parseNutrient(dynamic value) {
       if (value == null) return 0;
-
-      if (value is int) {
-        return value.toDouble();
-      }
-
-      if (value is double) {
-        return value;
-      }
-
-      return double.tryParse(value.toString()) ?? 0;
+      if (value is int) return value.toDouble();
+      if (value is double) return value;
+      if (value is num) return value.toDouble();
+      final p = double.tryParse(value.toString());
+      return p ?? 0;
     }
 
     return FoodItemModel(
       barcode: json['code'] ?? '',
+
       name: product['product_name'] ?? 'Unknown Product',
+
       brand: product['brands'],
+
       imageUrl: product['image_front_url'],
-      calories: parse(product['nutriments']?['energy-kcal_100g']),
-      protein: parse(product['nutriments']?['proteins_100g']),
-      carbs: parse(product['nutriments']?['carbohydrates_100g']),
-      fat: parse(product['nutriments']?['fat_100g']),
+
+      calories: parseNutrient(product['nutriments']?['energy-kcal_100g']),
+
+      protein: parseNutrient(product['nutriments']?['proteins_100g']),
+
+      carbs: parseNutrient(product['nutriments']?['carbohydrates_100g']),
+
+      fat: parseNutrient(product['nutriments']?['fat_100g']),
     );
   }
 

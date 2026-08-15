@@ -33,9 +33,6 @@ class _SplashRedirectPageState extends State<SplashRedirectPage> {
           if (state is AuthError) {
             context.push('/login');
           }
-          if (state is AuthError) {
-            context.push('/login');
-          }
         },
         child: const Center(
           child: Column(

@@ -70,6 +70,8 @@ class HealthMetricsBloc extends Bloc<HealthMetricEvent, HealthMetricState> {
       add(LoadHealthMetrics(event.type));
     } catch (e) {
       emit(HealthMetricError(e.toString()));
+
+      rethrow;
     }
   }
 }

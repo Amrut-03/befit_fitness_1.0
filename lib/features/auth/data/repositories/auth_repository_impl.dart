@@ -1,6 +1,5 @@
 import 'package:fitness_app/features/auth/data/datasources/local/auth_local_datasource.dart';
 import 'package:fitness_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
-import 'package:fitness_app/features/auth/data/models/user_model.dart';
 import 'package:fitness_app/features/auth/domain/entities/user_entity.dart';
 import 'package:fitness_app/features/auth/domain/repositories/auth_repository.dart';
 
@@ -62,14 +61,5 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> deleteAccount() async {
     await remoteDataSource.deleteAccount();
     await localDataSource.clearCache();
-  }
-
-  @override
-  Future<void> saveUserProfile(UserEntity user) async {
-    final userModel = UserModel.fromEntity(user);
-
-    await remoteDataSource.saveUserProfile(userModel);
-
-    await localDataSource.cacheUser(userModel);
   }
 }

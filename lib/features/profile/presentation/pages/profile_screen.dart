@@ -546,7 +546,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       icon: Icons.edit,
                       title: "Edit Profile",
                       onTap: () async {
-                        final result = await context.push(
+                        await context.push(
                           '/edit-profile',
 
                           extra: profile,
@@ -723,36 +723,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _miniStat(String title, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-
-          style: TextStyle(
-            color: const Color(0xFF00E5FF),
-
-            fontSize: 18.sp,
-
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        SizedBox(height: 4.h),
-
-        Text(
-          title,
-
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.5),
-
-            fontSize: 11.sp,
-          ),
-        ),
-      ],
     );
   }
 

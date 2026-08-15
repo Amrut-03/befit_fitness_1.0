@@ -28,8 +28,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late String goal;
 
   late String gender;
+final List<String> goals = [
 
-  final List<String> goals = [
     'Build Muscle',
 
     'Lose Weight',
@@ -37,6 +37,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     'Stay Fit',
 
     'Improve Strength',
+
+    'Fitness Goal',
   ];
 
   @override
@@ -181,6 +183,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
 
                 onPressed: () async {
+                  final weightText = _weightController.text.trim();
+
+                  final heightText = _heightController.text.trim();
+
+                  final ageText = _ageController.text.trim();
+
+                  if (weightText.isEmpty || double.tryParse(weightText) == null) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter valid weight'),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
+                  if (heightText.isEmpty || double.tryParse(heightText) == null) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter valid height'),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
+                  if (ageText.isEmpty || int.tryParse(ageText) == null || int.parse(ageText) <= 0) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter valid age'),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
+                  final weight = double.parse(weightText);
+
+                  final height = double.parse(heightText);
+
+                  final age = int.parse(ageText);
+
+                  if (weight <= 0 || height <= 0) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Weight and height must be positive values'),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
                   final stepGoal = GoalCalculator.calculateStepGoal(
                     goal,
                     widget.profile.activityLevel,
@@ -189,11 +255,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   final calorieGoal = GoalCalculator.calculateDailyCalories(
                     gender: gender,
 
-                    weight: double.tryParse(_weightController.text) ?? 0,
+                    weight: weight,
 
-                    height: double.tryParse(_heightController.text) ?? 0,
+                    height: height,
 
-                    age: int.tryParse(_ageController.text) ?? 0,
+                    age: age,
 
                     activityLevel: widget.profile.activityLevel,
                   );
@@ -213,15 +279,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                     streak: widget.profile.streak,
 
-                    weight: double.tryParse(_weightController.text) ?? 0,
+                    weight: weight,
 
-                    height: double.tryParse(_heightController.text) ?? 0,
+                    height: height,
 
-                    age: double.tryParse(_ageController.text) ?? 0,
+                    age: age.toDouble(),
 
                     gender: gender,
 
-                    photoUrl: null,
+                    photoUrl: widget.profile.photoUrl,
 
                     dailyStepGoal: stepGoal,
 

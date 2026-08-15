@@ -1,5 +1,6 @@
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
+import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_event.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_state.dart';
@@ -107,8 +108,49 @@ class _DietListPageState extends State<DietListPage> {
     );
   }
 
-  Widget _buildPlanCard(BuildContext context, dynamic plan) {
-    return GestureDetector(
+  Future<void> _confirmDeletePlan(
+    BuildContext context,
+    DietPlanEntity plan,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF171717),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          title: const Text(
+            "Delete Diet Plan",
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            'Are you sure you want to delete "${plan.name}"?',
+            style: const TextStyle(color: Colors.white70),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text("Cancel", style: TextStyle(color: Colors.white60)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.redAccent),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      context.read<DietBloc>().add(DeleteDietPlanEvent(plan.id));
+    }
+  }
+
+  Widget _buildPlanCard(BuildContext context, dynamic plan) {    return GestureDetector(
       onTap: () {
         showDietDetailBottomSheet(context, plan);
       },
@@ -299,15 +341,27 @@ class _DietListPageState extends State<DietListPage> {
                 SizedBox(width: 12.w),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.12),
+                    color: const Color(0xFF00E5FF).withOpacity(0.12),
                     borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: IconButton(
                     onPressed: () {
-                      context.read<DietBloc>().add(
-                        DeleteDietPlanEvent(plan.id),
-                      );
+                      context.push('/plan-diet', extra: plan);
                     },
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: const Color(0xFF00E5FF),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  child: IconButton(
+                    onPressed: () => _confirmDeletePlan(context, plan),
                     icon: Icon(Icons.delete_outline, color: Colors.redAccent),
                   ),
                 ),

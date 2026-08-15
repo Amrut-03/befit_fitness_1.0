@@ -169,10 +169,14 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           if (state.product != null) {
             _controller.stop();
 
+            final bloc = context.read<FoodScannerBloc>();
+
             showProductBottomSheet(context, state.product!).then((_) {
+              if (!mounted) return;
+
               _isProcessing = false;
 
-              context.read<FoodScannerBloc>().add(ResetScannerEvent());
+              bloc.add(ResetScannerEvent());
 
               _controller.start();
             });

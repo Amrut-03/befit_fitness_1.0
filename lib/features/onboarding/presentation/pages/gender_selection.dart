@@ -2,6 +2,7 @@ import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_blo
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_event.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
 import 'package:fitness_app/features/onboarding/presentation/pages/onboarding_option_card.dart';
+import 'package:fitness_app/features/onboarding/presentation/widgets/onboarding_step_guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,6 +44,14 @@ class GenderSelectionPage extends StatelessWidget {
 
               child: BlocBuilder<OnboardingProfileBloc, OnboardingProfileState>(
                 builder: (context, state) {
+                  if (state.selectedGoal == null) {
+                    return OnboardingStepGuard(
+                      canProceed: false,
+                      fallbackRoute: '/goal-selection',
+                      child: const SizedBox.shrink(),
+                    );
+                  }
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
 

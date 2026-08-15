@@ -29,8 +29,17 @@ class HealthCalculatorLocalDatasourceImpl
       return null;
     }
 
-    return CalculatorResultModel.fromJson(
-      Map<String, dynamic>.from(data as Map),
-    );
+    try {
+      return CalculatorResultModel.fromJson(
+        Map<String, dynamic>.from(data as Map),
+      );
+    } catch (_) {
+      return CalculatorResultModel(
+        value: 0,
+
+        title: '',
+        description: '',
+      );
+    }
   }
 }

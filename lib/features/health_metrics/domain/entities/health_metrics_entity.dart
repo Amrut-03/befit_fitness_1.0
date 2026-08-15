@@ -11,6 +11,8 @@ class HealthMetricEntity extends Equatable {
 
   final bool isManual;
 
+  final String? id;
+
   const HealthMetricEntity({
     required this.type,
 
@@ -19,8 +21,10 @@ class HealthMetricEntity extends Equatable {
     required this.value,
 
     required this.isManual,
+
+    this.id,
   });
 
   @override
-  List<Object?> get props => [type, date, value, isManual];
+  List<Object?> get props => [type, date, value, isManual, id];
 }

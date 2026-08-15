@@ -1,7 +1,6 @@
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class FoodItemCard extends StatelessWidget {
   final FoodItemEntity item;
@@ -17,9 +16,10 @@ class FoodItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isManual = item.source?.toLowerCase() == 'manual';
+
     return GestureDetector(
       onTap: onTap,
-      onDoubleTap: () => context.push("/manual-food-entry", extra: item),
       child: Container(
         margin: EdgeInsets.only(bottom: 16.h),
         padding: EdgeInsets.all(16.w),
@@ -136,15 +136,15 @@ class FoodItemCard extends StatelessWidget {
                     vertical: 5.h,
                   ),
                   decoration: BoxDecoration(
-                    color: item.source == "Manual"
+                    color: isManual
                         ? Colors.green.withOpacity(0.15)
                         : Colors.deepPurple.withOpacity(0.18),
                     borderRadius: BorderRadius.circular(30.r),
                   ),
                   child: Text(
-                    item.source == "Manual" ? "Manual" : "Scanned",
+                    isManual ? "Manual" : "Scanned",
                     style: TextStyle(
-                      color: item.source == "Manual"
+                      color: isManual
                           ? Colors.greenAccent
                           : Colors.deepPurpleAccent,
                       fontSize: 10.sp,

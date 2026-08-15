@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:fitness_app/features/diet/presentation/pages/diet_history_page.dart';
 import 'package:fitness_app/features/diet/presentation/pages/diet_planing_page.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
@@ -28,9 +33,38 @@ import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart'
 import 'package:fitness_app/features/diet/presentation/pages/diet_list_page.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
 
+class _AuthStateNotifier extends ChangeNotifier {
+  StreamSubscription? _subscription;
+
+  _AuthStateNotifier() {
+    _subscription = FirebaseAuth.instance.authStateChanges().listen((_) {
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+}
+
 class AppRouter {
+  static const _publicLocations = {'/', '/onboarding', '/login'};
+
+  static const _onboardingLocations = {
+    '/goal-selection',
+    '/gender-selection',
+    '/body-metrics',
+    '/activity-level',
+  };
+
+  static final _authStateNotifier = _AuthStateNotifier();
+
   static final router = GoRouter(
     initialLocation: '/',
+    refreshListenable: _authStateNotifier,
+    redirect: _redirect,
     routes: [
       GoRoute(path: '/', builder: (context, state) => const StartupPage()),
 
@@ -165,4 +199,64 @@ class AppRouter {
       ),
     ],
   );
+
+  static Future<String?> _redirect(
+    BuildContext context,
+    GoRouterState state,
+  ) async {
+    final location = state.matchedLocation;
+
+    final loggedIn = FirebaseAuth.instance.currentUser != null;
+
+    if (!loggedIn) {
+      if (!_publicLocations.contains(location)) {
+        return '/login';
+      }
+
+      return null;
+    }
+
+    /// Onboarding steps are only valid for users who have not completed
+    /// their profile yet. Returning users skip straight to home.
+    if (_onboardingLocations.contains(location)) {
+      final completed = await _hasCompletedProfile();
+
+      if (completed == true) {
+        return '/home';
+      }
+
+      return null;
+    }
+
+    if (location == '/login') {
+      final completed = await _hasCompletedProfile();
+
+      if (completed == true) {
+        return '/home';
+      }
+
+      return '/goal-selection';
+    }
+
+    return null;
+  }
+
+  static Future<bool?> _hasCompletedProfile() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid == null) {
+      return null;
+    }
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      return doc.exists && doc.data()?['profileCompleted'] == true;
+    } catch (_) {
+      return null;
+    }
+  }
 }

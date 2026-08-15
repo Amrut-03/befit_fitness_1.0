@@ -46,9 +46,15 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
     }
 
     final filtered = state.allExercises.where((exercise) {
-      return exercise.name.toLowerCase().contains(query) ||
-          exercise.bodyPart.toLowerCase().contains(query) ||
-          exercise.target.toLowerCase().contains(query);
+      final normalizedName = exercise.name.toLowerCase().trim();
+
+      final normalizedBodyPart = exercise.bodyPart.toLowerCase().trim();
+
+      final normalizedTarget = exercise.target.toLowerCase().trim();
+
+      return normalizedName.contains(query) ||
+          normalizedBodyPart.contains(query) ||
+          normalizedTarget.contains(query);
     }).toList();
 
     emit(state.copyWith(exercises: filtered, searchQuery: query));
@@ -95,20 +101,19 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
   ) {
     emit(state.copyWith(history: event.history));
   }
-
-  /// LOAD EXERCISES
+/// LOAD EXERCISES
   Future<void> _onLoadExercises(
     LoadExercisesEvent event,
 
     Emitter<WorkoutState> emit,
   ) async {
-    if (state.hasReachedMax && event.loadMore) {
+    if (state.hasReachedMax && !event.loadMore) {
       return;
     }
 
     try {
       if (!event.loadMore) {
-        emit(state.copyWith(isLoading: true, offset: 0));
+        emit(state.copyWith(isLoading: true, offset: 0, hasReachedMax: false));
       }
 
       final exercises = await getExercises(
@@ -121,6 +126,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
 
       final updatedExercises = event.loadMore
           ? [...state.allExercises, ...exercises]
+
           : exercises;
 
       emit(

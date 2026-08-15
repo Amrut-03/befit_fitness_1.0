@@ -21,28 +21,32 @@ class OnboardingProfileBloc
     required this.isProfileCompleted,
   }) : super(const OnboardingProfileState()) {
     on<SelectGoalEvent>((event, emit) {
-      emit(state.copyWith(selectedGoal: event.goal));
+      emit(state.copyWith(selectedGoal: event.goal, error: null));
     });
 
     on<SelectGenderEvent>((event, emit) {
-      emit(state.copyWith(selectedGender: event.gender));
+      emit(state.copyWith(selectedGender: event.gender, error: null));
     });
 
     on<UpdateWeightEvent>((event, emit) {
-      emit(state.copyWith(weight: event.weight));
+      emit(state.copyWith(weight: event.weight, error: null));
     });
 
     on<UpdateHeightEvent>((event, emit) {
-      emit(state.copyWith(height: event.height));
+      emit(state.copyWith(height: event.height, error: null));
     });
 
     on<UpdateAgeEvent>((event, emit) {
-      emit(state.copyWith(age: event.age));
+      emit(state.copyWith(age: event.age, error: null));
     });
 
     on<SelectActivityLevelEvent>((event, emit) {
       emit(
-        state.copyWith(activityLevel: event.activityLevel, saveSuccess: false),
+        state.copyWith(
+          activityLevel: event.activityLevel,
+          saveSuccess: false,
+          error: null,
+        ),
       );
     });
 

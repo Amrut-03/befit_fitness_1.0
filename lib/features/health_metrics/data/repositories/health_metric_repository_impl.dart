@@ -9,11 +9,7 @@ import '../datasources/local/health_metrics_local_datasource.dart';
 
 import '../models/health_metric_model.dart';
 
-import '../services/google_fit_metrics_service.dart';
-
 class HealthMetricRepositoryImpl implements HealthMetricsRepository {
-  final GoogleFitMetricsService googleFitService;
-
   final HealthMetricsLocalDataSource localDataSource;
 
   final FirebaseAuth auth;
@@ -21,8 +17,6 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
   final HealthMetricsRemoteDataSource remoteDataSource;
 
   HealthMetricRepositoryImpl(
-    this.googleFitService,
-
     this.localDataSource,
 
     this.remoteDataSource,
@@ -44,21 +38,15 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
       firebaseMetrics = await remoteDataSource.getMetrics(uid);
     }
 
-    /// GOOGLE FIT METRICS
-    List<HealthMetricModel> googleFitMetrics = [];
-
-    try {
-      googleFitMetrics = await googleFitService.fetchMetrics();
-    } catch (_) {}
-
     /// MERGE ALL
-    final merged = [...localMetrics, ...firebaseMetrics, ...googleFitMetrics];
+    final merged = [...localMetrics, ...firebaseMetrics];
 
     /// REMOVE DUPLICATES
     final unique = <String, HealthMetricModel>{};
 
     for (var metric in merged) {
-      unique["${metric.type}_${metric.date}"] = metric;
+      final dateKey = metric.date.toIso8601String();
+      unique["${metric.type}_$dateKey"] = metric;
     }
 
     final finalMetrics = unique.values.toList();
@@ -73,7 +61,7 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
     return filtered;
   }
 
-  @override
+@override
   Future<void> saveMetric(HealthMetricEntity metric) async {
     final model = HealthMetricModel(
       type: metric.type,
@@ -83,6 +71,8 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
       value: metric.value,
 
       isManual: metric.isManual,
+
+      id: '${metric.type.name}_${metric.date.millisecondsSinceEpoch}',
     );
 
     await localDataSource.saveMetric(model);
@@ -94,8 +84,62 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
     }
   }
 
+  Future<void> syncLocalMetrics() async {
+    final localMetrics = await localDataSource.getMetrics();
+
+    final uid = auth.currentUser?.uid;
+
+    if (uid == null) {
+      return;
+    }
+
+    final existingRemote = await remoteDataSource.getMetrics(uid);
+
+    final existingIds = <String>{};
+    for (var m in existingRemote) {
+      existingIds.add('${m.type}_${m.date.millisecondsSinceEpoch}');
+    }
+
+    for (var localMetric in localMetrics) {
+      final key = '${localMetric.type}_${localMetric.date.millisecondsSinceEpoch}';
+      if (!existingIds.contains(key)) {
+        final model = HealthMetricModel(
+          type: localMetric.type,
+
+          date: localMetric.date,
+
+          value: localMetric.value,
+
+          isManual: localMetric.isManual,
+
+          id: key,
+        );
+
+        await remoteDataSource.saveMetric(uid, model);
+      }
+    }
+  }
+
   @override
   Future<void> deleteMetric(DateTime date) async {
     await localDataSource.deleteMetric(date);
+
+    final uid = auth.currentUser?.uid;
+
+    if (uid != null) {
+      final model = HealthMetricModel(
+        type: MetricType.weight,
+
+        date: date,
+
+        value: 0,
+
+        isManual: false,
+
+        id: '${MetricType.weight.name}_${date.millisecondsSinceEpoch}',
+      );
+
+      await remoteDataSource.deleteMetric(uid, model);
+    }
   }
 }

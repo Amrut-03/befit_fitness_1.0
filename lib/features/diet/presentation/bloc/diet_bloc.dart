@@ -78,15 +78,16 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       _plansSubscription = getDietPlans().listen(
         (plans) {
-          print("PLANS RECEIVED: ${plans.length}");
-
           add(DietPlansUpdated(plans));
         },
 
         onError: (e) {
-          print("STREAM ERROR: $e");
-
-          addError(e);
+          emit(
+            state.copyWith(
+              isLoading: false,
+              error: 'Failed to load diet plans',
+            ),
+          );
         },
       );
     } catch (e) {
@@ -103,9 +104,16 @@ class DietBloc extends Bloc<DietEvent, DietState> {
   ) async {
     await _historySubscription?.cancel();
 
-    _historySubscription = getDietHistory().listen((history) {
-      add(DietHistoryUpdated(history));
-    });
+    _historySubscription = getDietHistory().listen(
+      (history) {
+        add(DietHistoryUpdated(history));
+      },
+      onError: (e) {
+        emit(
+          state.copyWith(isLoading: false, error: 'Failed to load diet history'),
+        );
+      },
+    );
   }
 
   void _onDietHistoryUpdated(
@@ -185,9 +193,14 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await updateMealStatus(planId: event.planId, meals: event.meals);
 
-      final updatedPlan = state.plans
-          .firstWhere((e) => e.id == event.planId)
-          .copyWith(meals: event.meals);
+      final planIndex = state.plans.indexWhere((e) => e.id == event.planId);
+
+      if (planIndex == -1) {
+        emit(state.copyWith(error: "Failed to update meals"));
+        return;
+      }
+
+      final updatedPlan = state.plans[planIndex].copyWith(meals: event.meals);
 
       if (updatedPlan.isCompletedToday) {
         final alreadySaved = state.history.any((h) {

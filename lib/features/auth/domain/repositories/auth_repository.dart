@@ -7,5 +7,4 @@ abstract class AuthRepository {
   Stream<UserEntity?> watchAuthState();
   Future<void> signOut();
   Future<void> deleteAccount();
-  Future<void> saveUserProfile(UserEntity user);
 }

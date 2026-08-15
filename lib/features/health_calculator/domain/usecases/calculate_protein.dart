@@ -18,6 +18,8 @@ class CalculateProtein {
       factor = 2.0;
     } else if (goal == "Muscle Gain") {
       factor = 2.2;
+    } else if (goal == "Maintain") {
+      factor = 1.6;
     }
 
     final protein = weight * factor;

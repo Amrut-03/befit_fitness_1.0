@@ -5,6 +5,8 @@ class GoalCalculator {
         return 12000;
       case 'Build Muscle':
         return 8000;
+      case 'Improve Strength':
+        return 8000;
       case 'Stay Fit':
         return 10000;
       case 'Improve Endurance':
@@ -24,8 +26,10 @@ class GoalCalculator {
     double bmr;
     if (gender == 'Male') {
       bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-    } else {
+    } else if (gender == 'Female') {
       bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    } else {
+      bmr = (10 * weight) + (6.25 * height) - (5 * age) - 78;
     }
 
     double multiplier;
@@ -33,6 +37,10 @@ class GoalCalculator {
     switch (activityLevel) {
       case 'Sedentary':
         multiplier = 1.2;
+        break;
+
+      case 'Lightly Active':
+        multiplier = 1.375;
         break;
 
       case 'Light':
@@ -45,6 +53,10 @@ class GoalCalculator {
 
       case 'Active':
         multiplier = 1.725;
+        break;
+
+      case 'Athlete':
+        multiplier = 1.9;
         break;
 
       default:

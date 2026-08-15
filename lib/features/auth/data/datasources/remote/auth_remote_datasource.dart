@@ -73,8 +73,4 @@ class AuthRemoteDataSource {
       await user.delete();
     }
   }
-
-  Future<void> saveUserProfile(UserModel user) async {
-    /// Firestore save logic later
-  }
 }

@@ -7,15 +7,18 @@ class CalculateWaterIntake {
 
   CalculateWaterIntake(this.repository);
 
+  static const _waterCoefficient = 0.035;
+
   Future<CalculatorResultEntity> call({required double weight}) async {
-    final liters = weight * 0.035;
+    final liters = weight * _waterCoefficient;
 
     final result = CalculatorResultEntity(
       value: double.parse(liters.toStringAsFixed(1)),
 
       title: "Daily Water Intake",
 
-      description: "Recommended water intake per day.",
+      description:
+          "General guideline: weight (kg) × 0.035 liters. Adjust for climate, activity, and personal needs.",
     );
 
     await repository.saveResult(result);

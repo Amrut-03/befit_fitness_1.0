@@ -206,6 +206,20 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                         hint: '100',
 
                         icon: Icons.scale_rounded,
+
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return null;
+                          }
+
+                          final parsed = double.tryParse(value);
+
+                          if (parsed == null || parsed <= 0) {
+                            return 'Enter a positive number';
+                          }
+
+                          return null;
+                        },
                       ),
                     ),
 
@@ -451,6 +465,19 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
           TextFormField(
             controller: controller,
             keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return null;
+              }
+
+              final parsed = double.tryParse(value);
+
+              if (parsed == null || parsed < 0) {
+                return 'Enter a valid number';
+              }
+
+              return null;
+            },
             style: TextStyle(
               color: Colors.white,
               fontSize: 18.sp,

@@ -14,19 +14,20 @@ class NotificationModel extends NotificationEntity {
   @HiveField(2)
   final DateTime notificationCreatedAt;
 
-  NotificationModel({
+  const NotificationModel({
     required this.notificationTitle,
 
     required this.notificationBody,
 
     required this.notificationCreatedAt,
   }) : super(
-         title: notificationTitle,
 
-         body: notificationBody,
+          title: notificationTitle,
 
-         createdAt: notificationCreatedAt,
-       );
+          body: notificationBody,
+
+          createdAt: notificationCreatedAt,
+        );
 
   factory NotificationModel.fromEntity(NotificationEntity entity) {
     return NotificationModel(

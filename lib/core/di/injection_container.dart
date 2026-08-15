@@ -12,7 +12,6 @@ import 'package:fitness_app/features/diet/domain/repositories/diet_repository.da
 import 'package:fitness_app/features/diet/domain/usecases/delete_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/get_diet_history.dart';
 import 'package:fitness_app/features/diet/domain/usecases/get_diet_plans.dart';
-import 'package:fitness_app/features/diet/domain/usecases/get_todays_macros.dart';
 import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart';
 import 'package:fitness_app/features/diet/domain/usecases/save_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/set_active_diet_plan.dart';
@@ -33,7 +32,7 @@ import 'package:fitness_app/features/food_scanner/domain/repositories/food_scann
 import 'package:fitness_app/features/food_scanner/domain/usecases/scan_barcode.dart';
 import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_bloc.dart';
 import 'package:fitness_app/features/health/data/repositories/health_repository_impl.dart';
-import 'package:fitness_app/features/health/data/services/google_fit_service.dart';
+import 'package:fitness_app/features/health/data/services/pedometer_service.dart';
 import 'package:fitness_app/features/health/domain/repositories/health_repository.dart';
 import 'package:fitness_app/features/health/domain/usecases/get_health_data.dart';
 import 'package:fitness_app/features/health/presentation/bloc/health_bloc.dart';
@@ -48,7 +47,6 @@ import 'package:fitness_app/features/health_calculator/presentation/bloc/health_
 import 'package:fitness_app/features/health_metrics/data/datasources/local/health_metrics_local_datasource.dart';
 import 'package:fitness_app/features/health_metrics/data/datasources/remote/health_metrics_remote_datasource.dart';
 import 'package:fitness_app/features/health_metrics/data/repositories/health_metric_repository_impl.dart';
-import 'package:fitness_app/features/health_metrics/data/services/google_fit_metrics_service.dart';
 import 'package:fitness_app/features/health_metrics/domain/repositories/health_metrics_repository.dart';
 import 'package:fitness_app/features/health_metrics/domain/usecases/delete_health_metrics.dart';
 import 'package:fitness_app/features/health_metrics/domain/usecases/get_health_metrics.dart';
@@ -137,10 +135,6 @@ Future<void> init() async {
     () => GoogleSignIn(
       scopes: [
         'email',
-
-        'https://www.googleapis.com/auth/fitness.activity.read',
-
-        'https://www.googleapis.com/auth/fitness.body.read',
       ],
     ),
   );
@@ -196,9 +190,11 @@ Future<void> init() async {
 
   // Health Registrations
 
-  sl.registerLazySingleton(() => GoogleFitService(googleSignIn: sl()));
+  sl.registerLazySingleton(() => PedometerService());
 
-  sl.registerLazySingleton<HealthRepository>(() => HealthRepositoryImpl(sl()));
+  sl.registerLazySingleton<HealthRepository>(
+    () => HealthRepositoryImpl(sl(), sl<OnboardingRepository>()),
+  );
 
   sl.registerFactory(() => HealthBloc(getHealthData: sl()));
 
@@ -271,7 +267,7 @@ Future<void> init() async {
 
   // home page registtrations
 
-  sl.registerFactory(() => HomeBloc());
+  sl.registerFactory(() => HomeBloc(getProfile: sl()));
 
   // Ai Insights registtrations
 
@@ -293,8 +289,6 @@ Future<void> init() async {
 
   // Health Metrics Registrations
 
-  sl.registerLazySingleton(() => GoogleFitMetricsService(googleSignIn: sl()));
-
   sl.registerLazySingleton<HealthMetricsLocalDataSource>(
     () => HealthMetricsLocalDataSourceImpl(
       sl<Box>(instanceName: 'health_metrics_box'),
@@ -306,7 +300,7 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<HealthMetricsRepository>(
-    () => HealthMetricRepositoryImpl(sl(), sl(), sl(), sl()),
+    () => HealthMetricRepositoryImpl(sl(), sl(), sl()),
   );
 
   sl.registerLazySingleton(() => GetHealthMetrics(sl()));
@@ -335,7 +329,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SaveDietPlan(sl()));
   sl.registerLazySingleton(() => DeleteDietPlan(sl()));
   sl.registerLazySingleton(() => UpdateMealStatus(sl()));
-  sl.registerLazySingleton(() => GetTodayMacros(sl()));
   sl.registerLazySingleton(() => SetActiveDietPlan(sl()));
   sl.registerLazySingleton(() => GetDietHistory(sl()));
   sl.registerLazySingleton(() => SaveDietHistory(sl()));

@@ -1,11 +1,17 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fitness_app/features/profile/domain/usecases/get_profile.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeInitial()) {
+  final GetProfile getProfile;
+
+  HomeLoaded? _lastLoaded;
+
+  HomeBloc({required this.getProfile}) : super(HomeInitial()) {
     on<LoadHomeDashboard>(_onLoadHomeDashboard);
     on<RefreshHomeDashboard>(_onRefreshHomeDashboard);
   }
@@ -17,11 +23,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoading());
 
     try {
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      emit(const HomeLoaded(userName: 'Amrut', weight: 72.5));
+      await _emitLoaded(emit);
     } catch (e) {
-      emit(const HomeError(message: 'Failed to load dashboard'));
+      if (_lastLoaded != null) {
+        emit(_lastLoaded!);
+      } else {
+        emit(const HomeError(message: 'Failed to load dashboard'));
+      }
     }
   }
 
@@ -30,11 +38,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      emit(const HomeLoaded(userName: 'Amrut', weight: 72.0));
+      await _emitLoaded(emit);
     } catch (e) {
-      emit(const HomeError(message: 'Failed to refresh data'));
+      if (_lastLoaded != null) {
+        emit(_lastLoaded!);
+      }
     }
+  }
+
+  Future<void> _emitLoaded(Emitter<HomeState> emit) async {
+    final profile = await getProfile();
+
+    final authUser = FirebaseAuth.instance.currentUser;
+
+    final name = profile.name.isNotEmpty
+        ? profile.name
+        : (authUser?.displayName ?? '');
+
+    _lastLoaded = HomeLoaded(userName: name, weight: profile.weight);
+
+    emit(_lastLoaded!);
   }
 }

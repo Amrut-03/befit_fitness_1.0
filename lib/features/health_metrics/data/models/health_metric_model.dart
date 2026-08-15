@@ -9,6 +9,8 @@ class HealthMetricModel extends HealthMetricEntity {
     required super.value,
 
     required super.isManual,
+
+    super.id,
   });
 
   factory HealthMetricModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,8 @@ class HealthMetricModel extends HealthMetricEntity {
       value: (json['value'] as num).toDouble(),
 
       isManual: json['isManual'] as bool,
+
+      id: json['id'] as String?,
     );
   }
 
@@ -32,6 +36,8 @@ class HealthMetricModel extends HealthMetricEntity {
       'value': value,
 
       'isManual': isManual,
+
+      'id': id,
     };
   }
 }

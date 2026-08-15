@@ -32,10 +32,24 @@ class FoodItemModel extends FoodItemEntity {
       unit: json['unit'] ?? 'g',
       source: json['source'],
       barcode: json['barcode'],
-      createdAt: json['createdAt'] != null
-          ? (json['createdAt'] as Timestamp).toDate()
-          : null,
+      createdAt: _parseDate(json['createdAt']),
     );
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+
+    if (value is Timestamp) {
+      return value.toDate();
+    }
+
+    if (value is DateTime) {
+      return value;
+    }
+
+    return DateTime.tryParse(value.toString());
   }
 
   Map<String, dynamic> toJson() {

@@ -62,6 +62,9 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
       },
 
       onError: (_) {
+        _foodItemsSubscription?.cancel();
+        _foodItemsSubscription = null;
+
         emit(
           state.copyWith(isLoading: false, error: 'Failed to load food items'),
         );

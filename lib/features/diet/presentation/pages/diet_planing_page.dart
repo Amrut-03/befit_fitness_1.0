@@ -67,11 +67,17 @@ class _PlanDietPageState extends State<PlanDietPage> {
                 return;
               }
 
+              final isEditing = widget.existingPlan != null;
+
               final plan = DietPlanEntity(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                id: isEditing
+                    ? widget.existingPlan!.id
+                    : DateTime.now().millisecondsSinceEpoch.toString(),
                 name: _nameController.text.trim(),
                 meals: meals,
-                activeDate: null,
+                activeDate: isEditing
+                    ? widget.existingPlan!.activeDate
+                    : null,
               );
 
               context.read<DietBloc>().add(SaveDietPlanEvent(plan));

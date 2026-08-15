@@ -406,7 +406,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                 SizedBox(height: 4.h),
 
                 Text(
-                  "Sync Google Fit or add manually",
+                  "Add data manually",
 
                   textAlign: TextAlign.center,
 

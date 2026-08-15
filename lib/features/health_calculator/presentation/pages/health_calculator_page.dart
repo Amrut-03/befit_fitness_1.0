@@ -177,35 +177,59 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                         final bloc = context.read<HealthCalculatorBloc>();
 
                         if (widget.type == "BMI") {
+                          final weight = double.tryParse(weightController.text);
+                          final height = double.tryParse(heightController.text);
+                          if (weight == null || height == null || weight <= 0 || height <= 0) {
+                            _showError(context, 'Please enter valid positive weight and height');
+                            return;
+                          }
                           bloc.add(
                             CalculateBMIEvent(
-                              weight: double.parse(weightController.text),
+                              weight: weight,
 
-                              height: double.parse(heightController.text),
+                              height: height,
                             ),
                           );
                         } else if (widget.type == "Water Intake") {
+                          final weight = double.tryParse(weightController.text);
+                          if (weight == null || weight <= 0) {
+                            _showError(context, 'Please enter valid positive weight');
+                            return;
+                          }
                           bloc.add(
                             CalculateWaterEvent(
-                              weight: double.parse(weightController.text),
+                              weight: weight,
                             ),
                           );
                         } else if (widget.type == "Protein") {
+                          final weight = double.tryParse(weightController.text);
+                          if (weight == null || weight <= 0) {
+                            _showError(context, 'Please enter valid positive weight');
+                            return;
+                          }
                           bloc.add(
                             CalculateProteinEvent(
-                              weight: double.parse(weightController.text),
+                              weight: weight,
 
                               goal: goal,
                             ),
                           );
                         } else {
+                          final weight = double.tryParse(weightController.text);
+                          final height = double.tryParse(heightController.text);
+                          final age = int.tryParse(ageController.text);
+                          if (weight == null || height == null || weight <= 0 || height <= 0 ||
+                              age == null || age <= 0) {
+                            _showError(context, 'Please enter valid positive weight, height and age');
+                            return;
+                          }
                           bloc.add(
                             CalculateCaloriesEvent(
-                              weight: double.parse(weightController.text),
+                              weight: weight,
 
-                              height: double.parse(heightController.text),
+                              height: height,
 
-                              age: int.parse(ageController.text),
+                              age: age,
 
                               gender: gender,
 
@@ -317,7 +341,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
     );
   }
 
-  Widget _buildDropdown({
+Widget _buildDropdown({
     required String value,
 
     required List<String> items,
@@ -349,6 +373,18 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
             .toList(),
 
         onChanged: onChanged,
+      ),
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+
+        behavior: SnackBarBehavior.floating,
+
+        backgroundColor: Colors.red,
       ),
     );
   }

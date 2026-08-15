@@ -2,6 +2,7 @@ import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_blo
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_event.dart';
 
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
+import 'package:fitness_app/features/onboarding/presentation/widgets/onboarding_step_guard.dart';
 
 import 'package:flutter/material.dart';
 
@@ -39,6 +40,15 @@ class BodyMetricsPage extends StatelessWidget {
 
               child: BlocBuilder<OnboardingProfileBloc, OnboardingProfileState>(
                 builder: (context, state) {
+                  if (state.selectedGoal == null ||
+                      state.selectedGender == null) {
+                    return OnboardingStepGuard(
+                      canProceed: false,
+                      fallbackRoute: '/gender-selection',
+                      child: const SizedBox.shrink(),
+                    );
+                  }
+
                   return Column(
                     children: [
                       SizedBox(

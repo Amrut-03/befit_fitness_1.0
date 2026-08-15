@@ -26,7 +26,7 @@ class CalculateCalories {
       bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
     }
 
-    final maintenance = bmr * activity;
+    final maintenance = bmr * activity.clamp(1.2, 1.9);
 
     final result = CalculatorResultEntity(
       value: double.parse(maintenance.toStringAsFixed(0)),

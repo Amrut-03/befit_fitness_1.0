@@ -37,11 +37,14 @@ class StreakRemoteDatasource {
     int updatedStreak = 1;
 
     if (lastDate != null) {
-      final difference = now
-          .difference(DateTime(lastDate.year, lastDate.month, lastDate.day))
-          .inDays;
+      /// Normalize both dates to UTC day boundaries for consistent comparison
+      final nowUtc = DateTime.now().toUtc();
 
-      /// SAME DAY
+      final lastDateUtc = lastDate.toUtc();
+
+      final difference = nowUtc.difference(lastDateUtc).inDays;
+
+      /// SAME DAY (UTC)
       if (difference == 0) {
         return;
       }

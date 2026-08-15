@@ -26,6 +26,18 @@ class HealthCalculatorRepositoryImpl implements HealthCalculatorRepository {
 
   @override
   Future<CalculatorResultEntity?> getLastResult() async {
-    return await localDatasource.getLastResult();
+    final model = await localDatasource.getLastResult();
+
+    if (model == null) {
+      return CalculatorResultEntity(
+        value: 0,
+
+        title: 'No results',
+
+        description: 'Complete a calculation to see results here.',
+      );
+    }
+
+    return model;
   }
 }

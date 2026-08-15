@@ -54,26 +54,25 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
   }
 
   void submit(List<FoodItemEntity> foods) {
-    final selectedMeals = foods
+    final selectedFoods = foods
         .where((food) => selectedIds.contains(food.id))
-        .map((food) {
-          return MealEntity(
-            id: food.id,
-
-            name: food.name,
-
-            calories: food.calories ?? 0,
-
-            protein: food.protein ?? 0,
-
-            carbs: food.carbs ?? 0,
-
-            fat: food.fat ?? 0,
-
-            consumedAt: null,
-          );
-        })
         .toList();
+
+    final now = DateTime.now().microsecondsSinceEpoch;
+
+    final selectedMeals = selectedFoods.asMap().entries.map((entry) {
+      final food = entry.value;
+
+      return MealEntity(
+        id: '${food.id}_${now}_${entry.key}',
+        name: food.name,
+        calories: food.calories ?? 0,
+        protein: food.protein ?? 0,
+        carbs: food.carbs ?? 0,
+        fat: food.fat ?? 0,
+        consumedAt: null,
+      );
+    }).toList();
 
     Navigator.pop(context);
 

@@ -31,6 +31,6 @@ class FoodItemsRemoteDataSource {
   }
 
   Future<void> updateFoodItem(FoodItemModel item) async {
-    await foodRef.doc(item.id).update(item.toJson());
+    await foodRef.doc(item.id).set(item.toJson(), SetOptions(merge: true));
   }
 }
