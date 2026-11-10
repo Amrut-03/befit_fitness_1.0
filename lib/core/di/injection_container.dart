@@ -13,6 +13,7 @@ import 'package:fitness_app/features/home/home_injection.dart';
 import 'package:fitness_app/features/notifications/notifications_injection.dart';
 import 'package:fitness_app/features/onboarding/onboarding_injection.dart';
 import 'package:fitness_app/features/profile/profile_injection.dart';
+import 'package:fitness_app/features/progress_report/progress_report_injection.dart';
 import 'package:fitness_app/features/streak/streak_injection.dart';
 import 'package:fitness_app/features/water_intake/water_intake_injection.dart';
 import 'package:fitness_app/features/workout/workout_injection.dart';
@@ -42,4 +43,5 @@ Future<void> init() async {
   registerBodyPartSelectionDependencies(sl);
   registerNotificationsDependencies(sl);
   registerWaterIntakeDependencies(sl);
+  registerProgressReportDependencies(sl);
 }

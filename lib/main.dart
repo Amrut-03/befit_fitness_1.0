@@ -24,6 +24,7 @@ import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_blo
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
+import 'package:fitness_app/features/progress_report/presentation/bloc/weekly_report_bloc.dart';
 import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
@@ -139,6 +140,8 @@ class UserScope extends StatelessWidget {
           ),
           // Shared by Home (resume bar), the exercise list and the session.
           BlocProvider(create: (_) => sl<WorkoutSessionCubit>()),
+          // Home's weekly progress card (the report page has its own).
+          BlocProvider(create: (_) => sl<WeeklyReportBloc>()),
         ],
         child: child,
       ),

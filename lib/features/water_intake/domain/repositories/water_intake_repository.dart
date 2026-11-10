@@ -8,6 +8,13 @@ abstract class WaterIntakeRepository {
   /// The last [days] days ending today, oldest first, with empty days filled.
   Future<List<WaterDay>> getHistory({required int days, required int goalMl});
 
+  /// [days] consecutive days starting at [from], with empty days filled.
+  Future<List<WaterDay>> getRange(
+    DateTime from, {
+    required int days,
+    required int goalMl,
+  });
+
   Future<void> addEntry(int ml, {required int goalMl});
 
   Future<void> removeEntry(DateTime day, WaterEntry entry);

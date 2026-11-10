@@ -31,6 +31,7 @@ void registerWaterIntakeDependencies(GetIt sl) {
 
   sl.registerLazySingleton(() => WatchWaterDay(sl()));
   sl.registerLazySingleton(() => GetWaterHistory(sl()));
+  sl.registerLazySingleton(() => GetWaterRange(sl()));
   sl.registerLazySingleton(() => AddWater(sl()));
   sl.registerLazySingleton(() => RemoveWater(sl()));
   sl.registerLazySingleton(() => GetWaterGoal(sl()));

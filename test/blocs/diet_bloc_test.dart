@@ -11,6 +11,8 @@ import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart
 import 'package:fitness_app/features/diet/domain/usecases/save_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/set_active_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/update_meal_status.dart';
+import 'package:fitness_app/features/diet/domain/entities/daily_nutrition.dart';
+import 'package:fitness_app/features/diet/domain/usecases/nutrition_log_usecases.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_event.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_state.dart';
@@ -30,6 +32,8 @@ class _UpdateMeals extends Mock implements UpdateMealStatus {}
 class _GetHistory extends Mock implements GetDietHistory {}
 
 class _SaveHistory extends Mock implements SaveDietHistory {}
+
+class _Record extends Mock implements RecordDailyNutrition {}
 
 MealEntity _meal(String id, {DateTime? consumedAt}) => MealEntity(
   id: id,
@@ -54,6 +58,7 @@ void main() {
   );
 
   setUpAll(() {
+    registerFallbackValue(DailyNutrition(day: DateTime(2026)));
     registerFallbackValue(
       DietHistoryEntity(
         id: '',
@@ -210,5 +215,53 @@ void main() {
       act: (b) => b.add(const UpdateMealStatusEvent(planId: 'p1', meals: [])),
       expect: () => const [DietState(error: 'Failed to update meals')],
     );
+  });
+
+  group('nutrition log', () {
+    test('ticking a meal records today\'s totals across plans', () async {
+      final record = _Record();
+      when(() => record(any())).thenAnswer((_) async {});
+      when(
+        () => updateMeals(
+          planId: any(named: 'planId'),
+          meals: any(named: 'meals'),
+        ),
+      ).thenAnswer((_) async {});
+      final other = DietPlanEntity(
+        id: 'p2',
+        name: 'Snacks',
+        meals: [_meal('s', consumedAt: DateTime.now())],
+      );
+      when(() => getPlans()).thenAnswer((_) => Stream.value([plan, other]));
+
+      final bloc = DietBloc(
+        getDietPlans: getPlans,
+        saveDietPlan: _SavePlan(),
+        setActiveDietPlan: _SetActive(),
+        deleteDietPlan: delete,
+        updateMealStatus: updateMeals,
+        getDietHistory: _GetHistory(),
+        saveDietHistory: saveHistory,
+        recordDailyNutrition: record,
+      )..add(LoadDietPlans());
+      await Future<void>.delayed(Duration.zero);
+
+      bloc.add(
+        UpdateMealStatusEvent(
+          planId: 'p1',
+          meals: [
+            _meal('a', consumedAt: DateTime.now()),
+            _meal('b'),
+          ],
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      final day =
+          verify(() => record(captureAny())).captured.single as DailyNutrition;
+      expect(day.calories, 600); // meal a + the snack
+      expect(day.protein, 40);
+      await bloc.close();
+    });
   });
 }

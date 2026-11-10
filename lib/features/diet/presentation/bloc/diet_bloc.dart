@@ -9,6 +9,8 @@ import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart
 import 'package:fitness_app/features/diet/domain/usecases/save_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/set_active_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/update_meal_status.dart';
+import 'package:fitness_app/features/diet/domain/entities/daily_nutrition.dart';
+import 'package:fitness_app/features/diet/domain/usecases/nutrition_log_usecases.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'diet_event.dart';
@@ -35,6 +37,10 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
   final AppAnalytics analytics;
 
+  /// Records today's eaten totals for the weekly report. Optional so the
+  /// bloc works without it (e.g. in tests).
+  final RecordDailyNutrition? recordDailyNutrition;
+
   DietBloc({
     required this.getDietPlans,
 
@@ -51,6 +57,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     required this.saveDietHistory,
 
     this.analytics = const NoopAnalytics(),
+    this.recordDailyNutrition,
   }) : super(DietState.initial()) {
     on<DietStreamFailed>(
       (event, emit) =>
@@ -193,6 +200,20 @@ class DietBloc extends Bloc<DietEvent, DietState> {
       }
 
       final updatedPlan = state.plans[planIndex].copyWith(meals: event.meals);
+
+      // Today's totals across every plan, re-recorded on each tick/un-tick.
+      final record = recordDailyNutrition;
+      if (record != null) {
+        final meals = [
+          for (final p in state.plans)
+            ...(p.id == updatedPlan.id ? updatedPlan.meals : p.meals),
+        ];
+        unawaited(
+          record(
+            DailyNutrition.fromMeals(DateTime.now(), meals),
+          ).catchError((_) {}),
+        );
+      }
 
       final newlyConsumed =
           event.meals.where((m) => m.isConsumedToday).length -

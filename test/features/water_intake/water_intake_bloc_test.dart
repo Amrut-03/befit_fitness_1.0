@@ -52,6 +52,16 @@ class _Repo implements WaterIntakeRepository {
   }
 
   @override
+  Future<List<WaterDay>> getRange(
+    DateTime from, {
+    required int days,
+    required int goalMl,
+  }) async => [
+    for (var i = 0; i < days; i++)
+      _snapshot(DateTime(from.year, from.month, from.day + i), goalMl),
+  ];
+
+  @override
   Future<void> addEntry(int ml, {required int goalMl}) async {
     if (failAdd != null) throw failAdd!;
     final t = now!();

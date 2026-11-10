@@ -18,6 +18,17 @@ class GetWaterHistory {
       _repo.getHistory(days: days, goalMl: goalMl);
 }
 
+class GetWaterRange {
+  GetWaterRange(this._repo);
+  final WaterIntakeRepository _repo;
+
+  Future<List<WaterDay>> call(
+    DateTime from, {
+    required int days,
+    required int goalMl,
+  }) => _repo.getRange(from, days: days, goalMl: goalMl);
+}
+
 class AddWater {
   AddWater(this._repo);
   final WaterIntakeRepository _repo;

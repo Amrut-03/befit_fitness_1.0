@@ -9,6 +9,9 @@ import 'package:fitness_app/features/diet/domain/usecases/save_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/set_active_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/update_meal_status.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
+import 'package:fitness_app/features/diet/data/datasources/remote/nutrition_log_remote_datasource.dart';
+import 'package:fitness_app/features/diet/domain/repositories/nutrition_log_repository.dart';
+import 'package:fitness_app/features/diet/domain/usecases/nutrition_log_usecases.dart';
 import 'package:get_it/get_it.dart';
 
 /// Dependencies for the diet feature.
@@ -23,8 +26,15 @@ void registerDietDependencies(GetIt sl) {
       getDietHistory: sl(),
       saveDietHistory: sl(),
       analytics: sl(),
+      recordDailyNutrition: sl(),
     ),
   );
+
+  sl.registerLazySingleton<NutritionLogRepository>(
+    () => NutritionLogRemoteDatasource(firestore: sl(), auth: sl()),
+  );
+  sl.registerLazySingleton(() => RecordDailyNutrition(sl()));
+  sl.registerLazySingleton(() => GetNutritionLog(sl()));
 
   sl.registerLazySingleton(() => GetDietPlans(sl()));
   sl.registerLazySingleton(() => SaveDietPlan(sl()));

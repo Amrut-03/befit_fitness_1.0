@@ -24,6 +24,8 @@ import 'package:fitness_app/features/home/presentation/widgets/calculator_readin
 import 'package:fitness_app/features/home/presentation/widgets/overall_health_card.dart';
 import 'package:fitness_app/features/home/presentation/widgets/quick_action_section.dart';
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:fitness_app/features/progress_report/presentation/bloc/weekly_report_bloc.dart';
+import 'package:fitness_app/features/progress_report/presentation/widgets/weekly_report_card.dart';
 import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'package:fitness_app/features/water_intake/presentation/widgets/water_intake_card.dart';
 import 'package:fitness_app/features/workout/presentation/widgets/session/session_bar.dart';
@@ -48,6 +50,8 @@ class _HomePageState extends State<HomePage> {
     context.read<HealthBloc>().add(RefreshHealthData());
 
     context.read<WaterIntakeBloc>().add(const WaterIntakeRefreshed());
+
+    context.read<WeeklyReportBloc>().add(const WeeklyReportRefreshed());
   }
 
   /// Re-reads steps (and the Health Connect status, e.g. after installing it
@@ -69,6 +73,7 @@ class _HomePageState extends State<HomePage> {
         context.read<HealthBloc>().add(RefreshHealthData());
         // Moves the water log to the new day after midnight.
         context.read<WaterIntakeBloc>().add(const WaterIntakeRefreshed());
+        context.read<WeeklyReportBloc>().add(const WeeklyReportRefreshed());
       },
     );
 
@@ -256,6 +261,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 16.h),
                       const AIInsightsSection(),
+                      SizedBox(height: 16.h),
+                      const WeeklyReportCard(),
                       SizedBox(height: 16.h),
                       BlocBuilder<DietBloc, DietState>(
                         builder: (context, state) {

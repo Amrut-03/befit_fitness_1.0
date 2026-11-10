@@ -46,10 +46,21 @@ class WaterIntakeRemoteDatasource {
   }) async {
     final today = WaterGoal.startOfDay(_now());
     final from = DateTime(today.year, today.month, today.day - (days - 1));
+    return getRange(from, days: days, goalMl: goalMl);
+  }
+
+  Future<List<WaterDay>> getRange(
+    DateTime start, {
+    required int days,
+    required int goalMl,
+  }) async {
+    final from = WaterGoal.startOfDay(start);
+    final end = DateTime(from.year, from.month, from.day + days);
 
     final snap = await _user
         .collection(collection)
         .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(from))
+        .where('date', isLessThan: Timestamp.fromDate(end))
         .orderBy('date')
         .get();
 

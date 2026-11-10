@@ -21,6 +21,13 @@ class WaterIntakeRepositoryImpl implements WaterIntakeRepository {
       _remote.getHistory(days: days, goalMl: goalMl);
 
   @override
+  Future<List<WaterDay>> getRange(
+    DateTime from, {
+    required int days,
+    required int goalMl,
+  }) => _remote.getRange(from, days: days, goalMl: goalMl);
+
+  @override
   Future<void> addEntry(int ml, {required int goalMl}) =>
       _remote.addEntry(ml, goalMl: goalMl);
 

@@ -20,6 +20,7 @@ import 'package:fitness_app/features/streak/presentation/bloc/streak_state.dart'
 import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'package:fitness_app/features/water_intake/presentation/widgets/water_intake_card.dart';
 import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
+import 'package:fitness_app/features/progress_report/presentation/bloc/weekly_report_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,6 +54,9 @@ class _Water extends MockBloc<WaterIntakeEvent, WaterIntakeState>
 class _Session extends MockCubit<WorkoutSessionState>
     implements WorkoutSessionCubit {}
 
+class _Report extends MockBloc<WeeklyReportEvent, WeeklyReportState>
+    implements WeeklyReportBloc {}
+
 void main() {
   late _Home home;
 
@@ -84,6 +88,8 @@ void main() {
     when(() => insights.state).thenReturn(AIInsightsInitial());
     final session = _Session();
     when(() => session.state).thenReturn(const WorkoutSessionState());
+    final report = _Report();
+    when(() => report.state).thenReturn(const WeeklyReportState());
     final water = _Water();
     when(() => water.state).thenReturn(const WaterIntakeState());
 
@@ -97,6 +103,7 @@ void main() {
           BlocProvider<StreakBloc>.value(value: streak),
           BlocProvider<AIInsightsBloc>.value(value: insights),
           BlocProvider<WaterIntakeBloc>.value(value: water),
+          BlocProvider<WeeklyReportBloc>.value(value: report),
           BlocProvider<WorkoutSessionCubit>.value(value: session),
         ],
         child: const HomePage(),

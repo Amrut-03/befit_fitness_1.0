@@ -38,6 +38,9 @@ abstract final class Routes {
     queryParameters: {'type': type},
   ).toString();
 
+  // Progress
+  static const weeklyReport = '/weekly-report';
+
   // Water
   static const water = '/water';
 
