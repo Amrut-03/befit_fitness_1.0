@@ -104,6 +104,8 @@ import 'package:fitness_app/features/onboarding/domain/usecases/save_user_profil
 
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:fitness_app/features/auth/data/datasources/local/user_data_local_datasource.dart';
+import 'package:fitness_app/features/auth/data/datasources/remote/user_data_remote_datasource.dart';
 
 final sl = GetIt.instance;
 
@@ -238,8 +240,28 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => AuthLocalDataSource(sl()));
 
+  sl.registerLazySingleton(() => UserDataRemoteDataSource(firestore: sl()));
+
+  // Every box holding per-user data. Add new user-scoped boxes here so
+  // "Delete account" clears them.
+  sl.registerLazySingleton(
+    () => UserDataLocalDataSource([
+      dietBox,
+      foodBox,
+      healthMetricsBox,
+      calculatorBox,
+      profileBox,
+      sl<Box<NotificationModel>>(),
+    ]),
+  );
+
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
+    () => AuthRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      userDataRemoteDataSource: sl(),
+      userDataLocalDataSource: sl(),
+    ),
   );
 
   sl.registerLazySingleton(() => SignInWithGoogle(sl()));

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/user_entity.dart';
+import '../../domain/exceptions/account_deletion_exception.dart';
 import '../../domain/usecases/delete_account.dart';
 import '../../domain/usecases/get_current_user.dart';
 import '../../domain/usecases/sign_in_as_guest.dart';
@@ -119,12 +120,36 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthDeleteRequested event,
     Emitter<AuthState> emit,
   ) async {
+    final previous = state;
     try {
-      emit(AuthLoading());
+      emit(const AuthDeleting());
       await deleteAccount();
-      emit(AuthUnauthenticated());
+      emit(const AuthAccountDeleted());
     } catch (e) {
-      emit(AuthError('Delete account failed'));
+      final reason = e is AccountDeletionException
+          ? e.reason
+          : AccountDeletionFailure.unknown;
+      emit(AuthError(deletionErrorMessage(reason)));
+      // The user is still signed in, so restore the previous state.
+      if (previous is AuthAuthenticated) emit(previous);
+    }
+  }
+
+  static String deletionErrorMessage(AccountDeletionFailure reason) {
+    switch (reason) {
+      case AccountDeletionFailure.cancelled:
+        return 'Account deletion cancelled.';
+      case AccountDeletionFailure.requiresRecentLogin:
+        return 'For your security, please log out, sign in again, and then '
+            'delete your account.';
+      case AccountDeletionFailure.wrongAccount:
+        return 'Please choose the Google account you signed in with.';
+      case AccountDeletionFailure.network:
+        return 'No internet connection. Nothing was deleted. Please try again.';
+      case AccountDeletionFailure.notSignedIn:
+        return 'You are not signed in.';
+      case AccountDeletionFailure.unknown:
+        return 'Could not delete your account. Please try again.';
     }
   }
 

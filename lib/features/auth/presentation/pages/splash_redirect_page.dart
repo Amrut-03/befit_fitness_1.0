@@ -25,13 +25,13 @@ class _SplashRedirectPageState extends State<SplashRedirectPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            context.push('/home');
+            context.go('/home');
           }
           if (state is AuthUnauthenticated) {
-            context.push('/login');
+            context.go('/login');
           }
           if (state is AuthError) {
-            context.push('/login');
+            context.go('/login');
           }
         },
         child: const Center(

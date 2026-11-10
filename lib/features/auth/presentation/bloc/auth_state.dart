@@ -28,6 +28,16 @@ class AuthUnauthenticated extends AuthState {
   const AuthUnauthenticated();
 }
 
+/// Account deletion is in progress.
+class AuthDeleting extends AuthState {
+  const AuthDeleting();
+}
+
+/// The account and all its data were deleted. The user is signed out.
+class AuthAccountDeleted extends AuthUnauthenticated {
+  const AuthAccountDeleted();
+}
+
 class AuthError extends AuthState {
   final String message;
 

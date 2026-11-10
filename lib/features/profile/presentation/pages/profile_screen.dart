@@ -5,6 +5,7 @@ import 'package:fitness_app/features/health/presentation/bloc/health_bloc.dart';
 import 'package:fitness_app/features/health/presentation/bloc/health_state.dart';
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:fitness_app/features/profile/presentation/pages/profile_share_card.dart';
+import 'package:fitness_app/features/profile/presentation/widgets/delete_account_tile.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_state.dart';
 import 'package:flutter/material.dart';
@@ -601,7 +602,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    context.pop(true);
+                                    Navigator.pop(context, false);
                                   },
 
                                   child: Text(
@@ -650,6 +651,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         }
                       },
                     ),
+
+                    const DeleteAccountTile(),
                   ],
                 ),
               );
