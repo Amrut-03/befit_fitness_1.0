@@ -59,16 +59,20 @@ class AuthButton extends StatelessWidget {
           children: [
             icon,
             SizedBox(width: 14.w),
-            isLoading
-                ? const AppLoader()
-                : Text(
-                    title,
-                    style: TextStyle(
-                      color: isPrimary ? Colors.black : Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
+            if (isLoading)
+              AppLoader(size: 40.h)
+            else
+              Flexible(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isPrimary ? Colors.black : Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
+              ),
           ],
         ),
       ),

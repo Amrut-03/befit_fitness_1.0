@@ -170,16 +170,11 @@ class _DietListPageState extends State<DietListPage> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: plan.isActiveToday
-                ? [
-                    AppColors.primary.withValues(alpha: 0.15),
-                    Colors.black,
-                  ]
+                ? [AppColors.primary.withValues(alpha: 0.15), Colors.black]
                 : [AppColors.surfaceHigh, Colors.black],
           ),
           border: Border.all(
-            color: plan.isActiveToday
-                ? AppColors.primary
-                : Colors.white10,
+            color: plan.isActiveToday ? AppColors.primary : Colors.white10,
             width: 1.2,
           ),
           boxShadow: [
@@ -286,9 +281,7 @@ class _DietListPageState extends State<DietListPage> {
                 value: plan.progress,
                 minHeight: 10.h,
                 backgroundColor: Colors.white10,
-                color: plan.isActiveToday
-                    ? AppColors.primary
-                    : Colors.blue,
+                color: plan.isActiveToday ? AppColors.primary : Colors.blue,
               ),
             ),
             SizedBox(height: 10.h),

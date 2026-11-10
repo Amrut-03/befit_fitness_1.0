@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/observability/observability.dart';
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -35,6 +37,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await setUpCrashReporting();
 
   // App Check attests that requests to Firestore and Firebase AI Logic come
   // from this genuine app. Debug builds use the debug provider: copy the token
@@ -62,6 +65,7 @@ Future<void> main() async {
     saveNotification: sl<SaveNotification>().call,
   );
   sl<ReminderSync>().start();
+  syncObservabilityUser(sl<SessionNotifier>(), sl<AppAnalytics>());
 
   runApp(const MyApp());
 }

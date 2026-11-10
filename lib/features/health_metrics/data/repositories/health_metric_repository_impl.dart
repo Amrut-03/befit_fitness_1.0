@@ -61,7 +61,7 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
     return filtered;
   }
 
-@override
+  @override
   Future<void> saveMetric(HealthMetricEntity metric) async {
     final model = HealthMetricModel(
       type: metric.type,
@@ -101,7 +101,8 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
     }
 
     for (var localMetric in localMetrics) {
-      final key = '${localMetric.type}_${localMetric.date.millisecondsSinceEpoch}';
+      final key =
+          '${localMetric.type}_${localMetric.date.millisecondsSinceEpoch}';
       if (!existingIds.contains(key)) {
         final model = HealthMetricModel(
           type: localMetric.type,

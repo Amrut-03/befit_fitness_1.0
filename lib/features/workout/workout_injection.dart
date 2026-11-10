@@ -28,6 +28,7 @@ void registerWorkoutDependencies(GetIt sl) {
       getExercises: sl(),
       saveWorkoutHistory: sl(),
       getWorkoutHistory: sl(),
+      analytics: sl(),
     ),
   );
 }

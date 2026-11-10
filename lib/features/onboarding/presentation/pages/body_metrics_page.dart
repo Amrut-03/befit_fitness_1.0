@@ -24,7 +24,11 @@ class BodyMetricsPage extends StatelessWidget {
 
             end: Alignment.bottomRight,
 
-            colors: [AppColors.background, AppColors.surfaceNavy, AppColors.background],
+            colors: [
+              AppColors.background,
+              AppColors.surfaceNavy,
+              AppColors.background,
+            ],
           ),
         ),
 
@@ -165,7 +169,9 @@ class BodyMetricsPage extends StatelessWidget {
 
                             elevation: 12,
 
-                            shadowColor: AppColors.primary.withValues(alpha: 0.4),
+                            shadowColor: AppColors.primary.withValues(
+                              alpha: 0.4,
+                            ),
 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(22.r),
@@ -261,19 +267,18 @@ class _MetricCard extends StatelessWidget {
 
               SizedBox(width: 12.w),
 
-              Text(
-                title,
-
-                style: TextStyle(
-                  color: Colors.white,
-
-                  fontSize: 18.sp,
-
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-
-              const Spacer(),
 
               Text(
                 "$value $unit",

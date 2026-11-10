@@ -33,7 +33,11 @@ class GenderSelectionPage extends StatelessWidget {
 
             end: Alignment.bottomRight,
 
-            colors: [AppColors.background, AppColors.surfaceNavy, AppColors.background],
+            colors: [
+              AppColors.background,
+              AppColors.surfaceNavy,
+              AppColors.background,
+            ],
           ),
         ),
 
@@ -138,7 +142,9 @@ class GenderSelectionPage extends StatelessWidget {
 
                             elevation: 12,
 
-                            shadowColor: AppColors.primary.withValues(alpha: 0.4),
+                            shadowColor: AppColors.primary.withValues(
+                              alpha: 0.4,
+                            ),
 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(22.r),

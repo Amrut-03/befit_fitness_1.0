@@ -1,4 +1,7 @@
+import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
+import 'package:fitness_app/features/profile/presentation/widgets/save_progress_tile.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fitness_app/features/profile/domain/entities/profile_entity.dart';
@@ -18,6 +21,7 @@ class ProfileSettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SaveProgressTile(),
         SettingsTile(
           icon: Icons.edit,
           title: "Edit Profile",
@@ -36,6 +40,8 @@ class ProfileSettingsSection extends StatelessWidget {
           icon: Icons.logout,
           title: "Logout",
           onTap: () async {
+            final isGuest = (await sl<GetCurrentUser>()())?.isGuest ?? false;
+            if (!context.mounted) return;
             final shouldLogout = await showDialog<bool>(
               context: context,
               builder: (context) {
@@ -53,7 +59,11 @@ class ProfileSettingsSection extends StatelessWidget {
                     ),
                   ),
                   content: Text(
-                    "Are you sure you want to logout?",
+                    isGuest
+                        ? "You're using a guest account. After logging out you "
+                              "can't get back to your data. Tap 'Save your "
+                              "progress' first to keep it."
+                        : "Are you sure you want to logout?",
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 14.sp,

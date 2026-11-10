@@ -46,7 +46,11 @@ class ActivityLevelPage extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.background, AppColors.surfaceNavy, AppColors.background],
+              colors: [
+                AppColors.background,
+                AppColors.surfaceNavy,
+                AppColors.background,
+              ],
             ),
           ),
           child: SafeArea(

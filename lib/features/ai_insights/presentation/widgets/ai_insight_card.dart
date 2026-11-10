@@ -30,9 +30,7 @@ class AIInsightCard extends StatelessWidget {
           ],
         ),
 
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.12),
-        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.12)),
       ),
 
       child: Row(

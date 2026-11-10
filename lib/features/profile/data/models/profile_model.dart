@@ -38,7 +38,7 @@ class ProfileModel extends ProfileEntity {
 
       goal: json['goal'] ?? 'Fitness Goal',
 
-      streak: json['streak'] ?? 0,
+      streak: asInt(json['streak']),
 
       weight: asDouble(json['weight']),
 
@@ -50,12 +50,12 @@ class ProfileModel extends ProfileEntity {
 
       photoUrl: json['photoUrl'],
 
-      dailyStepGoal: json['dailyStepGoal'] ?? 0,
+      dailyStepGoal: asInt(json['dailyStepGoal']),
 
-      dailyCalorieGoal: json['dailyCalorieGoal'] ?? 0,
-      proteinGoal: json['proteinGoal'] ?? 0,
-      carbsGoal: json['carbsGoal'] ?? 0,
-      fatGoal: json['fatGoal'] ?? 0,
+      dailyCalorieGoal: asInt(json['dailyCalorieGoal']),
+      proteinGoal: asInt(json['proteinGoal']),
+      carbsGoal: asInt(json['carbsGoal']),
+      fatGoal: asInt(json['fatGoal']),
       activityLevel: json['activityLevel'] ?? 'Sedentary',
     );
   }

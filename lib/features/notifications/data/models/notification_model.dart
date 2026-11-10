@@ -21,13 +21,12 @@ class NotificationModel extends NotificationEntity {
 
     required this.notificationCreatedAt,
   }) : super(
+         title: notificationTitle,
 
-          title: notificationTitle,
+         body: notificationBody,
 
-          body: notificationBody,
-
-          createdAt: notificationCreatedAt,
-        );
+         createdAt: notificationCreatedAt,
+       );
 
   factory NotificationModel.fromEntity(NotificationEntity entity) {
     return NotificationModel(

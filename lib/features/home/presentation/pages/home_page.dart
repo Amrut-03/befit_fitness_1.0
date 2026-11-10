@@ -80,10 +80,6 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(height: 20.h),
                       BlocBuilder<ProfileBloc, ProfileState>(
                         builder: (context, profileState) {
-                          debugPrint(
-                            "PROFILE STATE: ${profileState.runtimeType}",
-                          );
-
                           if (profileState is! ProfileLoaded) {
                             return const SizedBox();
                           }

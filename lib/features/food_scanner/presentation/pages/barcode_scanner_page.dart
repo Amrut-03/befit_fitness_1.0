@@ -234,10 +234,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   height: 180.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24.r),
-                    border: Border.all(
-                      color: AppColors.primary,
-                      width: 3,
-                    ),
+                    border: Border.all(color: AppColors.primary, width: 3),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primary.withValues(alpha: 0.5),

@@ -140,6 +140,8 @@ class _ActionCard extends StatelessWidget {
             SizedBox(height: 10.h),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
@@ -147,11 +149,17 @@ class _ActionCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4.h),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: Colors.white.withValues(alpha: 0.6),
+            // Grid cells have a fixed aspect ratio, so the subtitle gives way
+            // on narrow screens or large text instead of overflowing.
+            Flexible(
+              child: Text(
+                subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
               ),
             ),
           ],

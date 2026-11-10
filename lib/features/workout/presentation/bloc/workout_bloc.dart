@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'dart:async';
 
 import 'package:fitness_app/core/error/failures.dart';
@@ -17,6 +18,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
 
   final GetWorkoutHistory getWorkoutHistory;
 
+  final AppAnalytics analytics;
   StreamSubscription? _historySubscription;
 
   WorkoutBloc({
@@ -25,6 +27,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
     required this.saveWorkoutHistory,
 
     required this.getWorkoutHistory,
+    this.analytics = const NoopAnalytics(),
   }) : super(WorkoutState.initial()) {
     on<LoadExercisesEvent>(_onLoadExercises);
 
@@ -82,6 +85,12 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
           exercises: event.exercises,
 
           completedAt: DateTime.now(),
+        ),
+      );
+      unawaited(
+        analytics.logWorkoutSaved(
+          bodyPart: event.bodyPart,
+          exerciseCount: event.exercises.length,
         ),
       );
     } catch (e) {

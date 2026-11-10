@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'dart:async';
 
 import 'package:fitness_app/features/diet/domain/entities/diet_history_entity.dart';
@@ -32,6 +33,8 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
   final SaveDietHistory saveDietHistory;
 
+  final AppAnalytics analytics;
+
   DietBloc({
     required this.getDietPlans,
 
@@ -46,6 +49,8 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     required this.getDietHistory,
 
     required this.saveDietHistory,
+
+    this.analytics = const NoopAnalytics(),
   }) : super(DietState.initial()) {
     on<DietStreamFailed>(
       (event, emit) =>
@@ -189,6 +194,13 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
       final updatedPlan = state.plans[planIndex].copyWith(meals: event.meals);
 
+      final newlyConsumed =
+          event.meals.where((m) => m.isConsumedToday).length -
+          state.plans[planIndex].meals.where((m) => m.isConsumedToday).length;
+      for (var i = 0; i < newlyConsumed; i++) {
+        unawaited(analytics.logMealCompleted());
+      }
+
       if (updatedPlan.isCompletedToday) {
         final alreadySaved = state.history.any((h) {
           final samePlan = h.planId == updatedPlan.id;
@@ -232,6 +244,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
               meals: updatedPlan.meals.map((e) => e.name).toList(),
             ),
           );
+          unawaited(analytics.logDietPlanCompleted());
         }
       }
     } catch (e) {

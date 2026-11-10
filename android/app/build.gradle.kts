@@ -6,6 +6,8 @@ plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
+    // Uploads R8 mapping files so release stack traces are readable.
+    id("com.google.firebase.crashlytics")
     // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -30,12 +32,10 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.befit_fitness.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 29
-        targetSdk = 35
+        // Play requires API 36 for new apps and updates from 31 Aug 2026.
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -57,6 +57,15 @@ android {
                 // No key.properties: fall back to debug signing so local release builds still work.
                 signingConfigs.getByName("debug")
             }
+            // R8: shrink, optimize and obfuscate Java/Kotlin, drop unused
+            // resources. Dart code is obfuscated separately via
+            // `flutter build appbundle --obfuscate --split-debug-info=...`.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }

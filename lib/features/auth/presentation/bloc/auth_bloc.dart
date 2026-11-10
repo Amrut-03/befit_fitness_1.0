@@ -1,9 +1,14 @@
+import 'dart:async';
+
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../../domain/exceptions/account_deletion_exception.dart';
+import '../../domain/exceptions/account_link_exception.dart';
 import '../../domain/usecases/delete_account.dart';
+import '../../domain/usecases/link_guest_with_google.dart';
 import '../../domain/usecases/sign_in_as_guest.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_out.dart';
@@ -16,17 +21,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInAsGuest signInAsGuest;
   final SignOut signOut;
   final DeleteAccount deleteAccount;
+  final LinkGuestWithGoogle? linkGuestWithGoogle;
+  final AppAnalytics analytics;
 
   AuthBloc({
     required this.signInWithGoogle,
     required this.signInAsGuest,
     required this.signOut,
     required this.deleteAccount,
+    this.linkGuestWithGoogle,
+    this.analytics = const NoopAnalytics(),
   }) : super(const AuthInitial()) {
     on<AuthGoogleSignInRequested>(_onGoogleSignIn);
     on<AuthGuestSignInRequested>(_onGuestSignIn);
     on<AuthLogoutRequested>(_onLogout);
     on<AuthDeleteRequested>(_onDeleteAccount);
+    on<AuthLinkGoogleRequested>(_onLinkGoogle);
   }
 
   Future<void> _onGoogleSignIn(
@@ -40,6 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (user != null) {
         emit(AuthAuthenticated(user));
+        unawaited(analytics.logLogin(method: 'google'));
       } else {
         emit(const AuthUnauthenticated());
       }
@@ -59,6 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (user != null) {
         emit(AuthAuthenticated(user));
+        unawaited(analytics.logLogin(method: 'guest'));
       } else {
         emit(const AuthUnauthenticated());
       }
@@ -96,6 +108,49 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthError(deletionErrorMessage(reason)));
       // The user is still signed in, so restore the previous state.
       if (previous is AuthAuthenticated) emit(previous);
+    }
+  }
+
+  Future<void> _onLinkGoogle(
+    AuthLinkGoogleRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    final link = linkGuestWithGoogle;
+    if (link == null) return;
+
+    final previous = state;
+    try {
+      emit(const AuthLinking());
+      final user = await link();
+      emit(AuthAuthenticated(user));
+      unawaited(analytics.logLogin(method: 'google_link'));
+    } catch (e) {
+      final reason = e is AccountLinkException
+          ? e.reason
+          : AccountLinkFailure.unknown;
+      if (reason == AccountLinkFailure.cancelled) {
+        emit(previous);
+        return;
+      }
+      emit(AuthError(linkErrorMessage(reason)));
+      // Still signed in as the same guest.
+      emit(previous);
+    }
+  }
+
+  static String linkErrorMessage(AccountLinkFailure reason) {
+    switch (reason) {
+      case AccountLinkFailure.alreadyInUse:
+        return 'That Google account already has a BeFit account. Choose a '
+            'different Google account to keep your guest progress.';
+      case AccountLinkFailure.network:
+        return 'No internet connection. Your progress is safe; please try '
+            'again.';
+      case AccountLinkFailure.notGuest:
+        return 'Your account is already linked to Google.';
+      case AccountLinkFailure.cancelled:
+      case AccountLinkFailure.unknown:
+        return 'Could not link your Google account. Please try again.';
     }
   }
 

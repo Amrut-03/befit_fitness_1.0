@@ -114,13 +114,7 @@ class OnboardingOptionCard extends StatelessWidget {
                 ),
 
                 child: isSelected
-                    ? Icon(
-                        Icons.check,
-
-                        color: AppColors.primary,
-
-                        size: 18.sp,
-                      )
+                    ? Icon(Icons.check, color: AppColors.primary, size: 18.sp)
                     : null,
               ),
             ],

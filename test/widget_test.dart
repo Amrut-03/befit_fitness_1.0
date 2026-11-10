@@ -6,11 +6,23 @@ import 'package:fitness_app/features/onboarding/domain/utils/macros_calculator.d
 void main() {
   group('GoalCalculator', () {
     test('returns expected step goals for each goal', () {
-      expect(GoalCalculator.calculateStepGoal('Lose Weight', 'Moderate'), 12000);
-      expect(GoalCalculator.calculateStepGoal('Build Muscle', 'Moderate'), 8000);
+      expect(
+        GoalCalculator.calculateStepGoal('Lose Weight', 'Moderate'),
+        12000,
+      );
+      expect(
+        GoalCalculator.calculateStepGoal('Build Muscle', 'Moderate'),
+        8000,
+      );
       expect(GoalCalculator.calculateStepGoal('Stay Fit', 'Moderate'), 10000);
-      expect(GoalCalculator.calculateStepGoal('Improve Endurance', 'Moderate'), 15000);
-      expect(GoalCalculator.calculateStepGoal('Unknown Goal', 'Moderate'), 10000);
+      expect(
+        GoalCalculator.calculateStepGoal('Improve Endurance', 'Moderate'),
+        15000,
+      );
+      expect(
+        GoalCalculator.calculateStepGoal('Unknown Goal', 'Moderate'),
+        10000,
+      );
     });
 
     test('calculates daily calories for a sedentary male', () {

@@ -22,6 +22,21 @@ class UserDataRemoteDataSource {
 
   UserDataRemoteDataSource({required this.firestore, this.batchSize = 400});
 
+  /// Stores the name and email from a newly linked Google account on the
+  /// user's profile document, without touching any other field.
+  Future<void> saveIdentity(
+    String uid, {
+    String? name,
+    String? email,
+    String? photoUrl,
+  }) {
+    return firestore.collection('users').doc(uid).set({
+      if (name != null && name.isNotEmpty) 'name': name,
+      if (email != null && email.isNotEmpty) 'email': email,
+      'photoUrl': ?photoUrl,
+    }, SetOptions(merge: true));
+  }
+
   Future<void> deleteAllUserData(String uid) async {
     final userRef = firestore.collection('users').doc(uid);
 

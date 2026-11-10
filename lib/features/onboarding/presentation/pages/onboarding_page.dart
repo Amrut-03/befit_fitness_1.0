@@ -173,7 +173,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   decoration: BoxDecoration(
                                     gradient: RadialGradient(
                                       colors: [
-                                        AppColors.primary.withValues(alpha: 0.15),
+                                        AppColors.primary.withValues(
+                                          alpha: 0.15,
+                                        ),
 
                                         Colors.transparent,
                                       ],

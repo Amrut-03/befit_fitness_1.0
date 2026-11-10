@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'package:fitness_app/core/error/failures.dart';
 import 'package:fitness_app/features/food_scanner/domain/usecases/scan_barcode.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,8 +10,10 @@ import 'food_scanner_state.dart';
 
 class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
   final ScanBarcode scanBarcode;
+  final AppAnalytics analytics;
 
-  FoodScannerBloc(this.scanBarcode) : super(FoodScannerState.initial()) {
+  FoodScannerBloc(this.scanBarcode, {this.analytics = const NoopAnalytics()})
+    : super(FoodScannerState.initial()) {
     on<ProcessBarcodeEvent>(_onProcessBarcode);
     on<ResetScannerEvent>(_onResetScanner);
   }
@@ -30,16 +35,19 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
               : failure.message,
         ),
       ),
-      (product) => emit(
-        product == null
-            ? state.copyWith(
-                isLoading: false,
-                error:
-                    "We couldn't find this product. Try again or add it "
-                    'manually.',
-              )
-            : state.copyWith(isLoading: false, product: product),
-      ),
+      (product) {
+        unawaited(analytics.logFoodScanned(found: product != null));
+        emit(
+          product == null
+              ? state.copyWith(
+                  isLoading: false,
+                  error:
+                      "We couldn't find this product. Try again or add it "
+                      'manually.',
+                )
+              : state.copyWith(isLoading: false, product: product),
+        );
+      },
     );
   }
 

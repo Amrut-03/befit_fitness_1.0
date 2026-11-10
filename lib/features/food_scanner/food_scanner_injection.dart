@@ -15,5 +15,5 @@ void registerFoodScannerDependencies(GetIt sl) {
 
   sl.registerLazySingleton(() => ScanBarcode(sl()));
 
-  sl.registerFactory(() => FoodScannerBloc(sl()));
+  sl.registerFactory(() => FoodScannerBloc(sl(), analytics: sl()));
 }

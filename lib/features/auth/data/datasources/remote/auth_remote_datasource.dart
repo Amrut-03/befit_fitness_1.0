@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/features/auth/data/models/user_model.dart';
 import 'package:fitness_app/features/auth/domain/exceptions/account_deletion_exception.dart';
+import 'package:fitness_app/features/auth/domain/exceptions/account_link_exception.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRemoteDataSource {
@@ -66,6 +67,61 @@ class AuthRemoteDataSource {
   }
 
   String? get currentUid => firebaseAuth.currentUser?.uid;
+
+  /// Attaches a Google credential to the current anonymous user. The uid
+  /// stays the same, so everything stored under `users/{uid}` is kept.
+  Future<UserModel> linkGuestWithGoogle() async {
+    final user = firebaseAuth.currentUser;
+    if (user == null || !user.isAnonymous) {
+      throw const AccountLinkException(AccountLinkFailure.notGuest);
+    }
+
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser == null) {
+      throw const AccountLinkException(AccountLinkFailure.cancelled);
+    }
+
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    try {
+      final result = await user.linkWithCredential(credential);
+      final linked = result.user ?? user;
+
+      // Linking doesn't always copy the profile onto the user itself, so
+      // fall back to what the Google provider reported.
+      final google = linked.providerData
+          .where((p) => p.providerId == GoogleAuthProvider.PROVIDER_ID)
+          .firstOrNull;
+
+      return UserModel(
+        uid: linked.uid,
+        name:
+            linked.displayName ?? google?.displayName ?? googleUser.displayName,
+        email: linked.email ?? google?.email ?? googleUser.email,
+        photoUrl: linked.photoURL ?? google?.photoURL ?? googleUser.photoUrl,
+        isGuest: false,
+        createdAt: DateTime.now(),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Leave Google signed out so the picker shows again next time.
+      try {
+        await googleSignIn.signOut();
+      } catch (_) {}
+      throw AccountLinkException(switch (e.code) {
+        'credential-already-in-use' ||
+        'email-already-in-use' ||
+        'account-exists-with-different-credential' =>
+          AccountLinkFailure.alreadyInUse,
+        'provider-already-linked' => AccountLinkFailure.notGuest,
+        'network-request-failed' => AccountLinkFailure.network,
+        _ => AccountLinkFailure.unknown,
+      }, e);
+    }
+  }
 
   /// Firebase only lets a user delete their account with a recent sign-in.
   /// For Google users, get a fresh credential up front so `user.delete()`

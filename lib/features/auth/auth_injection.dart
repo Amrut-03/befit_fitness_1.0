@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/auth/domain/usecases/link_guest_with_google.dart';
 import 'package:fitness_app/core/di/storage_module.dart';
 import 'package:fitness_app/features/auth/data/datasources/local/auth_local_datasource.dart';
 import 'package:fitness_app/features/auth/data/datasources/local/user_data_local_datasource.dart';
@@ -56,12 +57,16 @@ void registerAuthDependencies(GetIt sl) {
 
   sl.registerLazySingleton(() => DeleteAccount(sl()));
 
+  sl.registerLazySingleton(() => LinkGuestWithGoogle(sl()));
+
   sl.registerFactory(
     () => AuthBloc(
       signInWithGoogle: sl(),
       signInAsGuest: sl(),
       signOut: sl(),
       deleteAccount: sl(),
+      analytics: sl(),
+      linkGuestWithGoogle: sl(),
     ),
   );
 }

@@ -277,30 +277,51 @@ _Original plan:_
 
 ## P3: Testing, CI, release polish
 
-### ☐ 24. Unit tests for domain and data
+### ✅ 24. Unit tests for domain and data
+> **Progress (2026-11-10):** ✅ `ActivityEstimator`, all four health-calculator use cases (Mifflin-St Jeor, BMI boundaries, activity clamp), model JSON round-trips including Firestore `Timestamp`s (meal, diet plan, food item, health metric, profile, onboarding), and repository error mapping (`FoodScannerRepositoryImpl` → `Failure` types). The streak logic was already covered in task 8. ✅ Also fixed: profile/onboarding `int` fields now go through `asInt`, so a `2600.0` stored in Firestore no longer crashes parsing. ⚠️ I dropped `hive_generator` and `build_runner`: they pin `analyzer < 7`, which blocks `bloc_test`. `notification_model.g.dart` is checked in. If you need codegen again, move to `hive_ce` + `hive_ce_generator`.
+
+_Original plan:_
 - Priority targets: `ActivityEstimator`, streak date logic (after task 8), the health calculator use cases, model `fromJson`/`toJson`, and repository error mapping.
 - Use `mocktail` for repos and datasources, and `fake_cloud_firestore` / `firebase_auth_mocks` for remote datasources.
 
-### ☐ 25. Bloc tests
+### ✅ 25. Bloc tests
+> **Progress (2026-11-10):** ✅ `bloc_test` + `mocktail` suites in `test/blocs/` for AuthBloc (Google, guest, logout; deletion was already covered), StreakBloc, DietBloc (load, stream error, refresh, history saved once on completion), FoodItemsBloc (cache then live, retry after error) and WorkoutBloc (success, failure, search, history error).
+
+_Original plan:_
 - Use `bloc_test` for AuthBloc, StreakBloc, DietBloc, FoodItemsBloc, and WorkoutBloc (load, success, error, refresh).
 
-### ☐ 26. Widget & golden tests
+### ✅ 26. Widget & golden tests
+> **Progress (2026-11-10):** ✅ Widget tests in `test/widgets/` (helper `pump_app.dart`): Login (options, events, loading, error snackbar) and Home (loading/error/loaded). ✅ The onboarding → home flow test drives the real pages, bloc and `SessionRedirect` with only the Firestore write mocked. I wrote it as a widget test rather than an `integration_test`, because the real flow needs Firebase on a device. ✅ Goldens in `test/goldens/` are tagged `golden` and skipped in CI. Regenerate with `flutter test --update-goldens --tags golden`. ✅ The tests caught real overflows on small screens or large text, now fixed: the login column scrolls, the auth button label shrinks, the button loader is sized to fit, quick-action subtitles ellipsize, and the body-metrics header row no longer overflows.
+
+_Original plan:_
 - Cover Login, onboarding steps, and the Home dashboard states (loading, loaded, error). Add an integration test for the onboarding → home flow.
 
-### ☐ 27. CI pipeline
+### ✅ 27. CI pipeline
+> **Progress (2026-11-10):** ✅ `.github/workflows/ci.yml` has two jobs. Flutter 3.47.7: format check, `analyze --fatal-infos`, `test --coverage` (excluding goldens; lcov uploaded as an artifact), debug APK. Firestore rules: the emulator tests from task 3. ✅ No `secrets.dart` needed (task 2). The Firebase config files are committed and contain only public identifiers. Coverage is 42.9% of lines.
+
+_Original plan:_
 - Add `.github/workflows/ci.yml`: `flutter analyze --fatal-infos`, `dart format --set-exit-if-changed`, `flutter test --coverage`, and `flutter build apk --debug`.
 - Generate `secrets.dart` from the example in CI, or drop it entirely after task 2.
 
-### ☐ 28. Crash reporting & analytics
+### ✅ 28. Crash reporting & analytics
+> **Progress (2026-11-10):** ✅ Crashlytics catches `FlutterError.onError` and `PlatformDispatcher.onError`, and collection is off in debug builds (`core/observability/observability.dart`). Crash reports and analytics are tagged with the uid only (never email), and the tag is cleared on sign-out. ✅ Analytics sits behind an `AppAnalytics` interface, so blocs don't import Firebase. Events: `login` (google/guest/google_link), `workout_saved`, `meal_completed`, `diet_plan_completed`, `food_scanned` (found). Tests in `test/blocs/analytics_events_test.dart`. ✅ Added the Crashlytics Gradle plugin and bumped google-services to 4.4.2. ⏳ **You:** enable Crashlytics in the Firebase console. On iOS, run `pod install` and add the dSYM upload script.
+
+_Original plan:_
 - Add `firebase_crashlytics` (wire `FlutterError.onError` and `PlatformDispatcher.onError`) and `firebase_analytics` for key events (sign-in, workout saved, meal completed, scan).
 
-### ☐ 29. Release hardening
+### ◐ 29. Release hardening
+> **Progress (2026-11-10):** ✅ R8 is explicit (`isMinifyEnabled`, `isShrinkResources`), and `proguard-rules.pro` covers flutter_local_notifications/Gson, Crashlytics line numbers and Play Core. ✅ `targetSdk` 36. ✅ `SCHEDULE_EXACT_ALARM` was already gone (task 9). ✅ A native splash (`flutter_native_splash`, #050505 + app icon, Android 12 style) is configured; launcher icons regenerated with `remove_alpha_ios`. ✅ Version 1.1.0+3. ✅ `docs/RELEASE.md` has the build and symbol-upload commands and a Data Safety table. ✅ `flutter build appbundle --release --obfuscate --split-debug-info=build/symbols` runs through R8 and Dart obfuscation. It stops at signing, because `key.properties` points at the new keystore from task 1, which isn't on this machine yet. ⏳ **You:** create the upload keystore (task 1), publish the privacy policy and account-deletion web pages, fill in Data Safety, and test the release build on a device (R8 issues only show up there).
+
+_Original plan:_
 - Android: enable R8 (`isMinifyEnabled`, `isShrinkResources`) with keep rules for Firebase and Hive. Bump `targetSdk` to the version Play currently requires. Check whether `SCHEDULE_EXACT_ALARM` is needed (Play restricts it), and use inexact alarms if possible.
 - Add a native splash screen (`flutter_native_splash`, since `assets/splash_screen/` exists but is untracked) and run `flutter_launcher_icons` for both platforms.
 - Prepare a privacy policy URL, the Data Safety form (health and fitness data, location none, camera), and the account-deletion URL (task 4).
 - Bump the version in `pubspec.yaml`. Build the `appbundle` with `--obfuscate --split-debug-info`.
 
-### ☐ 30. Guest account upgrade
+### ✅ 30. Guest account upgrade
+> **Progress (2026-11-10):** ✅ A "Save your progress" tile on Profile (guests only) calls `user.linkWithCredential(GoogleAuthProvider)` through `LinkGuestWithGoogle`. The uid doesn't change, so all Firestore data and the user scope stay intact. Name, email and photo are merged onto `users/{uid}`. ✅ Typed `AccountLinkException`: a Google account that already has a BeFit account gets a clear message and the user stays signed in as the guest; a cancelled picker is silent. ✅ The guest logout dialog now warns that their data will be unreachable. ✅ Tests: repository (data kept, fields merged, error mapping), bloc and widget. ⏳ Verify on a device with a fresh guest account.
+
+_Original plan:_
 - Anonymous guests lose all data if they uninstall or sign out. Offer "Save your progress" with `linkWithCredential(GoogleAuthProvider)` to convert a guest into a Google account.
 
 ---

@@ -19,6 +19,11 @@ class AuthLogoutRequested extends AuthEvent {
   const AuthLogoutRequested();
 }
 
+/// Upgrades a guest to a Google account, keeping their data.
+class AuthLinkGoogleRequested extends AuthEvent {
+  const AuthLinkGoogleRequested();
+}
+
 class AuthDeleteRequested extends AuthEvent {
   const AuthDeleteRequested();
 }

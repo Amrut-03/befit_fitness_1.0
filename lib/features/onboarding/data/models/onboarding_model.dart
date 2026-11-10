@@ -27,11 +27,11 @@ class UserProfileModel extends UserProfileEntity {
       age: asDouble(json['age']),
       activityLevel: json['activityLevel'] ?? '',
       profileCompleted: json['profileCompleted'] ?? false,
-      dailyStepGoal: json['dailyStepGoal'] ?? 0,
-      dailyCalorieGoal: json['dailyCalorieGoal'] ?? 0,
-      proteinGoal: json['proteinGoal'] ?? 0,
-      carbsGoal: json['carbsGoal'] ?? 0,
-      fatGoal: json['fatGoal'] ?? 0,
+      dailyStepGoal: asInt(json['dailyStepGoal']),
+      dailyCalorieGoal: asInt(json['dailyCalorieGoal']),
+      proteinGoal: asInt(json['proteinGoal']),
+      carbsGoal: asInt(json['carbsGoal']),
+      fatGoal: asInt(json['fatGoal']),
       email: json['email'] ?? '',
     );
   }

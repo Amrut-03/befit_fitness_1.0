@@ -22,6 +22,7 @@ void registerDietDependencies(GetIt sl) {
       setActiveDietPlan: sl(),
       getDietHistory: sl(),
       saveDietHistory: sl(),
+      analytics: sl(),
     ),
   );
 
