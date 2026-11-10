@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_app/firebase_options.dart';
 import 'package:fitness_app/features/ai_insights/presentation/bloc/ai_insights_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,6 +32,19 @@ Future<void> main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // App Check attests that requests to Firestore and Firebase AI Logic come
+  // from this genuine app. Debug builds use the debug provider: copy the token
+  // it logs ("Enter this debug secret into the allow list...") into
+  // Firebase Console → App Check → Apps → Manage debug tokens.
+  await FirebaseAppCheck.instance.activate(
+    providerAndroid: kReleaseMode
+        ? const AndroidPlayIntegrityProvider()
+        : const AndroidDebugProvider(),
+    providerApple: kReleaseMode
+        ? const AppleAppAttestWithDeviceCheckFallbackProvider()
+        : const AppleDebugProvider(),
   );
 
   await Hive.initFlutter();

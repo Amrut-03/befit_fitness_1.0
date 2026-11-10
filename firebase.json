@@ -1,1 +1,15 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"fitness-app-9dac8","appId":"1:475383477382:android:ef1a7af416b44275c44d07","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fitness-app-9dac8","configurations":{"android":"1:475383477382:android:ef1a7af416b44275c44d07"}}}}}}
+{
+  "flutter": {"platforms":{"android":{"default":{"projectId":"fitness-app-9dac8","appId":"1:475383477382:android:0e3c563b237c312fc44d07","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fitness-app-9dac8","configurations":{"android":"1:475383477382:android:0e3c563b237c312fc44d07"}}}}},
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  }
+}
