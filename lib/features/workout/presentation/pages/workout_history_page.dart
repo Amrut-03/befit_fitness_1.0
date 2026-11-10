@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/models/history_detail_data.dart';
 import 'package:fitness_app/core/models/history_item.dart';
 import 'package:fitness_app/core/widgets/history_page.dart';
@@ -38,10 +39,12 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
 
             subtitle: history.exerciseLogs.isEmpty
                 ? history.bodyPart
-                : '${history.exerciseLogs.length} exercises · '
-                      '${history.totalSets} sets',
+                : context.l10n.workoutExercisesSets(
+                    history.exerciseLogs.length,
+                    history.totalSets,
+                  ),
 
-            value: "Completed",
+            value: context.l10n.workoutCompleted,
 
             date: history.completedAt,
 
@@ -50,7 +53,7 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
         }).toList();
 
         return HistoryListPage(
-          title: "Workout History",
+          title: context.l10n.historyWorkoutTitle,
 
           items: items,
 
@@ -71,14 +74,17 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
                           '${log.name} — ${log.summary}',
                       ],
                 stats: {
-                  "Target": history.bodyPart,
+                  context.l10n.workoutTarget: history.bodyPart,
                   if (history.durationSeconds != null)
-                    "Duration": formatDuration(
+                    context.l10n.workoutDuration: formatDuration(
                       Duration(seconds: history.durationSeconds!),
                     ),
-                  if (history.totalSets > 0) "Sets": '${history.totalSets}',
+                  if (history.totalSets > 0)
+                    context.l10n.workoutSets: '${history.totalSets}',
                   if (history.volumeKg > 0)
-                    "Volume": '${history.volumeKg.round()} kg',
+                    context.l10n.workoutVolume: context.l10n.unitKg(
+                      history.volumeKg.round().toString(),
+                    ),
                 },
               ),
             );

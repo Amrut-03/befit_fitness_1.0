@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
@@ -21,9 +22,9 @@ class DeleteAccountTile extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthAccountDeleted) {
           // The router redirects to /login when the session signs out.
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Your account has been deleted.')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(context.l10n.accountDeleted)));
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,
@@ -50,7 +51,9 @@ class DeleteAccountTile extends StatelessWidget {
                 SizedBox(width: 14.w),
                 Expanded(
                   child: Text(
-                    deleting ? 'Deleting account…' : 'Delete Account',
+                    deleting
+                        ? context.l10n.accountDeleting
+                        : context.l10n.accountDelete,
                     style: TextStyle(
                       color: _danger,
                       fontSize: 14.sp,
@@ -93,7 +96,7 @@ class DeleteAccountTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(24.r),
         ),
         title: Text(
-          'Delete account?',
+          context.l10n.accountDeleteTitle,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -101,10 +104,10 @@ class DeleteAccountTile extends StatelessWidget {
           ),
         ),
         content: Text(
-          'This permanently deletes your account and all your data: profile, '
-          'diet plans, food items, workout history, health metrics and '
-          'streak. This cannot be undone.'
-          '${isGuest ? '' : '\n\nYou will be asked to confirm with Google.'}',
+          isGuest
+              ? context.l10n.accountDeleteBody
+              : '${context.l10n.accountDeleteBody}\n\n'
+                    '${context.l10n.accountDeleteGoogleConfirm}',
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.7),
             fontSize: 14.sp,
@@ -114,7 +117,7 @@ class DeleteAccountTile extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
             child: Text(
-              'Cancel',
+              context.l10n.commonCancel,
               style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
             ),
           ),
@@ -126,9 +129,9 @@ class DeleteAccountTile extends StatelessWidget {
               ),
             ),
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text(
-              'Delete',
-              style: TextStyle(
+            child: Text(
+              context.l10n.commonDelete,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),

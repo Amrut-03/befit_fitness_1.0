@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,7 +65,7 @@ class _RestTimerPanelState extends State<RestTimerPanel> {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    'Rest',
+                    context.l10n.workoutRest,
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14.sp,
@@ -75,7 +76,7 @@ class _RestTimerPanelState extends State<RestTimerPanel> {
                     formatDuration(
                       remaining + const Duration(milliseconds: 999),
                     ),
-                    semanticsLabel: 'Rest remaining',
+                    semanticsLabel: context.l10n.workoutRestRemaining,
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 24.sp,
@@ -105,7 +106,7 @@ class _RestTimerPanelState extends State<RestTimerPanel> {
                   const Spacer(),
                   TextButton(
                     onPressed: cubit.skipRest,
-                    child: const Text('Skip'),
+                    child: Text(context.l10n.commonSkip),
                   ),
                 ],
               ),

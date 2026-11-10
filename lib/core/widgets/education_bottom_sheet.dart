@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,7 +77,7 @@ class EducationBottomSheet {
               SizedBox(height: 20.h),
 
               Text(
-                "Why it matters",
+                context.l10n.educationWhyItMatters,
 
                 style: TextStyle(
                   color: Colors.white,
@@ -98,7 +99,7 @@ class EducationBottomSheet {
               SizedBox(height: 20.h),
 
               Text(
-                "Tips",
+                context.l10n.educationTips,
 
                 style: TextStyle(
                   color: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -66,7 +67,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: const AppHeader(title: "Workouts"),
+      appBar: AppHeader(title: context.l10n.workoutsTitle),
       bottomNavigationBar: SafeArea(
         child: SessionBar(margin: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h)),
       ),
@@ -98,7 +99,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                         const LoadExercisesEvent(),
                       );
                     },
-                    child: const Text("Retry"),
+                    child: Text(context.l10n.commonRetry),
                   ),
                 ],
               ),
@@ -147,7 +148,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                           size: 22.sp,
                         ),
                       ),
-                      hintText: "Search workouts...",
+                      hintText: context.l10n.workoutSearch,
                       hintStyle: TextStyle(
                         color: Colors.white38,
                         fontSize: 14.sp,
@@ -173,7 +174,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                   child: state.exercises.isEmpty
                       ? Center(
                           child: Text(
-                            "No exercises found",
+                            context.l10n.workoutNoExercises,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 16.sp,
@@ -318,7 +319,9 @@ class AddToSessionButton extends StatelessWidget {
       (WorkoutSessionCubit c) => c.state.contains(exercise.id),
     );
     return IconButton(
-      tooltip: added ? 'In your workout' : 'Add to workout',
+      tooltip: added
+          ? context.l10n.workoutInYourWorkout
+          : context.l10n.workoutAddTo,
       onPressed: added
           ? null
           : () => context.read<WorkoutSessionCubit>().addExercise(exercise),

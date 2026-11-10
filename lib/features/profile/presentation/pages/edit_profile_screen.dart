@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/profile/presentation/widgets/profile_text_field.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -73,7 +75,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppHeader(title: "Edit Profile"),
+      appBar: AppHeader(title: context.l10n.profileEdit),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.w),
         child: Column(
@@ -96,34 +98,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             SizedBox(height: 30.h),
-            _label("Full Name"),
-            ProfileTextField(controller: _nameController, hint: "Enter name"),
+            _label(context.l10n.profileFullName),
+            ProfileTextField(
+              controller: _nameController,
+              hint: context.l10n.profileEnterName,
+            ),
             SizedBox(height: 18.h),
-            _label("Goal"),
+            _label(context.l10n.profileGoal),
             _dropdown(),
             SizedBox(height: 18.h),
-            _label("Weight (kg)"),
+            _label(context.l10n.profileWeightKg),
             ProfileTextField(
               controller: _weightController,
-              hint: "Enter weight",
+              hint: context.l10n.profileEnterWeight,
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 18.h),
-            _label("Height (cm)"),
+            _label(context.l10n.profileHeightCm),
             ProfileTextField(
               controller: _heightController,
-              hint: "Enter height",
+              hint: context.l10n.profileEnterHeight,
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 18.h),
-            _label("Age"),
+            _label(context.l10n.metricAge),
             ProfileTextField(
               controller: _ageController,
-              hint: "Enter age",
+              hint: context.l10n.profileEnterAge,
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 18.h),
-            _label("Gender"),
+            _label(context.l10n.profileGender),
             SizedBox(height: 10.h),
             Row(
               children: [
@@ -154,8 +159,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       double.tryParse(weightText) == null) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter valid weight'),
+                        SnackBar(
+                          content: Text(context.l10n.profileInvalidWeight),
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.red,
                         ),
@@ -168,8 +173,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       double.tryParse(heightText) == null) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter valid height'),
+                        SnackBar(
+                          content: Text(context.l10n.profileInvalidHeight),
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.red,
                         ),
@@ -183,8 +188,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       int.parse(ageText) <= 0) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter valid age'),
+                        SnackBar(
+                          content: Text(context.l10n.profileInvalidAge),
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.red,
                         ),
@@ -202,10 +207,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (weight <= 0 || height <= 0) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Weight and height must be positive values',
-                          ),
+                        SnackBar(
+                          content: Text(context.l10n.profilePositiveValues),
                           behavior: SnackBarBehavior.floating,
                           backgroundColor: Colors.red,
                         ),
@@ -261,7 +264,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   }
                 },
                 child: Text(
-                  "Save Profile",
+                  context.l10n.profileSave,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16.sp,
@@ -304,7 +307,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
           isExpanded: true,
           style: const TextStyle(color: Colors.white),
           items: goals.map((e) {
-            return DropdownMenuItem(value: e, child: Text(e));
+            return DropdownMenuItem(
+              value: e,
+              child: Text(
+                e == 'Fitness Goal'
+                    ? context.l10n.goalFitnessGoal
+                    : goalLabel(context.l10n, e),
+              ),
+            );
           }).toList(),
           onChanged: (value) {
             if (value == null) {
@@ -340,7 +350,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           child: Center(
             child: Text(
-              value,
+              genderLabel(context.l10n, value),
               style: TextStyle(
                 color: isSelected ? Colors.black : Colors.white,
                 fontWeight: FontWeight.bold,

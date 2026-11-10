@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/health_metrics/domain/entities/health_metrics_entity.dart';
@@ -48,7 +49,7 @@ class HealthMetricCard extends StatelessWidget {
               child: HealthMetricsChart(
                 chartType: type,
                 title: title,
-                subtitle: "Last 7 days",
+                subtitle: context.l10n.metricLast7Days,
                 metrics: state.metrics,
                 color: color,
                 onAddTap: () {

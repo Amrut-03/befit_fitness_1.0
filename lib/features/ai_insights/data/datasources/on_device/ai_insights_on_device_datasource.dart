@@ -15,10 +15,16 @@ class AIInsightsOnDeviceDatasource {
   AIInsightsOnDeviceDatasource(
     this.llm, {
     this.timeout = const Duration(seconds: 90),
+    this.language = _english,
   });
 
   final OnDeviceLlm llm;
   final Duration timeout;
+
+  /// Language the insight text is written in, e.g. "Hindi".
+  final String Function() language;
+
+  static String _english() => 'English';
 
   static const _system =
       'You are a professional fitness coach inside the BeFit app. Write '
@@ -43,7 +49,8 @@ class AIInsightsOnDeviceDatasource {
         'Write exactly 4 insights as a JSON array. Each item has "emoji" (one '
         'emoji), "title" (2-4 words) and "message" (one sentence, at most 20 '
         'words). Format:\n'
-        '[{"emoji":"🔥","title":"Short title","message":"One sentence."}]';
+        '[{"emoji":"🔥","title":"Short title","message":"One sentence."}]'
+        '${AIInsightsRemoteDatasource.languageInstruction(language())}';
 
     final tokens = await llm.generate(
       prompt,

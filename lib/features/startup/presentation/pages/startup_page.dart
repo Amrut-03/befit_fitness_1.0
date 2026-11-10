@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/session/session_notifier.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -40,15 +41,15 @@ class StartupPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 if (failed) ...[
-                  const Text(
-                    "Couldn't load your profile.\nCheck your connection.",
+                  Text(
+                    context.l10n.startupProfileFailed,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white70),
+                    style: const TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: session.retry,
-                    child: const Text('Retry'),
+                    child: Text(context.l10n.commonRetry),
                   ),
                 ] else
                   const AppLoader(),

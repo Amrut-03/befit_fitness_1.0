@@ -25,7 +25,8 @@ abstract final class SessionDefaults {
     return List.filled(sets, const SessionSet(reps: reps));
   }
 
-  /// "Last time: 3 × 10 @ 40 kg", or null if never logged with sets.
+  /// "3 × 10 @ 40 kg" from the last time [exerciseName] was logged with sets,
+  /// or null. The UI adds the localized "Last time:" label.
   static String? lastTimeSummary(
     String exerciseName,
     List<WorkoutHistoryEntity> history,
@@ -34,7 +35,7 @@ abstract final class SessionDefaults {
     for (final workout in history) {
       for (final log in workout.exerciseLogs) {
         if (log.name.trim().toLowerCase() == key && log.sets.isNotEmpty) {
-          return 'Last time: ${log.summary}';
+          return log.summary;
         }
       }
     }

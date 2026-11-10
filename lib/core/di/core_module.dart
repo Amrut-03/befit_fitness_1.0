@@ -6,6 +6,8 @@ import 'package:fitness_app/core/ai/gemma_on_device_llm.dart';
 import 'package:fitness_app/core/ai/on_device_llm.dart';
 import 'package:fitness_app/core/config/app_config.dart';
 import 'package:fitness_app/core/di/storage_module.dart';
+import 'package:fitness_app/core/l10n/locale_cubit.dart';
+import 'package:fitness_app/core/services/reminder_sync.dart';
 import 'package:fitness_app/core/health/health_platform_service.dart';
 import 'package:fitness_app/core/health/health_plugin_service.dart';
 import 'package:fitness_app/core/network/api_client.dart';
@@ -36,6 +38,15 @@ void registerCoreDependencies(GetIt sl) {
   sl.registerLazySingleton<HealthPlatformService>(
     () => HealthPluginService(
       sl<Box>(instanceName: StorageModule.healthPlatform),
+    ),
+  );
+
+  // App language (device-level). Reminders are re-scheduled on change so
+  // their text follows the new language.
+  sl.registerLazySingleton(
+    () => LocaleCubit(
+      sl<Box>(instanceName: StorageModule.appSettings),
+      onChanged: () => sl<ReminderSync>().reapply(),
     ),
   );
 

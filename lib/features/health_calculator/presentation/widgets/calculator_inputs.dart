@@ -38,11 +38,15 @@ class CalculatorDropdown extends StatelessWidget {
     required this.value,
     required this.items,
     required this.onChanged,
+    this.labelOf,
   });
 
   final String value;
   final List<String> items;
   final Function(String?) onChanged;
+
+  /// Display text for a stored value; defaults to the value itself.
+  final String Function(String)? labelOf;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +63,12 @@ class CalculatorDropdown extends StatelessWidget {
         underline: const SizedBox(),
         style: const TextStyle(color: Colors.white),
         items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(labelOf?.call(e) ?? e),
+              ),
+            )
             .toList(),
         onChanged: onChanged,
       ),

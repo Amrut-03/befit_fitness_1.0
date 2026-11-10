@@ -22,6 +22,10 @@ abstract final class StorageModule {
   /// user-scoped: store access belongs to the device.
   static const healthPlatform = 'health_platform_box';
 
+  /// Device-level app preferences (e.g. the chosen language). Not
+  /// user-scoped: the language stays when another account signs in.
+  static const appSettings = 'app_settings_box';
+
   /// Boxes that hold per-user data, cleared on logout and account deletion.
   static const userScoped = [
     diet,
@@ -33,7 +37,12 @@ abstract final class StorageModule {
     workoutSession,
   ];
 
-  static const _all = [...userScoped, notificationSettings, healthPlatform];
+  static const _all = [
+    ...userScoped,
+    notificationSettings,
+    healthPlatform,
+    appSettings,
+  ];
 
   static Future<void> register(GetIt sl) async {
     for (final name in _all) {

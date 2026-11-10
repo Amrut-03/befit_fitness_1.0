@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:fitness_app/core/observability/app_analytics.dart';
@@ -55,7 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthUnauthenticated());
       }
     } catch (e) {
-      emit(const AuthError('Google sign-in failed. Please try again.'));
+      emit(AuthError(AppLocale.l10n.authGoogleFailed));
     }
   }
 
@@ -75,7 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthUnauthenticated());
       }
     } catch (e) {
-      emit(const AuthError('Guest sign in failed'));
+      emit(AuthError(AppLocale.l10n.authGuestFailed));
     }
   }
 
@@ -88,7 +89,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await signOut();
       emit(const AuthUnauthenticated());
     } catch (e) {
-      emit(const AuthError('Logout failed'));
+      emit(AuthError(AppLocale.l10n.authLogoutFailed));
     }
   }
 
@@ -139,36 +140,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   static String linkErrorMessage(AccountLinkFailure reason) {
-    switch (reason) {
-      case AccountLinkFailure.alreadyInUse:
-        return 'That Google account already has a BeFit account. Choose a '
-            'different Google account to keep your guest progress.';
-      case AccountLinkFailure.network:
-        return 'No internet connection. Your progress is safe; please try '
-            'again.';
-      case AccountLinkFailure.notGuest:
-        return 'Your account is already linked to Google.';
-      case AccountLinkFailure.cancelled:
-      case AccountLinkFailure.unknown:
-        return 'Could not link your Google account. Please try again.';
-    }
+    final l10n = AppLocale.l10n;
+    return switch (reason) {
+      AccountLinkFailure.alreadyInUse => l10n.linkAlreadyInUse,
+      AccountLinkFailure.network => l10n.linkNetwork,
+      AccountLinkFailure.notGuest => l10n.linkNotGuest,
+      AccountLinkFailure.cancelled ||
+      AccountLinkFailure.unknown => l10n.linkFailed,
+    };
   }
 
   static String deletionErrorMessage(AccountDeletionFailure reason) {
-    switch (reason) {
-      case AccountDeletionFailure.cancelled:
-        return 'Account deletion cancelled.';
-      case AccountDeletionFailure.requiresRecentLogin:
-        return 'For your security, please log out, sign in again, and then '
-            'delete your account.';
-      case AccountDeletionFailure.wrongAccount:
-        return 'Please choose the Google account you signed in with.';
-      case AccountDeletionFailure.network:
-        return 'No internet connection. Nothing was deleted. Please try again.';
-      case AccountDeletionFailure.notSignedIn:
-        return 'You are not signed in.';
-      case AccountDeletionFailure.unknown:
-        return 'Could not delete your account. Please try again.';
-    }
+    final l10n = AppLocale.l10n;
+    return switch (reason) {
+      AccountDeletionFailure.cancelled => l10n.deleteCancelled,
+      AccountDeletionFailure.requiresRecentLogin => l10n.deleteRecentLogin,
+      AccountDeletionFailure.wrongAccount => l10n.deleteWrongAccount,
+      AccountDeletionFailure.network => l10n.deleteNetwork,
+      AccountDeletionFailure.notSignedIn => l10n.deleteNotSignedIn,
+      AccountDeletionFailure.unknown => l10n.deleteFailed,
+    };
   }
 }

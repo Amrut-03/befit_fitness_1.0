@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fitness_app/features/home/presentation/widgets/fitness_reading_item.dart';
@@ -36,7 +37,7 @@ class CalculatorReadingsWidget extends StatelessWidget {
             onTap: onClick,
             lottieAsset: 'assets/lotties/steps.json',
             value: _formatSteps(steps),
-            label: 'Steps',
+            label: context.l10n.statSteps,
             previousValue: previousSteps,
           ),
           Divider(
@@ -48,7 +49,7 @@ class CalculatorReadingsWidget extends StatelessWidget {
             onTap: onClick,
             lottieAsset: 'assets/lotties/flame.json',
             value: calories.toStringAsFixed(0),
-            label: 'Calories',
+            label: context.l10n.statCalories,
             bottomSpacing: 2.h,
             previousValue: previousCalories,
           ),
@@ -61,7 +62,7 @@ class CalculatorReadingsWidget extends StatelessWidget {
             onTap: onClick,
             lottieAsset: 'assets/lotties/heart.json',
             value: moveMin != null ? moveMin!.toString() : '0',
-            label: 'Move Min',
+            label: context.l10n.homeMoveMin,
             lottieHeight: 25.h,
             lottieWidth: 25.w,
             topSpacing: 4.h,

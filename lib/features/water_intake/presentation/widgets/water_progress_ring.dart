@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -24,7 +25,10 @@ class WaterProgressRing extends StatelessWidget {
     final size = 200.w;
 
     return Semantics(
-      label: 'Water today: ${formatWater(totalMl)} of ${formatWater(goalMl)}',
+      label: context.l10n.waterTodayLabel(
+        formatWater(totalMl),
+        formatWater(goalMl),
+      ),
       child: SizedBox.square(
         dimension: size,
         child: TweenAnimationBuilder<double>(
@@ -61,8 +65,8 @@ class WaterProgressRing extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Text(
                     reached
-                        ? 'Goal reached 🎉'
-                        : '${formatWater(goalMl - totalMl)} to go',
+                        ? context.l10n.waterGoalReached
+                        : context.l10n.waterToGo(formatWater(goalMl - totalMl)),
                     style: TextStyle(
                       color: reached ? AppColors.success : AppColors.water,
                       fontSize: 13.sp,

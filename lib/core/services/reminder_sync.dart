@@ -25,6 +25,16 @@ class ReminderSync {
     _onSessionChanged();
   }
 
+  /// Re-schedules the signed-in user's reminders, e.g. after the language
+  /// changes so their text follows it. Never asks for permission.
+  Future<void> reapply() async {
+    if (session.status != SessionStatus.ready) return;
+    try {
+      final settings = storage.read();
+      if (settings.anyEnabled) await scheduler.apply(settings);
+    } catch (_) {}
+  }
+
   Future<void> _onSessionChanged() async {
     final status = session.status;
     if (status == _last) return;

@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,16 +17,17 @@ class CoachMessageBubble extends StatelessWidget {
   /// The answer is still being generated.
   final bool streaming;
 
-  static String? sourceLabel(CoachSource? s) => switch (s) {
-    CoachSource.onDevice => 'On-device',
-    CoachSource.cloud => 'Cloud',
-    CoachSource.rule || null => null,
-  };
+  static String? sourceLabel(AppLocalizations l10n, CoachSource? s) =>
+      switch (s) {
+        CoachSource.onDevice => l10n.coachOnDevice,
+        CoachSource.cloud => l10n.coachCloud,
+        CoachSource.rule || null => null,
+      };
 
   @override
   Widget build(BuildContext context) {
     final user = message.isUser;
-    final label = sourceLabel(message.source);
+    final label = sourceLabel(context.l10n, message.source);
     return Align(
       alignment: user ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
@@ -53,7 +55,7 @@ class CoachMessageBubble extends StatelessWidget {
             children: [
               if (message.text.isEmpty && streaming)
                 Text(
-                  'Thinking…',
+                  context.l10n.coachThinking,
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 14.sp,

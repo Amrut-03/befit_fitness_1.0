@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,40 +29,44 @@ class ReportStatTiles extends StatelessWidget {
               width: tileWidth,
               icon: Icons.monitor_weight_outlined,
               color: AppColors.primary,
-              label: 'Weight',
+              label: context.l10n.statWeight,
               value: change != null
                   ? signedKg(change)
                   : (r.latestWeightKg != null ? kg(r.latestWeightKg!) : '—'),
-              caption: change != null ? 'vs last week' : 'latest',
+              caption: change != null
+                  ? context.l10n.reportVsLastWeek
+                  : context.l10n.reportLatest,
             ),
             _Tile(
               width: tileWidth,
               icon: Icons.pie_chart_outline,
               color: AppColors.accentPink,
-              label: 'Macros on target',
+              label: context.l10n.reportMacrosOnTarget,
               value: r.adherencePct == null
                   ? '—'
                   : '${r.adherencePct!.round()}%',
-              caption: 'logged ${r.loggedDays}/$days days',
+              caption: context.l10n.reportLoggedDays(r.loggedDays, days),
             ),
             _Tile(
               width: tileWidth,
               icon: Icons.fitness_center,
               color: AppColors.accentOrange,
-              label: 'Workouts',
+              label: context.l10n.reportWorkouts,
               value: '${r.workouts}',
               caption: r.workoutSets > 0
-                  ? '${r.workoutSets} sets'
-                        '${r.workoutMinutes > 0 ? ' · ${r.workoutMinutes} min' : ''}'
-                  : 'this week',
+                  ? context.l10n.reportSetsCount(r.workoutSets) +
+                        (r.workoutMinutes > 0
+                            ? ' · ${context.l10n.unitMinutes('${r.workoutMinutes}')}'
+                            : '')
+                  : context.l10n.reportThisWeekCaption,
             ),
             _Tile(
               width: tileWidth,
               icon: Icons.water_drop_outlined,
               color: AppColors.water,
-              label: 'Water goal',
+              label: context.l10n.reportWaterGoal,
               value: '${r.waterDaysMet}/$days',
-              caption: 'days met',
+              caption: context.l10n.reportDaysMet,
             ),
           ],
         );

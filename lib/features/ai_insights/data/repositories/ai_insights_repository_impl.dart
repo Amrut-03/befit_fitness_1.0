@@ -16,12 +16,16 @@ class AIInsightsRepositoryImpl implements AIInsightsRepository {
   final String? Function() currentUid;
   final DateTime Function() _now;
 
+  /// Current app language code; part of the cache key.
+  final String Function() languageCode;
+
   AIInsightsRepositoryImpl({
     required this.remoteDatasource,
     required this.localDatasource,
     this.onDeviceDatasource,
     required this.currentUid,
     DateTime Function()? now,
+    this.languageCode = _english,
   }) : _now = now ?? DateTime.now;
 
   @override
@@ -36,8 +40,9 @@ class AIInsightsRepositoryImpl implements AIInsightsRepository {
     if (uid == null) throw const UnauthenticatedException();
 
     final today = _now();
+    final lang = languageCode();
     if (!forceRefresh) {
-      final cached = localDatasource.read(uid: uid, day: today);
+      final cached = localDatasource.read(uid: uid, day: today, language: lang);
       if (cached != null && cached.isNotEmpty) return cached;
     }
 
@@ -61,7 +66,14 @@ class AIInsightsRepositoryImpl implements AIInsightsRepository {
       streak: streak,
       bmi: bmi,
     );
-    await localDatasource.write(uid: uid, day: today, insights: insights);
+    await localDatasource.write(
+      uid: uid,
+      day: today,
+      insights: insights,
+      language: lang,
+    );
     return insights;
   }
+
+  static String _english() => 'en';
 }

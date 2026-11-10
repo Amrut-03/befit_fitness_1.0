@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'dart:async';
 
@@ -98,11 +99,14 @@ class DietBloc extends Bloc<DietEvent, DietState> {
         },
 
         onError: (_) =>
-            add(const DietStreamFailed('Failed to load diet plans')),
+            add(DietStreamFailed(AppLocale.l10n.dietLoadPlansFailed)),
       );
     } catch (e) {
       emit(
-        state.copyWith(isLoading: false, error: 'Failed to load diet plans'),
+        state.copyWith(
+          isLoading: false,
+          error: AppLocale.l10n.dietLoadPlansFailed,
+        ),
       );
     }
   }
@@ -119,7 +123,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
         add(DietHistoryUpdated(history));
       },
       onError: (_) =>
-          add(const DietStreamFailed('Failed to load diet history')),
+          add(DietStreamFailed(AppLocale.l10n.dietLoadHistoryFailed)),
     );
   }
 
@@ -153,7 +157,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await saveDietPlan(event.plan);
     } catch (e) {
-      emit(state.copyWith(error: "Failed to save plan"));
+      emit(state.copyWith(error: AppLocale.l10n.dietSaveFailed));
     }
   }
 
@@ -166,7 +170,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await setActiveDietPlan(event.planId);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to update active plan'));
+      emit(state.copyWith(error: AppLocale.l10n.dietActivateFailed));
     }
   }
 
@@ -179,7 +183,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await deleteDietPlan(event.id);
     } catch (e) {
-      emit(state.copyWith(error: "Failed to delete plan"));
+      emit(state.copyWith(error: AppLocale.l10n.dietDeleteFailed));
     }
   }
 
@@ -195,7 +199,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
       final planIndex = state.plans.indexWhere((e) => e.id == event.planId);
 
       if (planIndex == -1) {
-        emit(state.copyWith(error: "Failed to update meals"));
+        emit(state.copyWith(error: AppLocale.l10n.dietUpdateMealsFailed));
         return;
       }
 
@@ -269,7 +273,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
         }
       }
     } catch (e) {
-      emit(state.copyWith(error: "Failed to update meals"));
+      emit(state.copyWith(error: AppLocale.l10n.dietUpdateMealsFailed));
     }
   }
 

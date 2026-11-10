@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -39,10 +40,8 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
     final bloc = context.read<WaterIntakeBloc>();
     final ml = await showWaterAmountSheet(
       context,
-      title: 'Daily water goal',
-      hint:
-          'Recommended for your weight: '
-          '${formatWater(state.recommendedGoalMl)}',
+      title: context.l10n.waterDailyGoal,
+      hint: context.l10n.waterRecommended(formatWater(state.recommendedGoalMl)),
       initialMl: state.goalMl,
       min: WaterGoal.minMl,
       max: WaterGoal.maxMl,
@@ -54,10 +53,10 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
     final bloc = context.read<WaterIntakeBloc>();
     final ml = await showWaterAmountSheet(
       context,
-      title: 'Add water',
+      title: context.l10n.waterAdd,
       min: 1,
       max: 3000,
-      confirmLabel: 'Add',
+      confirmLabel: context.l10n.commonAdd,
     );
     if (ml != null) bloc.add(WaterAdded(ml));
   }
@@ -73,10 +72,10 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppHeader(
-            title: 'Water',
+            title: context.l10n.waterTitle,
             actions: [
               IconButton(
-                tooltip: 'Edit goal',
+                tooltip: context.l10n.waterEditGoal,
                 icon: const Icon(Icons.flag_outlined),
                 onPressed: state.status == WaterStatus.ready
                     ? () => _editGoal(state)
@@ -119,14 +118,13 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
                       Icons.notifications_active_outlined,
                       color: AppColors.water,
                     ),
-                    title: const Text(
-                      'Hydration reminders',
-                      style: TextStyle(color: AppColors.textPrimary),
+                    title: Text(
+                      context.l10n.waterReminders,
+                      style: const TextStyle(color: AppColors.textPrimary),
                     ),
-                    subtitle: const Text(
-                      'Every 2 hours, 10 AM to 6 PM. Paused for the day once '
-                      'you hit your goal.',
-                      style: TextStyle(color: AppColors.textMuted),
+                    subtitle: Text(
+                      context.l10n.waterRemindersHint,
+                      style: const TextStyle(color: AppColors.textMuted),
                     ),
                     trailing: const Icon(
                       Icons.chevron_right,
@@ -168,7 +166,7 @@ class _QuickAdd extends StatelessWidget {
           ),
         ActionChip(
           avatar: const Icon(Icons.edit, size: 18, color: AppColors.water),
-          label: const Text('Custom'),
+          label: Text(context.l10n.waterCustom),
           labelStyle: const TextStyle(color: AppColors.textPrimary),
           backgroundColor: AppColors.surfaceHigh,
           side: BorderSide(color: AppColors.water.withValues(alpha: 0.4)),
@@ -192,7 +190,7 @@ class _TodayLog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Today',
+          context.l10n.commonToday,
           style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 16.sp,
@@ -203,9 +201,9 @@ class _TodayLog extends StatelessWidget {
         if (entries.isEmpty)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.h),
-            child: const Text(
-              'Nothing logged yet. Tap an amount above.',
-              style: TextStyle(color: AppColors.textMuted),
+            child: Text(
+              context.l10n.waterNothingLogged,
+              style: const TextStyle(color: AppColors.textMuted),
             ),
           )
         else
@@ -239,7 +237,7 @@ class _TodayLog extends StatelessWidget {
             ),
         if (entries.isNotEmpty)
           Text(
-            'Swipe left to remove an entry.',
+            context.l10n.waterSwipeHint,
             style: TextStyle(color: AppColors.textMuted, fontSize: 11.sp),
           ),
       ],
@@ -258,11 +256,11 @@ class _Failure extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Couldn't load your water log.",
-            style: TextStyle(color: AppColors.textPrimary),
+          Text(
+            context.l10n.waterLoadFailed,
+            style: const TextStyle(color: AppColors.textPrimary),
           ),
-          TextButton(onPressed: onRetry, child: const Text('Retry')),
+          TextButton(onPressed: onRetry, child: Text(context.l10n.commonRetry)),
         ],
       ),
     );

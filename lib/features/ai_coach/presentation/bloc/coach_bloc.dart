@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
@@ -60,11 +61,9 @@ class CoachBloc extends Bloc<CoachEvent, CoachState> {
   final AskCoach _ask;
   Completer<void>? _stopSignal;
 
-  static const offlineMessage =
-      "You're offline. Download the on-device model to chat without internet.";
-  static const errorMessage = "Couldn't reach the coach right now. Try again.";
-  static const emptyMessage =
-      "I couldn't come up with an answer. Try rephrasing your question.";
+  static String get offlineMessage => AppLocale.l10n.coachOffline;
+  static String get errorMessage => AppLocale.l10n.coachError;
+  static String get emptyMessage => AppLocale.l10n.coachEmpty;
 
   void _stop() {
     final s = _stopSignal;
@@ -115,7 +114,12 @@ class CoachBloc extends Bloc<CoachEvent, CoachState> {
       if (text.isNotEmpty) {
         emit(withAnswer(text).copyWith(generating: false));
       } else if (stop.isCompleted) {
-        emit(withAnswer('Stopped.', failed: true).copyWith(generating: false));
+        emit(
+          withAnswer(
+            AppLocale.l10n.coachStopped,
+            failed: true,
+          ).copyWith(generating: false),
+        );
       } else {
         emit(
           withAnswer(emptyMessage, failed: true).copyWith(generating: false),

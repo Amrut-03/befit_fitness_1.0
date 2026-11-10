@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_bloc.dart';
@@ -109,7 +110,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 ),
                 SizedBox(height: 28.h),
                 Text(
-                  "Camera Permission Required",
+                  context.l10n.scanCameraTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -119,7 +120,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  "Please allow camera access to scan food barcodes.",
+                  context.l10n.scanCameraBody,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white60,
@@ -140,7 +141,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                       ),
                     ),
                     child: Text(
-                      "Grant Permission",
+                      context.l10n.scanGrant,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,
@@ -153,7 +154,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 TextButton(
                   onPressed: () => context.pop(),
                   child: Text(
-                    "Go Back",
+                    context.l10n.scanGoBack,
                     style: TextStyle(color: Colors.white54, fontSize: 14.sp),
                   ),
                 ),
@@ -278,7 +279,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Scan Food Barcode",
+                      context.l10n.scanTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -288,7 +289,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                     ),
                     SizedBox(height: 10.h),
                     Text(
-                      "Align barcode inside the frame",
+                      context.l10n.scanAlign,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white70, fontSize: 14.sp),
                     ),

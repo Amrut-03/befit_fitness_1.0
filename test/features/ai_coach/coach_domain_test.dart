@@ -1,8 +1,21 @@
 import 'package:fitness_app/features/ai_coach/domain/entities/coach_context.dart';
+import 'package:fitness_app/features/ai_coach/domain/entities/coach_delta.dart';
 import 'package:fitness_app/features/ai_coach/domain/entities/coach_message.dart';
 import 'package:fitness_app/features/ai_coach/domain/services/coach_prompt_builder.dart';
+import 'package:fitness_app/features/ai_coach/domain/repositories/coach_repository.dart';
 import 'package:fitness_app/features/ai_coach/domain/services/coach_safety.dart';
+import 'package:fitness_app/features/ai_coach/domain/usecases/ask_coach.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+class _Repo implements CoachRepository {
+  final prompts = <String>[];
+
+  @override
+  Stream<CoachDelta> reply(String prompt) {
+    prompts.add(prompt);
+    return Stream.value(const CoachDelta('ok', CoachSource.cloud));
+  }
+}
 
 void main() {
   const full = CoachContext(
@@ -105,6 +118,57 @@ void main() {
         'User question: Hi',
       );
     });
+
+    test('asks for a reply in the app language, except English', () {
+      expect(
+        builder.build(
+          question: 'Hi',
+          context: const CoachContext(),
+          language: 'Marathi',
+        ),
+        startsWith('User question: Hi\n\nReply in Marathi'),
+      );
+      expect(
+        builder.build(
+          question: 'Hi',
+          context: const CoachContext(),
+          language: 'English',
+        ),
+        'User question: Hi',
+      );
+    });
+  });
+
+  group('AskCoach.localized', () {
+    test('passes the language into the prompt', () async {
+      final repo = _Repo();
+      final ask = AskCoach.localized(
+        repo,
+        language: () => 'Hindi',
+        cannedText: (_) => 'canned',
+      );
+      await ask(
+        question: 'Protein?',
+        context: const CoachContext(),
+      ).drain<void>();
+      expect(repo.prompts.single, contains('Reply in Hindi'));
+    });
+
+    test('safety replies come from cannedText, not the model', () async {
+      final repo = _Repo();
+      final ask = AskCoach.localized(
+        repo,
+        language: () => 'Hindi',
+        cannedText: (k) => 'canned:${k.name}',
+      );
+      final d = await ask(
+        question: 'मुझे सीने में दर्द है',
+        context: const CoachContext(),
+      ).single;
+      expect(d.text, 'canned:emergency');
+      expect(d.source, CoachSource.rule);
+      expect(repo.prompts, isEmpty);
+    });
   });
 
   group('CoachSafety', () {
@@ -117,6 +181,16 @@ void main() {
         CoachSafety.cannedReply('I fainted at the gym'),
         CoachSafety.emergencyReply,
       );
+    });
+
+    test('Hindi and Marathi emergencies are caught too', () {
+      for (final q in [
+        'दौड़ने के बाद सीने में दर्द हो रहा है',
+        'व्यायामानंतर छातीत दुखत आहे',
+        'जिम में बेहोश हो गया',
+      ]) {
+        expect(CoachSafety.classify(q), CannedReply.emergency, reason: q);
+      }
     });
 
     test('professional topics are referred', () {

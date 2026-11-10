@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
@@ -87,7 +88,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                 ),
                 SizedBox(height: 28.h),
                 Text(
-                  "Instructions",
+                  context.l10n.workoutInstructions,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.sp,
@@ -97,7 +98,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                 SizedBox(height: 16.h),
                 if (exercise.instructions.isEmpty)
                   Text(
-                    "No instructions available",
+                    context.l10n.workoutNoInstructions,
                     style: TextStyle(color: Colors.white60, fontSize: 14.sp),
                   ),
 
@@ -191,7 +192,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                           ),
 
                           content: Text(
-                            "Workout Completed 🔥",
+                            context.l10n.workoutCompletedToast,
 
                             style: TextStyle(
                               color: Colors.black,
@@ -220,7 +221,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                         SizedBox(width: 10.w),
 
                         Text(
-                          "Log as done",
+                          context.l10n.workoutLogAsDone,
 
                           style: TextStyle(
                             color: Colors.black,
@@ -303,7 +304,9 @@ class _AddToSessionAction extends StatelessWidget {
           await router.push(Routes.workoutSession);
         },
         icon: Icon(added ? Icons.play_arrow_rounded : Icons.add),
-        label: Text(added ? 'Open workout' : 'Add to workout & start'),
+        label: Text(
+          added ? context.l10n.workoutOpen : context.l10n.workoutAddAndStart,
+        ),
       ),
     );
   }

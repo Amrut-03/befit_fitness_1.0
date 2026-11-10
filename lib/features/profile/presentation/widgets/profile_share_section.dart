@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:io';
 
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -92,7 +93,7 @@ class _ProfileShareSectionState extends State<ProfileShareSection> {
 
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Image saved to gallery ✅")),
+                    SnackBar(content: Text(context.l10n.shareSavedToGallery)),
                   );
                 }
               } catch (e) {
@@ -107,7 +108,7 @@ class _ProfileShareSectionState extends State<ProfileShareSection> {
             },
             icon: Icon(Icons.download, color: AppColors.primary, size: 22.sp),
             label: Text(
-              "Save to Gallery",
+              context.l10n.shareSaveToGallery,
               style: TextStyle(
                 color: AppColors.primary,
                 fontSize: 15.sp,
@@ -128,6 +129,7 @@ class _ProfileShareSectionState extends State<ProfileShareSection> {
               ),
             ),
             onPressed: () async {
+              final shareText = context.l10n.shareText;
               try {
                 final image = await screenshotController.capture(
                   delay: const Duration(milliseconds: 10),
@@ -150,7 +152,7 @@ class _ProfileShareSectionState extends State<ProfileShareSection> {
                 await SharePlus.instance.share(
                   ShareParams(
                     files: [XFile(imagePath.path)],
-                    text: "Check out my fitness progress on BeFit 🔥",
+                    text: shareText,
                   ),
                 );
               } catch (e) {
@@ -165,7 +167,7 @@ class _ProfileShareSectionState extends State<ProfileShareSection> {
             },
             icon: Icon(Icons.share, color: Colors.black, size: 22.sp),
             label: Text(
-              "Share Progress",
+              context.l10n.profileShareProgress,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16.sp,

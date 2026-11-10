@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
@@ -36,27 +37,27 @@ class FoodListView extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  title: const Text(
-                    "Delete Food Item",
-                    style: TextStyle(color: Colors.white),
+                  title: Text(
+                    context.l10n.foodDeleteTitle,
+                    style: const TextStyle(color: Colors.white),
                   ),
                   content: Text(
-                    'Are you sure you want to delete "${item.name}"?',
+                    context.l10n.foodDeleteBody(item.name),
                     style: const TextStyle(color: Colors.white70),
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(dialogContext, false),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.white60),
+                      child: Text(
+                        context.l10n.commonCancel,
+                        style: const TextStyle(color: Colors.white60),
                       ),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(dialogContext, true),
-                      child: const Text(
-                        "Delete",
-                        style: TextStyle(color: Colors.redAccent),
+                      child: Text(
+                        context.l10n.commonDelete,
+                        style: const TextStyle(color: Colors.redAccent),
                       ),
                     ),
                   ],

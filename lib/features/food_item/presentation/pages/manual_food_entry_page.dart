@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/l10n/profile_labels.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/food_item/presentation/widgets/food_form_fields.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -92,9 +94,9 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
       context.read<FoodItemsBloc>().add(SaveFoodItems(food));
     }
     context.pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Food item saved successfully')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.foodSaved)));
   }
 
   @override
@@ -102,7 +104,9 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppHeader(
-        title: widget.item != null ? 'Edit Food Item' : 'Manual Food Entry',
+        title: widget.item != null
+            ? context.l10n.foodEditTitle
+            : context.l10n.foodManualTitle,
       ),
       body: SafeArea(
         child: Form(
@@ -143,7 +147,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                       ),
                       SizedBox(height: 14.h),
                       Text(
-                        'Create Custom Food',
+                        context.l10n.foodCreateCustom,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20.sp,
@@ -152,7 +156,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        'Add your own food items with nutrition values',
+                        context.l10n.foodCreateCustomHint,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white60,
@@ -163,16 +167,16 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                   ),
                 ),
                 SizedBox(height: 28.h),
-                _sectionTitle('Food Information'),
+                _sectionTitle(context.l10n.foodInfoSection),
                 SizedBox(height: 14.h),
                 FoodTextField(
                   controller: _nameController,
-                  label: 'Food Name',
-                  hint: 'Enter food name',
+                  label: context.l10n.foodName,
+                  hint: context.l10n.foodNameHint,
                   icon: Icons.fastfood_rounded,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Food name is required';
+                      return context.l10n.foodNameRequired;
                     }
                     return null;
                   },
@@ -180,12 +184,12 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                 SizedBox(height: 16.h),
                 FoodTextField(
                   controller: _brandController,
-                  label: 'Brand (Optional)',
-                  hint: 'Ex. Homemade / Amul / Nestle',
+                  label: context.l10n.foodBrand,
+                  hint: context.l10n.foodBrandHint,
                   icon: Icons.business_rounded,
                 ),
                 SizedBox(height: 28.h),
-                _sectionTitle('Serving Information'),
+                _sectionTitle(context.l10n.foodServingSection),
                 SizedBox(height: 16.h),
                 Row(
                   children: [
@@ -193,7 +197,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                       flex: 2,
                       child: FoodTextField(
                         controller: _quantityController,
-                        label: 'Quantity',
+                        label: context.l10n.foodQuantity,
                         hint: '100',
                         icon: Icons.scale_rounded,
                         validator: (value) {
@@ -204,7 +208,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                           final parsed = double.tryParse(value);
 
                           if (parsed == null || parsed <= 0) {
-                            return 'Enter a positive number';
+                            return context.l10n.foodPositiveNumber;
                           }
 
                           return null;
@@ -217,7 +221,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Unit',
+                            context.l10n.foodUnit,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 13.sp,
@@ -240,7 +244,9 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                                   (unit) {
                                     return DropdownMenuItem(
                                       value: unit,
-                                      child: Text(unit),
+                                      child: Text(
+                                        foodUnitLabel(context.l10n, unit),
+                                      ),
                                     );
                                   },
                                 ).toList(),
@@ -258,14 +264,14 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                   ],
                 ),
                 SizedBox(height: 16.h),
-                _sectionTitle('Nutrition Values'),
+                _sectionTitle(context.l10n.foodNutritionSection),
                 SizedBox(height: 16.h),
                 Row(
                   children: [
                     Expanded(
                       child: MacroInputField(
                         controller: _caloriesController,
-                        label: 'Calories',
+                        label: context.l10n.statCalories,
                         suffix: 'kcal',
                         color: Colors.orangeAccent,
                       ),
@@ -274,7 +280,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                     Expanded(
                       child: MacroInputField(
                         controller: _proteinController,
-                        label: 'Protein',
+                        label: context.l10n.macroProtein,
                         suffix: 'g',
                         color: Colors.greenAccent,
                       ),
@@ -287,7 +293,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                     Expanded(
                       child: MacroInputField(
                         controller: _carbsController,
-                        label: 'Carbs',
+                        label: context.l10n.macroCarbs,
                         suffix: 'g',
                         color: Colors.blueAccent,
                       ),
@@ -296,7 +302,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                     Expanded(
                       child: MacroInputField(
                         controller: _fatController,
-                        label: 'Fat',
+                        label: context.l10n.macroFat,
                         suffix: 'g',
                         color: Colors.pinkAccent,
                       ),
@@ -317,8 +323,8 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                     ),
                     child: Text(
                       widget.item != null
-                          ? 'Update Food Item'
-                          : 'Save Food Item',
+                          ? context.l10n.foodUpdate
+                          : context.l10n.foodSave,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,

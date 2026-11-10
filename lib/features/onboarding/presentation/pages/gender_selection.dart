@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
@@ -68,7 +70,7 @@ class GenderSelectionPage extends StatelessWidget {
 
                       /// TITLE
                       Text(
-                        "Select Gender",
+                        context.l10n.onbGenderTitle,
 
                         textAlign: TextAlign.center,
 
@@ -85,7 +87,7 @@ class GenderSelectionPage extends StatelessWidget {
 
                       /// SUBTITLE
                       Text(
-                        "Help us personalize your experience",
+                        context.l10n.onbGenderSubtitle,
 
                         textAlign: TextAlign.center,
 
@@ -105,7 +107,10 @@ class GenderSelectionPage extends StatelessWidget {
                               state.selectedGender == gender["title"];
 
                           return OnboardingOptionCard(
-                            title: gender["title"].toString(),
+                            title: genderLabel(
+                              context.l10n,
+                              gender["title"].toString(),
+                            ),
 
                             emoji: gender["emoji"].toString(),
 
@@ -158,7 +163,7 @@ class GenderSelectionPage extends StatelessWidget {
                                 },
 
                           child: Text(
-                            "Continue",
+                            context.l10n.commonContinue,
 
                             style: TextStyle(
                               color: state.selectedGender != null

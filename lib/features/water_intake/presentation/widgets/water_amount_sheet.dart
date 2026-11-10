@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +14,7 @@ Future<int?> showWaterAmountSheet(
   required int max,
   int? initialMl,
   String? hint,
-  String confirmLabel = 'Save',
+  String? confirmLabel,
 }) {
   return showModalBottomSheet<int>(
     context: context,
@@ -48,7 +49,7 @@ class _WaterAmountSheet extends StatefulWidget {
   final int max;
   final int? initialMl;
   final String? hint;
-  final String confirmLabel;
+  final String? confirmLabel;
 
   @override
   State<_WaterAmountSheet> createState() => _WaterAmountSheetState();
@@ -70,7 +71,7 @@ class _WaterAmountSheetState extends State<_WaterAmountSheet> {
     final ml = int.tryParse(_controller.text.trim());
     if (ml == null || ml < widget.min || ml > widget.max) {
       setState(
-        () => _error = 'Enter between ${widget.min} and ${widget.max} ml',
+        () => _error = context.l10n.waterEnterBetween(widget.min, widget.max),
       );
       return;
     }
@@ -114,7 +115,7 @@ class _WaterAmountSheetState extends State<_WaterAmountSheet> {
             style: const TextStyle(color: AppColors.textPrimary),
             onSubmitted: (_) => _submit(),
             decoration: InputDecoration(
-              hintText: 'Amount',
+              hintText: context.l10n.waterAmount,
               hintStyle: const TextStyle(color: AppColors.textMuted),
               suffixText: 'ml',
               suffixStyle: const TextStyle(color: AppColors.water),
@@ -140,7 +141,7 @@ class _WaterAmountSheetState extends State<_WaterAmountSheet> {
                 ),
               ),
               onPressed: _submit,
-              child: Text(widget.confirmLabel),
+              child: Text(widget.confirmLabel ?? context.l10n.commonSave),
             ),
           ),
         ],

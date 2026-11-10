@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/features/health/presentation/bloc/health_bloc.dart';
@@ -19,11 +20,11 @@ import '../widgets/on_device_model_card.dart';
 class CoachPage extends StatefulWidget {
   const CoachPage({super.key});
 
-  static const suggestions = [
-    'How am I doing this week?',
-    'How can I hit my protein goal?',
-    'Plan a 30-minute workout for today',
-    'What should I eat after a workout?',
+  static List<String> suggestions(AppLocalizations l10n) => [
+    l10n.coachSuggest1,
+    l10n.coachSuggest2,
+    l10n.coachSuggest3,
+    l10n.coachSuggest4,
   ];
 
   @override
@@ -93,18 +94,16 @@ class _CoachPageState extends State<CoachPage> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Remove on-device model?'),
-        content: const Text(
-          'This frees up storage. The coach will use cloud AI until you download the model again.',
-        ),
+        title: Text(context.l10n.coachRemoveModelTitle),
+        content: Text(context.l10n.coachRemoveModelBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Remove'),
+            child: Text(context.l10n.commonRemove),
           ),
         ],
       ),
@@ -120,21 +119,24 @@ class _CoachPageState extends State<CoachPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppHeader(
-        title: 'AI Coach',
+        title: context.l10n.coachTitle,
         actions: [
           PopupMenuButton<String>(
-            tooltip: 'More',
+            tooltip: context.l10n.coachMore,
             onSelected: (v) => switch (v) {
               'clear' => context.read<CoachBloc>().add(const CoachCleared()),
               'model' => _confirmDeleteModel(),
               _ => null,
             },
             itemBuilder: (_) => [
-              const PopupMenuItem(value: 'clear', child: Text('Clear chat')),
+              PopupMenuItem(
+                value: 'clear',
+                child: Text(context.l10n.coachClearChat),
+              ),
               if (modelReady)
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'model',
-                  child: Text('Remove on-device model'),
+                  child: Text(context.l10n.coachRemoveModel),
                 ),
             ],
           ),
@@ -187,7 +189,7 @@ class _Welcome extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Ask me anything about training, food or recovery.',
+            context.l10n.coachIntro,
             style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 16.sp,
@@ -196,7 +198,7 @@ class _Welcome extends StatelessWidget {
           ),
           SizedBox(height: 6.h),
           Text(
-            'I use your profile, today\'s activity and this week\'s report to tailor answers. General guidance, not medical advice.',
+            context.l10n.coachIntroHint,
             style: TextStyle(color: AppColors.textMuted, fontSize: 12.sp),
           ),
           SizedBox(height: 16.h),
@@ -204,7 +206,7 @@ class _Welcome extends StatelessWidget {
             spacing: 8.w,
             runSpacing: 8.h,
             children: [
-              for (final s in CoachPage.suggestions)
+              for (final s in CoachPage.suggestions(context.l10n))
                 ActionChip(
                   label: Text(s),
                   onPressed: () => onPick(s),
@@ -254,7 +256,7 @@ class _Composer extends StatelessWidget {
               onSubmitted: (_) => generating ? null : onSend(),
               style: TextStyle(color: AppColors.textPrimary, fontSize: 14.sp),
               decoration: InputDecoration(
-                hintText: 'Ask your coach…',
+                hintText: context.l10n.coachAskHint,
                 counterText: '',
                 isDense: true,
                 filled: true,
@@ -273,14 +275,14 @@ class _Composer extends StatelessWidget {
           SizedBox(width: 4.w),
           generating
               ? IconButton(
-                  tooltip: 'Stop',
+                  tooltip: context.l10n.coachStop,
                   onPressed: () =>
                       context.read<CoachBloc>().add(const CoachStopRequested()),
                   icon: const Icon(Icons.stop_circle_outlined),
                   color: AppColors.accentPink,
                 )
               : IconButton(
-                  tooltip: 'Send',
+                  tooltip: context.l10n.coachSend,
                   onPressed: onSend,
                   icon: const Icon(Icons.send_rounded),
                   color: AppColors.primary,

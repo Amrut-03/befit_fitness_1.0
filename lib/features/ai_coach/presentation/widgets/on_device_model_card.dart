@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/ai/on_device_llm.dart';
 import 'package:fitness_app/core/config/app_config.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -20,7 +21,7 @@ class OnDeviceModelCard extends StatelessWidget {
         if (state.downloading) {
           return _Frame(
             icon: Icons.downloading_rounded,
-            title: 'Downloading Gemma… ${state.progress}%',
+            title: context.l10n.coachDownloading(state.progress),
             body: Padding(
               padding: EdgeInsets.only(top: 8.h),
               child: ClipRRect(
@@ -35,17 +36,17 @@ class OnDeviceModelCard extends StatelessWidget {
             ),
             action: TextButton(
               onPressed: cubit.cancel,
-              child: const Text('Cancel'),
+              child: Text(context.l10n.commonCancel),
             ),
           );
         }
         return switch (state.status) {
           OnDeviceModelStatus.notDownloaded => _Frame(
             icon: Icons.offline_bolt_outlined,
-            title: 'Run the coach offline',
+            title: context.l10n.coachRunOffline,
             body: Text(
               state.error ??
-                  'Download Gemma once (${AppConfig.onDeviceModelSize}, Wi-Fi recommended). Answers are then generated on your phone, and your data never leaves it.',
+                  context.l10n.coachDownloadHint(AppConfig.onDeviceModelSize),
               style: TextStyle(
                 color: state.error != null
                     ? AppColors.error
@@ -56,16 +57,18 @@ class OnDeviceModelCard extends StatelessWidget {
             action: TextButton(
               onPressed: cubit.download,
               child: Text(
-                state.error != null ? 'Retry' : 'Download',
+                state.error != null
+                    ? context.l10n.commonRetry
+                    : context.l10n.coachDownload,
                 style: const TextStyle(color: AppColors.primary),
               ),
             ),
           ),
           OnDeviceModelStatus.unsupported => _Frame(
             icon: Icons.cloud_outlined,
-            title: 'Using cloud AI',
+            title: context.l10n.coachUsingCloud,
             body: Text(
-              'This phone doesn\'t have enough memory for the on-device model, so answers come from Gemini over the internet.',
+              context.l10n.coachLowMemory,
               style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
             ),
           ),

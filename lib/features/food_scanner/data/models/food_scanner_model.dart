@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/utils/json_read.dart';
 import 'package:fitness_app/features/food_scanner/domain/entities/scanned_food_entity.dart';
 
@@ -45,7 +46,7 @@ class FoodItemModel extends FoodItemEntity {
           nonEmpty(product['product_name']) ??
           nonEmpty(product['product_name_en']) ??
           nonEmpty(product['generic_name']) ??
-          'Unknown Product',
+          AppLocale.l10n.scanUnknownProduct,
 
       brand: product['brands'],
 

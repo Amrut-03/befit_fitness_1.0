@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitness_app/core/ai/on_device_llm.dart';
 import 'package:flutter/foundation.dart';
@@ -74,7 +75,7 @@ class OnDeviceModelCubit extends Cubit<OnDeviceModelState> {
           downloading: false,
           error: status == OnDeviceModelStatus.ready
               ? null
-              : 'The model downloaded but couldn\'t be set up.',
+              : AppLocale.l10n.coachModelSetupFailed,
         ),
       );
     } catch (e) {
@@ -85,9 +86,7 @@ class OnDeviceModelCubit extends Cubit<OnDeviceModelState> {
         state.copyWith(
           downloading: false,
           progress: 0,
-          error: cancelled
-              ? null
-              : 'Download failed. Check your connection and try again.',
+          error: cancelled ? null : AppLocale.l10n.coachDownloadFailed,
           clearError: cancelled,
         ),
       );

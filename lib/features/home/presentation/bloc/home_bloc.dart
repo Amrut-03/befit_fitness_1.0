@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
 import 'package:fitness_app/features/profile/domain/usecases/get_profile.dart';
@@ -30,7 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (_lastLoaded != null) {
         emit(_lastLoaded!);
       } else {
-        emit(const HomeError(message: 'Failed to load dashboard'));
+        emit(HomeError(message: AppLocale.l10n.homeLoadFailed));
       }
     }
   }

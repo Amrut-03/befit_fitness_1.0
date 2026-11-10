@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/features/health_metrics/domain/entities/health_metrics_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,12 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
         borderRadius: BorderRadius.circular(20.r),
       ),
 
-      child: Row(children: [_toggle("W", true), _toggle("M", false)]),
+      child: Row(
+        children: [
+          _toggle(context.l10n.metricWeekShort, true),
+          _toggle(context.l10n.metricMonthShort, false),
+        ],
+      ),
     );
   }
 
@@ -402,7 +408,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                 SizedBox(height: 10.h),
 
                 Text(
-                  "No data yet",
+                  context.l10n.metricNoData,
 
                   style: TextStyle(color: Colors.white, fontSize: 14.sp),
                 ),
@@ -410,7 +416,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                 SizedBox(height: 4.h),
 
                 Text(
-                  "Add data manually",
+                  context.l10n.metricAddManually,
 
                   textAlign: TextAlign.center,
 
@@ -427,7 +433,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                   ElevatedButton(
                     onPressed: widget.onRetry,
 
-                    child: const Text("Retry"),
+                    child: Text(context.l10n.commonRetry),
                   ),
                 ],
               ],

@@ -1,3 +1,6 @@
+import 'package:fitness_app/core/l10n/locale_cubit.dart';
+import 'package:fitness_app/core/l10n/language_sheet.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
@@ -24,21 +27,30 @@ class ProfileSettingsSection extends StatelessWidget {
         const SaveProgressTile(),
         SettingsTile(
           icon: Icons.edit,
-          title: "Edit Profile",
+          title: context.l10n.profileEdit,
           onTap: () async {
             await context.push(Routes.editProfile, extra: profile);
           },
         ),
         SettingsTile(
           icon: Icons.notifications,
-          title: "Notifications",
+          title: context.l10n.profileNotifications,
           onTap: () {
             context.push(Routes.notificationSettings);
           },
         ),
+        BlocBuilder<LocaleCubit, Locale?>(
+          builder: (context, locale) => SettingsTile(
+            icon: Icons.translate,
+            title:
+                '${context.l10n.languageTitle} · '
+                '${languageLabel(context.l10n, locale)}',
+            onTap: () => showLanguageSheet(context),
+          ),
+        ),
         SettingsTile(
           icon: Icons.logout,
-          title: "Logout",
+          title: context.l10n.profileLogout,
           onTap: () async {
             final isGuest = (await sl<GetCurrentUser>()())?.isGuest ?? false;
             if (!context.mounted) return;
@@ -51,7 +63,7 @@ class ProfileSettingsSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24.r),
                   ),
                   title: Text(
-                    "Logout",
+                    context.l10n.profileLogout,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.sp,
@@ -60,10 +72,8 @@ class ProfileSettingsSection extends StatelessWidget {
                   ),
                   content: Text(
                     isGuest
-                        ? "You're using a guest account. After logging out you "
-                              "can't get back to your data. Tap 'Save your "
-                              "progress' first to keep it."
-                        : "Are you sure you want to logout?",
+                        ? context.l10n.profileLogoutGuestWarning
+                        : context.l10n.profileLogoutConfirm,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 14.sp,
@@ -75,7 +85,7 @@ class ProfileSettingsSection extends StatelessWidget {
                         Navigator.pop(context, false);
                       },
                       child: Text(
-                        "Cancel",
+                        context.l10n.commonCancel,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.7),
                         ),
@@ -91,9 +101,9 @@ class ProfileSettingsSection extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context, true);
                       },
-                      child: const Text(
-                        "Logout",
-                        style: TextStyle(
+                      child: Text(
+                        context.l10n.profileLogout,
+                        style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),

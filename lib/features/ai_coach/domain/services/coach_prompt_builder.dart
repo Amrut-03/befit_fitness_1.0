@@ -25,6 +25,7 @@ class CoachPromptBuilder {
     required String question,
     required CoachContext context,
     List<CoachMessage> history = const [],
+    String language = 'English',
   }) {
     final b = StringBuffer();
     final facts = contextFacts(context);
@@ -51,6 +52,12 @@ class CoachPromptBuilder {
     }
 
     b.write('User question: ${_trim(question.trim())}');
+    if (language != 'English') {
+      b.write(
+        '\n\nReply in $language, using simple everyday words. Keep '
+        'numbers and units such as kg, g and kcal as they are.',
+      );
+    }
     return b.toString();
   }
 

@@ -3,16 +3,22 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_app/core/error/exceptions.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:http/http.dart' as http;
 
 /// A failure the UI can show. Repositories return these in a [Result]
 /// (or blocs map caught exceptions with [Failure.fromException]) so raw
 /// exception text (`e.toString()`) never reaches users.
 sealed class Failure {
-  const Failure(this.message);
+  const Failure([this._custom]);
 
-  /// User-facing message.
-  final String message;
+  final String? _custom;
+
+  /// User-facing message, in the app's current language unless a custom
+  /// message was given.
+  String get message => _custom ?? defaultMessage(AppLocale.l10n);
+
+  String defaultMessage(AppLocalizations l10n);
 
   /// Maps any exception from the data layer to a [Failure].
   factory Failure.fromException(Object e) {
@@ -52,35 +58,37 @@ sealed class Failure {
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure([
-    super.message =
-        'No internet connection. Check your connection and try '
-        'again.',
-  ]);
+  const NetworkFailure([super._custom]);
+  @override
+  String defaultMessage(AppLocalizations l10n) => l10n.failureNetwork;
 }
 
 class TimeoutFailure extends Failure {
-  const TimeoutFailure([
-    super.message = 'This is taking too long. Please try again.',
-  ]);
+  const TimeoutFailure([super._custom]);
+  @override
+  String defaultMessage(AppLocalizations l10n) => l10n.failureTimeout;
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure([
-    super.message = 'The service is unavailable right now. Please try again.',
-  ]);
+  const ServerFailure([super._custom]);
+  @override
+  String defaultMessage(AppLocalizations l10n) => l10n.failureServer;
 }
 
 class NotFoundFailure extends Failure {
-  const NotFoundFailure([super.message = "We couldn't find that."]);
+  const NotFoundFailure([super._custom]);
+  @override
+  String defaultMessage(AppLocalizations l10n) => l10n.failureNotFound;
 }
 
 class AuthFailure extends Failure {
-  const AuthFailure([super.message = 'Please sign in again.']);
+  const AuthFailure([super._custom]);
+  @override
+  String defaultMessage(AppLocalizations l10n) => l10n.failureAuth;
 }
 
 class UnknownFailure extends Failure {
-  const UnknownFailure([
-    super.message = 'Something went wrong. Please try again.',
-  ]);
+  const UnknownFailure([super._custom]);
+  @override
+  String defaultMessage(AppLocalizations l10n) => l10n.commonSomethingWentWrong;
 }

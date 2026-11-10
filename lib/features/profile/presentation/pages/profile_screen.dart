@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
@@ -43,15 +44,15 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   ProfileHeader(profile: profile),
                   SizedBox(height: 28.h),
-                  const _SectionTitle('Fitness Stats'),
+                  _SectionTitle(context.l10n.profileFitnessStats),
                   SizedBox(height: 16.h),
                   ProfileStatsGrid(profile: profile),
                   SizedBox(height: 30.h),
-                  const _SectionTitle('Share Progress'),
+                  _SectionTitle(context.l10n.profileShareProgress),
                   SizedBox(height: 16.h),
                   ProfileShareSection(profile: profile),
                   SizedBox(height: 16.h),
-                  const _SectionTitle('Settings'),
+                  _SectionTitle(context.l10n.profileSettings),
                   SizedBox(height: 16.h),
                   ProfileSettingsSection(profile: profile),
                 ],

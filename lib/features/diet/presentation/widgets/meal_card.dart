@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
@@ -65,7 +67,7 @@ class MealCard extends StatelessWidget {
                               SizedBox(width: 10.w),
                               Expanded(
                                 child: Text(
-                                  "Confirm Meal",
+                                  context.l10n.dietConfirmMeal,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18.sp,
@@ -76,7 +78,9 @@ class MealCard extends StatelessWidget {
                             ],
                           ),
                           content: Text(
-                            "Are you sure you consumed ${meal.name}?\n\nThis action cannot be undone today.",
+                            context.l10n.dietConfirmMealBody(
+                              mealLabel(context.l10n, meal.name),
+                            ),
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14.sp,
@@ -88,9 +92,9 @@ class MealCard extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context, false);
                               },
-                              child: const Text(
-                                "Cancel",
-                                style: TextStyle(color: Colors.white60),
+                              child: Text(
+                                context.l10n.commonCancel,
+                                style: const TextStyle(color: Colors.white60),
                               ),
                             ),
                             ElevatedButton(
@@ -103,9 +107,9 @@ class MealCard extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context, true);
                               },
-                              child: const Text(
-                                "Confirm",
-                                style: TextStyle(
+                              child: Text(
+                                context.l10n.dietConfirm,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -124,7 +128,7 @@ class MealCard extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  meal.name,
+                  mealLabel(context.l10n, meal.name),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15.sp,
@@ -140,10 +144,10 @@ class MealCard extends StatelessWidget {
           SizedBox(height: 24.h),
           Row(
             children: [
-              _nutrient("Calories", meal.calories),
-              _nutrient("Protein", meal.protein),
-              _nutrient("Carbs", meal.carbs),
-              _nutrient("Fat", meal.fat),
+              _nutrient(context.l10n.statCalories, meal.calories),
+              _nutrient(context.l10n.macroProtein, meal.protein),
+              _nutrient(context.l10n.macroCarbs, meal.carbs),
+              _nutrient(context.l10n.macroFat, meal.fat),
             ],
           ),
         ],

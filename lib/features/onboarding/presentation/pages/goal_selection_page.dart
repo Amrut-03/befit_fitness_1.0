@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
@@ -61,7 +63,7 @@ class GoalSelectionPage extends StatelessWidget {
 
                       /// TITLE
                       Text(
-                        "What's Your Goal?",
+                        context.l10n.onbGoalTitle,
 
                         textAlign: TextAlign.center,
 
@@ -78,7 +80,7 @@ class GoalSelectionPage extends StatelessWidget {
 
                       /// SUBTITLE
                       Text(
-                        "Personalize your fitness experience",
+                        context.l10n.onbGoalSubtitle,
 
                         textAlign: TextAlign.center,
 
@@ -98,7 +100,10 @@ class GoalSelectionPage extends StatelessWidget {
                               state.selectedGoal == goal["title"];
 
                           return OnboardingOptionCard(
-                            title: goal["title"].toString(),
+                            title: goalLabel(
+                              context.l10n,
+                              goal["title"].toString(),
+                            ),
 
                             emoji: goal["emoji"].toString(),
 
@@ -151,7 +156,7 @@ class GoalSelectionPage extends StatelessWidget {
                                 },
 
                           child: Text(
-                            "Continue",
+                            context.l10n.commonContinue,
 
                             style: TextStyle(
                               color: state.selectedGoal != null

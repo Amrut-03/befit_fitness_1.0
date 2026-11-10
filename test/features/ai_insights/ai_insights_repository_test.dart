@@ -40,6 +40,7 @@ void main() {
   late FakeOnDeviceLlm llm;
   var now = DateTime(2026, 11, 10, 9);
   String? uid = 'alice';
+  var lang = 'en';
 
   AIInsightsRepositoryImpl repo() => AIInsightsRepositoryImpl(
     remoteDatasource: remote,
@@ -47,6 +48,7 @@ void main() {
     onDeviceDatasource: AIInsightsOnDeviceDatasource(llm),
     currentUid: () => uid,
     now: () => now,
+    languageCode: () => lang,
   );
 
   Future<String> title() async => (await repo().getDailyInsights(
@@ -64,6 +66,7 @@ void main() {
     llm = FakeOnDeviceLlm();
     now = DateTime(2026, 11, 10, 9);
     uid = 'alice';
+    lang = 'en';
   });
 
   tearDown(() async {
@@ -88,6 +91,23 @@ void main() {
     await title();
     uid = 'bob';
     expect(await title(), 'Call 2');
+  });
+
+  test('switching language regenerates instead of serving the cache', () async {
+    await title();
+    lang = 'hi';
+    expect(await title(), 'Call 2');
+    expect(await title(), 'Call 2', reason: 'Hindi insights are cached too');
+    lang = 'en';
+    expect(await title(), 'Call 3');
+  });
+
+  test('asks for the text in the app language, JSON keys in English', () {
+    expect(AIInsightsRemoteDatasource.languageInstruction('English'), isEmpty);
+    expect(
+      AIInsightsRemoteDatasource.languageInstruction('Hindi'),
+      allOf(contains('in Hindi'), contains('JSON keys in English')),
+    );
   });
 
   test('forceRefresh bypasses the cache', () async {

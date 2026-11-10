@@ -144,7 +144,7 @@ void main() {
       ]);
       expect(
         SessionDefaults.lastTimeSummary('Bench', history),
-        'Last time: 8×50 kg, 6×55 kg',
+        '8×50 kg, 6×55 kg',
       );
     });
 

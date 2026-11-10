@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_bloc.dart';
@@ -55,21 +56,25 @@ Future<void> showProductBottomSheet(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _macroItem(
-                  "Calories",
+                  context.l10n.statCalories,
                   "${product.calories.toInt()}",
                   Colors.orangeAccent,
                 ),
                 _macroItem(
-                  "Protein",
+                  context.l10n.macroProtein,
                   "${product.protein.toInt()}g",
                   Colors.greenAccent,
                 ),
                 _macroItem(
-                  "Carbs",
+                  context.l10n.macroCarbs,
                   "${product.carbs.toInt()}g",
                   Colors.blueAccent,
                 ),
-                _macroItem("Fat", "${product.fat.toInt()}g", Colors.pinkAccent),
+                _macroItem(
+                  context.l10n.macroFat,
+                  "${product.fat.toInt()}g",
+                  Colors.pinkAccent,
+                ),
               ],
             ),
             SizedBox(height: 28.h),
@@ -114,7 +119,7 @@ Future<void> showProductBottomSheet(
                   ),
                 ),
                 child: Text(
-                  "Add Food Item",
+                  context.l10n.foodAddTitle,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16.sp,

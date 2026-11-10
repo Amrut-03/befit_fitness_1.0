@@ -1,0 +1,829 @@
+{
+  "@@locale": "en",
+  "appTitle": "BeFit",
+  "commonRetry": "Retry",
+  "commonCancel": "Cancel",
+  "commonSave": "Save",
+  "commonDelete": "Delete",
+  "commonRemove": "Remove",
+  "commonEdit": "Edit",
+  "commonAdd": "Add",
+  "commonDone": "Done",
+  "commonOk": "OK",
+  "commonYes": "Yes",
+  "commonNo": "No",
+  "commonClose": "Close",
+  "commonContinue": "Continue",
+  "commonNext": "Next",
+  "commonBack": "Back",
+  "commonSkip": "Skip",
+  "commonSeeAll": "See all",
+  "commonToday": "Today",
+  "commonYesterday": "Yesterday",
+  "commonLoading": "Loading…",
+  "commonSomethingWentWrong": "Something went wrong. Please try again.",
+  "commonNoInternet": "No internet connection.",
+  "unitKg": "{value} kg",
+  "@unitKg": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "unitMl": "{value} ml",
+  "@unitMl": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "unitKcal": "{value} kcal",
+  "@unitKcal": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "unitGrams": "{value} g",
+  "@unitGrams": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "unitMinutes": "{value} min",
+  "@unitMinutes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "unitCm": "{value} cm",
+  "@unitCm": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "languageTitle": "Language",
+  "languageSystem": "Phone language",
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "Always shown in its own language."
+  },
+  "languageHindi": "हिन्दी",
+  "@languageHindi": {
+    "description": "Always shown in its own language."
+  },
+  "languageMarathi": "मराठी",
+  "@languageMarathi": {
+    "description": "Always shown in its own language."
+  },
+  "failureNetwork": "No internet connection. Check your connection and try again.",
+  "failureTimeout": "This is taking too long. Please try again.",
+  "failureServer": "The service is unavailable right now. Please try again.",
+  "failureNotFound": "We couldn't find that.",
+  "failureAuth": "Please sign in again.",
+  "historyEmptyTitle": "No history yet",
+  "historyEmptyBody": "Complete workouts or diets to see history",
+  "historySummary": "Summary",
+  "historyDetails": "Details",
+  "educationWhyItMatters": "Why it matters",
+  "educationTips": "Tips",
+  "eduHealthTitle": "Overall Health Score",
+  "eduHealthDescription": "This score combines your daily activity metrics including steps, calories burned, and movement minutes.",
+  "eduHealthWhy": "A higher score means you're consistently achieving your daily fitness goals and maintaining an active lifestyle.",
+  "eduHealthTip1": "Walk regularly throughout the day",
+  "eduHealthTip2": "Aim for your daily step target",
+  "eduHealthTip3": "Increase active movement minutes",
+  "eduHealthTip4": "Stay consistent every day",
+  "eduHealthTip5": "Combine cardio and strength training",
+  "eduBodyTitle": "Interactive Body Chart",
+  "eduBodyDescription": "The Body Chart helps you visually select muscle groups and discover workouts tailored to those muscles.",
+  "eduBodyWhy": "Targeting specific muscle groups helps you train more effectively, maintain balance in your physique, and avoid neglecting important muscles.",
+  "eduBodyTip1": "Tap a muscle to select it",
+  "eduBodyTip2": "Select multiple muscles to focus on a workout area",
+  "eduBodyTip3": "Use Front and Back views to access all muscle groups",
+  "eduBodyTip4": "Press 'Search Workouts' to find exercises for selected muscles",
+  "eduBodyTip5": "Long press a muscle to temporarily disable it",
+  "eduBodyTip6": "Train all major muscle groups throughout the week",
+  "loginWelcome": "Welcome to BeFit",
+  "loginTagline": "Track workouts, build healthy habits,\nand transform your fitness journey.",
+  "loginGoogle": "Continue with Google",
+  "loginGuest": "Continue as Guest",
+  "loginTerms": "By continuing you agree to our\nTerms & Privacy Policy",
+  "authGoogleFailed": "Google sign-in failed. Please try again.",
+  "authGuestFailed": "Guest sign in failed",
+  "authLogoutFailed": "Logout failed",
+  "linkAlreadyInUse": "That Google account already has a BeFit account. Choose a different Google account to keep your guest progress.",
+  "linkNetwork": "No internet connection. Your progress is safe; please try again.",
+  "linkNotGuest": "Your account is already linked to Google.",
+  "linkFailed": "Could not link your Google account. Please try again.",
+  "deleteCancelled": "Account deletion cancelled.",
+  "deleteRecentLogin": "For your security, please log out, sign in again, and then delete your account.",
+  "deleteWrongAccount": "Please choose the Google account you signed in with.",
+  "deleteNetwork": "No internet connection. Nothing was deleted. Please try again.",
+  "deleteNotSignedIn": "You are not signed in.",
+  "deleteFailed": "Could not delete your account. Please try again.",
+  "startupProfileFailed": "Couldn't load your profile.\nCheck your connection.",
+  "goalBuildMuscle": "Build Muscle",
+  "goalLoseWeight": "Lose Weight",
+  "goalStayFit": "Stay Fit",
+  "goalImproveStrength": "Improve Strength",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "genderPreferNot": "Prefer Not To Say",
+  "activitySedentary": "Sedentary",
+  "activityLight": "Lightly Active",
+  "activityActive": "Active",
+  "activityAthlete": "Athlete",
+  "onbTrackTitle": "Track Workouts",
+  "onbTrackBody": "Monitor your daily fitness journey.",
+  "onbNutritionTitle": "Healthy Nutrition",
+  "onbNutritionBody": "Plan meals and calories smartly.",
+  "onbConsistentTitle": "Stay Consistent",
+  "onbConsistentBody": "Build habits and reach your goals.",
+  "onbGetStarted": "Get Started",
+  "onbGoalTitle": "What's Your Goal?",
+  "onbGoalSubtitle": "Personalize your fitness experience",
+  "onbGenderTitle": "Select Gender",
+  "onbGenderSubtitle": "Help us personalize your experience",
+  "onbActivityTitle": "Activity Level",
+  "onbActivitySubtitle": "Tell us about your daily activity",
+  "onbMetricsTitle": "Body Metrics",
+  "onbMetricsSubtitle": "Help us calculate your fitness data",
+  "metricWeight": "Weight",
+  "metricHeight": "Height",
+  "metricAge": "Age",
+  "unitKgShort": "kg",
+  "unitCmShort": "cm",
+  "unitYearsShort": "yrs",
+  "onbProfileNotFound": "Profile not found",
+  "goalFitnessGoal": "Fitness Goal",
+  "historyTitle": "History",
+  "historyDietTitle": "Diet History",
+  "historyDietSubtitle": "View completed diet plans",
+  "historyWorkoutTitle": "Workout History",
+  "historyWorkoutSubtitle": "View completed workouts",
+  "profileFitnessStats": "Fitness Stats",
+  "profileShareProgress": "Share Progress",
+  "profileSettings": "Settings",
+  "profileEdit": "Edit Profile",
+  "profileNotifications": "Notifications",
+  "profileLogout": "Logout",
+  "profileLogoutGuestWarning": "You're using a guest account. After logging out you can't get back to your data. Tap 'Save your progress' first to keep it.",
+  "profileLogoutConfirm": "Are you sure you want to logout?",
+  "profileFullName": "Full Name",
+  "profileEnterName": "Enter name",
+  "profileGoal": "Goal",
+  "profileWeightKg": "Weight (kg)",
+  "profileEnterWeight": "Enter weight",
+  "profileHeightCm": "Height (cm)",
+  "profileEnterHeight": "Enter height",
+  "profileEnterAge": "Enter age",
+  "profileGender": "Gender",
+  "profileInvalidWeight": "Please enter valid weight",
+  "profileInvalidHeight": "Please enter valid height",
+  "profileInvalidAge": "Please enter valid age",
+  "profilePositiveValues": "Weight and height must be positive values",
+  "profileSave": "Save Profile",
+  "statWeight": "Weight",
+  "statHeight": "Height",
+  "statAge": "Age",
+  "statStreak": "Streak",
+  "statBmi": "BMI",
+  "statCalories": "Calories",
+  "statSteps": "Steps",
+  "daysCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareDayStreak": "{count, plural, =1{1 Day Streak} other{{count} Day Streak}}",
+  "@shareDayStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareConsistency": "Consistency creates results",
+  "shareQuote": "\"Discipline beats motivation.\"",
+  "shareGeneratedWith": "Generated with BeFit",
+  "shareSavedToGallery": "Image saved to gallery ✅",
+  "shareSaveToGallery": "Save to Gallery",
+  "shareText": "Check out my fitness progress on BeFit 🔥",
+  "accountDeleted": "Your account has been deleted.",
+  "accountDeleting": "Deleting account…",
+  "accountDelete": "Delete Account",
+  "accountDeleteTitle": "Delete account?",
+  "accountDeleteBody": "This permanently deletes your account and all your data: profile, diet plans, food items, workout history, health metrics and streak. This cannot be undone.",
+  "accountDeleteGoogleConfirm": "You will be asked to confirm with Google.",
+  "progressSavedTo": "Progress saved to {email}.",
+  "@progressSavedTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "progressYourGoogleAccount": "your Google account",
+  "progressLinking": "Linking…",
+  "progressSave": "Save your progress",
+  "progressGuestHint": "You're using a guest account. Link Google to keep your data if you sign out or change phones.",
+  "homeGoodMorning": "Good Morning",
+  "homeGoodAfternoon": "Good Afternoon",
+  "homeGoodEvening": "Good Evening",
+  "homeTodaysGoals": "Today's Goals",
+  "homeHeartRate": "Heart Rate",
+  "homeSleep": "Sleep",
+  "homeMoveMin": "Move Min",
+  "homeQuickActions": "Quick Actions",
+  "qaDietPlan": "Diet Plan",
+  "qaDietPlanSub": "Track your macros",
+  "qaWorkout": "Workout",
+  "qaWorkoutSub": "Training plans",
+  "qaCalculator": "Health Calculator",
+  "qaCalculatorSub": "BMI & nutrition",
+  "qaScanFood": "Scan Food",
+  "qaScanFoodSub": "Barcode scanner",
+  "qaMyFoods": "My Foods",
+  "qaMyFoodsSub": "Manage items",
+  "qaHistorySub": "Diet & workouts",
+  "dietCardAllDone": "Meals Completed 🎉",
+  "dietCardAllDoneBody": "Awesome work! You completed all your meals for today.",
+  "dietCardGoalAchieved": "Daily Goal Achieved",
+  "dietCardResets": "Your tracking will reset tomorrow",
+  "dietCardNoPlan": "No Active Plan",
+  "dietCardNoPlanBody": "Start a diet plan to track your progress",
+  "dietCardExplore": "Explore Plans",
+  "dietCardActivePlan": "Active Plan",
+  "dietCardUntitled": "Untitled Plan",
+  "dietCardActiveBadge": "ACTIVE",
+  "dietCardMeals": "Meals",
+  "homeLoadFailed": "Failed to load dashboard",
+  "healthConnectTitle": "Connect {store}",
+  "@healthConnectTitle": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "healthConnectInstallBody": "Install or update Health Connect to sync steps, calories, sleep and heart rate.",
+  "healthConnectBody": "Sync steps, calories, sleep, heart rate and weight from your watch and other apps.",
+  "healthInstall": "Install",
+  "healthConnect": "Connect",
+  "insightsTitle": "AI Insights",
+  "insightsAskCoach": "Ask coach",
+  "insightsEmpty": "No insights today. Try again later.",
+  "insightsOffline": "You're offline. Insights will load when you're back online, or download the on-device model in AI Coach to get them offline.",
+  "insightsFailed": "Couldn't load AI insights right now.",
+  "macroProtein": "Protein",
+  "macroCarbs": "Carbs",
+  "macroFat": "Fat",
+  "macroCalShort": "Cal",
+  "macroCarbShort": "Carb",
+  "macroProtShort": "Prot",
+  "macroSummary": "{protein}g Protein • {carbs}g Carbs • {fat}g Fat",
+  "@macroSummary": {
+    "placeholders": {
+      "protein": {
+        "type": "int"
+      },
+      "carbs": {
+        "type": "int"
+      },
+      "fat": {
+        "type": "int"
+      }
+    }
+  },
+  "mealBreakfast": "Breakfast",
+  "mealLunch": "Lunch",
+  "mealDinner": "Dinner",
+  "mealSnack": "Snack",
+  "foodUnitPiece": "piece",
+  "foodUnitSlice": "slice",
+  "foodUnitCup": "cup",
+  "dietPlanningTitle": "Diet Planning",
+  "dietNoPlans": "No diet plans saved yet",
+  "dietNoPlansHint": "Tap the button below to plan your diet",
+  "dietPlanYourDiet": "Plan Your Diet",
+  "dietDeleteTitle": "Delete Diet Plan",
+  "dietDeleteConfirm": "Are you sure you want to delete \"{name}\"?",
+  "@dietDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dietMealsCount": "{count, plural, =1{1 meal} other{{count} meals}}",
+  "@dietMealsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dietMealsCompleted": "{done}/{total} meals completed",
+  "@dietMealsCompleted": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dietInactiveBadge": "INACTIVE",
+  "dietActivated": "Activated",
+  "dietSetActive": "Set Active",
+  "dietSavePlan": "Save Diet Plan",
+  "dietAddFood": "Add Food",
+  "dietPendingMeals": "Pending Meals",
+  "dietCompletedMeals": "Completed Meals",
+  "dietTotalNutrition": "Total Nutrition",
+  "dietNoFood": "No food added yet",
+  "dietNoFoodHint": "Tap \"Add Food\" to build your diet plan",
+  "dietEditQuantity": "Edit Quantity",
+  "dietQuantity": "Quantity",
+  "dietUnit": "Unit",
+  "dietUpdateQuantity": "Update Quantity",
+  "dietConfirmMeal": "Confirm Meal",
+  "dietConfirmMealBody": "Are you sure you consumed {meal}?\n\nThis action cannot be undone today.",
+  "@dietConfirmMealBody": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "dietConfirm": "Confirm",
+  "dietPlanName": "Diet Plan Name",
+  "dietEnterPlanName": "Enter diet plan name",
+  "dietDailyMacros": "Daily Macros",
+  "dietSelectFood": "Select Food items",
+  "dietSearchFood": "Search food...",
+  "dietNoFoodFound": "No food items found",
+  "dietAddNFood": "{count, plural, =1{Add 1 food} other{Add {count} foods}}",
+  "@dietAddNFood": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dietLoadPlansFailed": "Failed to load diet plans",
+  "dietLoadHistoryFailed": "Failed to load diet history",
+  "dietSaveFailed": "Failed to save plan",
+  "dietActivateFailed": "Failed to update active plan",
+  "dietDeleteFailed": "Failed to delete plan",
+  "dietUpdateMealsFailed": "Failed to update meals",
+  "workoutsTitle": "Workouts",
+  "workoutSearch": "Search workouts...",
+  "workoutNoExercises": "No exercises found",
+  "workoutInYourWorkout": "In your workout",
+  "workoutAddTo": "Add to workout",
+  "workoutExercisesSets": "{exercises, plural, =1{1 exercise} other{{exercises} exercises}} · {sets, plural, =1{1 set} other{{sets} sets}}",
+  "@workoutExercisesSets": {
+    "placeholders": {
+      "exercises": {
+        "type": "int"
+      },
+      "sets": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutCompleted": "Completed",
+  "workoutTarget": "Target",
+  "workoutDuration": "Duration",
+  "workoutSets": "Sets",
+  "workoutVolume": "Volume",
+  "workoutDiscardTitle": "Discard workout?",
+  "workoutDiscardBody": "Your sets won't be saved and this won't count toward your streak.",
+  "workoutKeepGoing": "Keep going",
+  "workoutDiscard": "Discard",
+  "workoutDiscardTooltip": "Discard workout",
+  "workoutNoExercisesYet": "No exercises yet. Add some to get started.",
+  "workoutAddExercise": "Add exercise",
+  "workoutFinish": "Finish workout",
+  "workoutNoSession": "No workout in progress",
+  "workoutNoSessionHint": "Add exercises from the list to start a session.",
+  "workoutBrowse": "Browse exercises",
+  "workoutSaved": "Workout saved 🔥",
+  "workoutLabelValue": "{label}: {value}",
+  "@workoutLabelValue": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutVolumeTonnes": "{value} t",
+  "@workoutVolumeTonnes": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutInstructions": "Instructions",
+  "workoutNoInstructions": "No instructions available",
+  "workoutCompletedToast": "Workout Completed 🔥",
+  "workoutLogAsDone": "Log as done",
+  "workoutOpen": "Open workout",
+  "workoutAddAndStart": "Add to workout & start",
+  "workoutInProgress": "Workout in progress · {count, plural, =1{1 exercise} other{{count} exercises}}",
+  "@workoutInProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutRemoveExercise": "Remove exercise",
+  "workoutAddSet": "Add set",
+  "workoutRemoveSet": "Remove set",
+  "workoutColSet": "SET",
+  "workoutColKg": "KG",
+  "workoutColReps": "REPS",
+  "workoutSetWeightLabel": "Set {n} weight in kg",
+  "@workoutSetWeightLabel": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutSetRepsLabel": "Set {n} reps",
+  "@workoutSetRepsLabel": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutSetUndone": "Mark set not done",
+  "workoutSetDone": "Complete set",
+  "workoutLastTime": "Last time: {summary}",
+  "@workoutLastTime": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutRest": "Rest",
+  "workoutRestRemaining": "Rest remaining",
+  "workoutNeedOneSet": "Complete at least one set to save the workout.",
+  "workoutHistoryFailed": "Failed to load workout history",
+  "bodyChartTitle": "Body Chart",
+  "bodySearchWorkouts": "Search Workouts",
+  "bodyFront": "Front",
+  "bodyBack": "Back",
+  "bodyMuscles": "Muscles",
+  "foodItemsTitle": "My Food Items",
+  "foodSaved": "Food item saved successfully",
+  "foodEditTitle": "Edit Food Item",
+  "foodManualTitle": "Manual Food Entry",
+  "foodCreateCustom": "Create Custom Food",
+  "foodCreateCustomHint": "Add your own food items with nutrition values",
+  "foodInfoSection": "Food Information",
+  "foodName": "Food Name",
+  "foodNameHint": "Enter food name",
+  "foodNameRequired": "Food name is required",
+  "foodBrand": "Brand (Optional)",
+  "foodBrandHint": "Ex. Homemade / Amul / Nestle",
+  "foodServingSection": "Serving Information",
+  "foodQuantity": "Quantity",
+  "foodPositiveNumber": "Enter a positive number",
+  "foodValidNumber": "Enter a valid number",
+  "foodUnit": "Unit",
+  "foodNutritionSection": "Nutrition Values",
+  "foodUpdate": "Update Food Item",
+  "foodSave": "Save Food Item",
+  "foodEmpty": "No Food Items",
+  "foodPer": "Per {quantity} {unit}",
+  "@foodPer": {
+    "placeholders": {
+      "quantity": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "foodManual": "Manual",
+  "foodScanned": "Scanned",
+  "foodDeleteTitle": "Delete Food Item",
+  "foodDeleteBody": "Are you sure you want to delete \"{name}\"?",
+  "@foodDeleteBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "foodAddTitle": "Add Food Item",
+  "foodAddHow": "Choose how you want to add food",
+  "foodScanBarcode": "Scan Barcode",
+  "foodScanBarcodeHint": "Quickly scan packaged food items",
+  "foodAddManually": "Add Manually",
+  "foodAddManuallyHint": "Create your own custom food item",
+  "foodLoadFailed": "Failed to load food items",
+  "foodDeleteFailed": "Failed to delete food item",
+  "foodSaveFailed": "Failed to save",
+  "foodUpdateFailed": "Failed to update food item",
+  "scanUnknownProduct": "Unknown Product",
+  "scanCameraTitle": "Camera Permission Required",
+  "scanCameraBody": "Please allow camera access to scan food barcodes.",
+  "scanGrant": "Grant Permission",
+  "scanGoBack": "Go Back",
+  "scanTitle": "Scan Food Barcode",
+  "scanAlign": "Align barcode inside the frame",
+  "scanOffline": "No internet connection. Check your connection and scan again.",
+  "scanNotFound": "We couldn't find this product. Try again or add it manually.",
+  "calcTitle": "Health Calculators",
+  "calcBmiTitle": "BMI Calculator",
+  "calcBmiSubtitle": "Check body mass index",
+  "calcWaterTitle": "Water Intake",
+  "calcWaterSubtitle": "Daily hydration goal",
+  "calcProteinTitle": "Protein Calculator",
+  "calcProteinSubtitle": "Daily protein target",
+  "calcCaloriesTitle": "Calories Calculator",
+  "calcCaloriesSubtitle": "Maintenance calories",
+  "calcTypeBmi": "BMI",
+  "calcTypeWater": "Water Intake",
+  "calcTypeProtein": "Protein",
+  "calcTypeCalories": "Calories",
+  "calcWeightHint": "Weight (kg)",
+  "calcHeightHint": "Height (cm)",
+  "calcGoalMaintain": "Maintain",
+  "calcGoalFatLoss": "Fat Loss",
+  "calcGoalMuscleGain": "Muscle Gain",
+  "calcActivityLevel": "Activity Level",
+  "calcErrWeightHeight": "Please enter valid positive weight and height",
+  "calcErrWeight": "Please enter valid positive weight",
+  "calcErrAll": "Please enter valid positive weight, height and age",
+  "calcCalculate": "Calculate",
+  "calcTagline": "Track your fitness smarter",
+  "calcNoResults": "No results",
+  "calcNoResultsBody": "Complete a calculation to see results here.",
+  "calcBmiUnderweight": "Underweight",
+  "calcBmiNormal": "Normal",
+  "calcBmiOverweight": "Overweight",
+  "calcBmiObese": "Obese",
+  "calcBmiDescription": "Your BMI is in the {category} range.",
+  "@calcBmiDescription": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "calcProteinResult": "Protein Intake",
+  "calcProteinDescription": "Recommended protein intake per day.",
+  "calcCaloriesResult": "Maintenance Calories",
+  "calcCaloriesDescription": "Calories needed to maintain your weight.",
+  "calcWaterResult": "Daily Water Intake",
+  "calcWaterDescription": "General guideline: weight (kg) × 0.035 liters. Adjust for climate, activity, and personal needs.",
+  "metricNoData": "No data yet",
+  "metricAddManually": "Add data manually",
+  "metricLast7Days": "Last 7 days",
+  "metricAddWeight": "Add Weight",
+  "metricAddHeartRate": "Add Heart Rate",
+  "metricAddSleep": "Add Sleep",
+  "metricUnitBpm": "BPM",
+  "metricUnitHours": "Hours",
+  "metricEnter": "Enter {unit}",
+  "@metricEnter": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "metricWeekShort": "W",
+  "@metricWeekShort": {
+    "description": "Toggle for weekly chart, one letter"
+  },
+  "metricMonthShort": "M",
+  "@metricMonthShort": {
+    "description": "Toggle for monthly chart, one letter"
+  },
+  "reportTitle": "Weekly report",
+  "reportLoadFailed": "Couldn't load. Retry",
+  "reportWeightTrend": "Weight trend",
+  "reportWeightTrendSub": "Weekly average, last 8 weeks",
+  "reportWeightTrendLatest": "Latest {weight} · weekly average, last 8 weeks",
+  "@reportWeightTrendLatest": {
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      }
+    }
+  },
+  "reportMacroAdherence": "Macro adherence",
+  "reportMacroSub": "Eaten vs. your daily goals",
+  "reportMacroOnTarget": "{pct}% on target over {days} logged days",
+  "@reportMacroOnTarget": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "reportPrevWeek": "Previous week",
+  "reportNextWeek": "Next week",
+  "reportGoal": "Goal",
+  "reportScore": "Score",
+  "reportMacrosOnTarget": "Macros on target",
+  "reportWorkouts": "Workouts",
+  "reportWaterGoal": "Water goal",
+  "reportVsLastWeek": "vs last week",
+  "reportLatest": "latest",
+  "reportLoggedDays": "logged {logged}/{days} days",
+  "@reportLoggedDays": {
+    "placeholders": {
+      "logged": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "reportSetsCount": "{count} sets",
+  "@reportSetsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reportThisWeekCaption": "this week",
+  "reportDaysMet": "days met",
+  "reportWeightEmpty": "Log your weight to see the trend.",
+  "reportWeightTrendLabel": "Weight trend: {values}",
+  "@reportWeightTrendLabel": {
+    "placeholders": {
+      "values": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSetMacroGoals": "Set macro goals in your profile to track adherence.",
+  "reportTickMeals": "Tick off meals in your diet plan to see your macros.",
+  "reportWeeklyProgress": "Weekly progress",
+  "reportFull": "Full report",
+  "reportThisWeek": "This week",
+  "reportLastWeek": "Last week",
+  "waterTitle": "Water",
+  "waterDailyGoal": "Daily water goal",
+  "waterRecommended": "Recommended for your weight: {amount}",
+  "@waterRecommended": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "waterAdd": "Add water",
+  "waterEditGoal": "Edit goal",
+  "waterReminders": "Hydration reminders",
+  "waterRemindersHint": "Every 2 hours, 10 AM to 6 PM. Paused for the day once you hit your goal.",
+  "waterCustom": "Custom",
+  "waterNothingLogged": "Nothing logged yet. Tap an amount above.",
+  "waterSwipeHint": "Swipe left to remove an entry.",
+  "waterLoadFailed": "Couldn't load your water log.",
+  "waterTodayLabel": "Water today: {total} of {goal}",
+  "@waterTodayLabel": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "waterGoalReached": "Goal reached 🎉",
+  "waterToGo": "{amount} to go",
+  "@waterToGo": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "waterEnterBetween": "Enter between {min} and {max} ml",
+  "@waterEnterBetween": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "waterAmount": "Amount",
+  "waterGoalMet": "Goal met {count}/7",
+  "@waterGoalMet": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "waterInvalidAmount": "Enter an amount between 1 and 3000 ml.",
+  "notifTitle": "Notifications",
+  "notifEmpty": "No Notifications Yet",
+  "notifSettingsTitle": "Notification Settings",
+  "notifDisabled": "Notifications are turned off for BeFit. Enable them in your device settings to receive reminders.",
+  "notifReminders": "Reminders",
+  "notifWorkout": "Workout Reminder",
+  "notifWorkoutHint": "Daily workout motivation",
+  "notifWater": "Water Reminder",
+  "notifWaterHint": "Every 2 hours, 10 AM–6 PM. Paused once you hit your goal",
+  "notifMeal": "Meal Reminder",
+  "notifMealHint": "Track your daily meals",
+  "notifStreak": "Streak Reminder",
+  "notifStreakHint": "Keep your streak alive",
+  "notifReminderTime": "Reminder Time",
+  "notifWorkoutTime": "Workout Reminder Time",
+  "reminderWorkoutTitle": "💪 Time to move",
+  "reminderWorkoutBody": "Your workout is waiting. A short session still counts!",
+  "reminderMealTitle": "🍽️ Log your meal",
+  "reminderMealBody": "Tick off your meal to stay on track with your plan.",
+  "reminderWaterTitle": "💧 Hydration check",
+  "reminderWaterBody": "Time for a glass of water. Tap to log it in BeFit.",
+  "reminderStreakTitle": "🔥 Streak at risk",
+  "reminderStreakBody": "Log a workout or meal today to keep your streak alive.",
+  "coachTitle": "AI Coach",
+  "coachSuggest1": "How am I doing this week?",
+  "coachSuggest2": "How can I hit my protein goal?",
+  "coachSuggest3": "Plan a 30-minute workout for today",
+  "coachSuggest4": "What should I eat after a workout?",
+  "coachRemoveModelTitle": "Remove on-device model?",
+  "coachRemoveModelBody": "This frees up storage. The coach will use cloud AI until you download the model again.",
+  "coachMore": "More",
+  "coachClearChat": "Clear chat",
+  "coachRemoveModel": "Remove on-device model",
+  "coachIntro": "Ask me anything about training, food or recovery.",
+  "coachIntroHint": "I use your profile, today's activity and this week's report to tailor answers. General guidance, not medical advice.",
+  "coachAskHint": "Ask your coach…",
+  "coachStop": "Stop",
+  "coachSend": "Send",
+  "coachOnDevice": "On-device",
+  "coachCloud": "Cloud",
+  "coachThinking": "Thinking…",
+  "coachDownloading": "Downloading Gemma… {progress}%",
+  "@coachDownloading": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "coachRunOffline": "Run the coach offline",
+  "coachDownloadHint": "Download Gemma once ({size}, Wi-Fi recommended). Answers are then generated on your phone, and your data never leaves it.",
+  "@coachDownloadHint": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "coachDownload": "Download",
+  "coachUsingCloud": "Using cloud AI",
+  "coachLowMemory": "This phone doesn't have enough memory for the on-device model, so answers come from Gemini over the internet.",
+  "coachModelSetupFailed": "The model downloaded but couldn't be set up.",
+  "coachDownloadFailed": "Download failed. Check your connection and try again.",
+  "coachOffline": "You're offline. Download the on-device model to chat without internet.",
+  "coachError": "Couldn't reach the coach right now. Try again.",
+  "coachEmpty": "I couldn't come up with an answer. Try rephrasing your question.",
+  "coachStopped": "Stopped.",
+  "coachEmergency": "This could be serious, so please don't rely on an app for it. Stop exercising and contact a doctor or your local emergency number (112 in India) right away. If you are thinking about harming yourself, please reach out to someone you trust or a helpline such as Tele-MANAS (14416) now.",
+  "coachProfessional": "That's a topic where advice needs to fit your health history, so I can't give guidance on it. Please talk to a doctor or a registered dietitian. I can still help with general training, steps, water and balanced eating."
+}

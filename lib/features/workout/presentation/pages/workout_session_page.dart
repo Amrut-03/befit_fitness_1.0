@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -25,19 +26,17 @@ class WorkoutSessionPage extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surfaceElevated,
-        title: const Text('Discard workout?'),
-        content: const Text(
-          "Your sets won't be saved and this won't count toward your streak.",
-        ),
+        title: Text(context.l10n.workoutDiscardTitle),
+        content: Text(context.l10n.workoutDiscardBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Keep going'),
+            child: Text(context.l10n.workoutKeepGoing),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Discard'),
+            child: Text(context.l10n.workoutDiscard),
           ),
         ],
       ),
@@ -77,11 +76,11 @@ class WorkoutSessionPage extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppHeader(
-            title: 'Workout',
+            title: context.l10n.qaWorkout,
             actions: [
               if (session != null)
                 IconButton(
-                  tooltip: 'Discard workout',
+                  tooltip: context.l10n.workoutDiscardTooltip,
                   icon: const Icon(Icons.delete_outline),
                   onPressed: () => _confirmDiscard(context),
                 ),
@@ -118,24 +117,27 @@ class _SessionBody extends StatelessWidget {
                   key: ValueKey(session.exercises[i].exerciseId),
                   index: i,
                   exercise: session.exercises[i],
-                  lastTime: SessionDefaults.lastTimeSummary(
+                  lastTime: switch (SessionDefaults.lastTimeSummary(
                     session.exercises[i].name,
                     state.history,
-                  ),
+                  )) {
+                    final s? => context.l10n.workoutLastTime(s),
+                    null => null,
+                  },
                 ),
               if (session.exercises.isEmpty)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 32.h),
-                  child: const Text(
-                    'No exercises yet. Add some to get started.',
+                  child: Text(
+                    context.l10n.workoutNoExercisesYet,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.textMuted),
+                    style: const TextStyle(color: AppColors.textMuted),
                   ),
                 ),
               OutlinedButton.icon(
                 onPressed: () => context.push(Routes.workout),
                 icon: const Icon(Icons.add),
-                label: const Text('Add exercise'),
+                label: Text(context.l10n.workoutAddExercise),
               ),
             ],
           ),
@@ -166,7 +168,7 @@ class _SessionBody extends StatelessWidget {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : Text(
-                            'Finish workout',
+                            context.l10n.workoutFinish,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
@@ -215,22 +217,29 @@ class _StatsStrip extends StatelessWidget {
       child: Row(
         children: [
           stat(
-            'Duration',
+            context.l10n.workoutDuration,
             Ticker(
               builder: (_, now) =>
                   Text(formatDuration(now.difference(session.startedAt))),
             ),
           ),
-          stat('Sets', Text('${session.completedSets}/${session.totalSets}')),
-          stat('Volume', Text(_volume(session.volumeKg))),
+          stat(
+            context.l10n.workoutSets,
+            Text('${session.completedSets}/${session.totalSets}'),
+          ),
+          stat(
+            context.l10n.workoutVolume,
+            Text(_volume(context.l10n, session.volumeKg)),
+          ),
         ],
       ),
     );
   }
 }
 
-String _volume(double kg) =>
-    kg >= 1000 ? '${(kg / 1000).toStringAsFixed(1)} t' : '${kg.round()} kg';
+String _volume(AppLocalizations l10n, double kg) => kg >= 1000
+    ? l10n.workoutVolumeTonnes((kg / 1000).toStringAsFixed(1))
+    : l10n.unitKg(kg.round().toString());
 
 class _NoSession extends StatelessWidget {
   const _NoSession({required this.saved});
@@ -248,20 +257,20 @@ class _NoSession extends StatelessWidget {
           children: [
             Icon(Icons.fitness_center, color: AppColors.primary, size: 48.sp),
             SizedBox(height: 12.h),
-            const Text(
-              'No workout in progress',
-              style: TextStyle(color: AppColors.textPrimary),
+            Text(
+              context.l10n.workoutNoSession,
+              style: const TextStyle(color: AppColors.textPrimary),
             ),
             SizedBox(height: 4.h),
-            const Text(
-              'Add exercises from the list to start a session.',
+            Text(
+              context.l10n.workoutNoSessionHint,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textMuted),
+              style: const TextStyle(color: AppColors.textMuted),
             ),
             SizedBox(height: 16.h),
             ElevatedButton(
               onPressed: () => context.push(Routes.workout),
-              child: const Text('Browse exercises'),
+              child: Text(context.l10n.workoutBrowse),
             ),
           ],
         ),
@@ -280,7 +289,7 @@ class _SummaryDialog extends StatelessWidget {
     final duration = Duration(seconds: workout.durationSeconds ?? 0);
     return AlertDialog(
       backgroundColor: AppColors.surfaceElevated,
-      title: const Text('Workout saved 🔥'),
+      title: Text(context.l10n.workoutSaved),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,10 +299,25 @@ class _SummaryDialog extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
           SizedBox(height: 8.h),
-          Text('Duration: ${formatDuration(duration)}'),
-          Text('Sets: ${workout.totalSets}'),
+          Text(
+            context.l10n.workoutLabelValue(
+              context.l10n.workoutDuration,
+              formatDuration(duration),
+            ),
+          ),
+          Text(
+            context.l10n.workoutLabelValue(
+              context.l10n.workoutSets,
+              '${workout.totalSets}',
+            ),
+          ),
           if (workout.volumeKg > 0)
-            Text('Volume: ${_volume(workout.volumeKg)}'),
+            Text(
+              context.l10n.workoutLabelValue(
+                context.l10n.workoutVolume,
+                _volume(context.l10n, workout.volumeKg),
+              ),
+            ),
           SizedBox(height: 8.h),
           for (final log in workout.exerciseLogs)
             Text(
@@ -305,7 +329,7 @@ class _SummaryDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Done'),
+          child: Text(context.l10n.commonDone),
         ),
       ],
     );

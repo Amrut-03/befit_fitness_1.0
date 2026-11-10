@@ -16,10 +16,17 @@ class AIInsightsLocalDatasource {
       '${d.day.toString().padLeft(2, '0')}';
 
   /// Insights cached for [uid] on [day], or null.
-  List<AIInsightModel>? read({required String uid, required DateTime day}) {
+  /// Insights are cached per [language] code, so switching the app's
+  /// language regenerates them instead of showing the old language.
+  List<AIInsightModel>? read({
+    required String uid,
+    required DateTime day,
+    String language = 'en',
+  }) {
     final raw = box.get(_key);
     if (raw is! Map) return null;
     if (raw['uid'] != uid || raw['day'] != dayKey(day)) return null;
+    if ((raw['lang'] ?? 'en') != language) return null;
 
     final list = raw['insights'];
     if (list is! List) return null;
@@ -33,10 +40,12 @@ class AIInsightsLocalDatasource {
     required String uid,
     required DateTime day,
     required List<AIInsightModel> insights,
+    String language = 'en',
   }) {
     return box.put(_key, {
       'uid': uid,
       'day': dayKey(day),
+      'lang': language,
       'insights': insights.map((i) => i.toJson()).toList(),
     });
   }

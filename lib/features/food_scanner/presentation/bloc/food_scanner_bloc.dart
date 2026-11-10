@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:fitness_app/core/observability/app_analytics.dart';
@@ -31,7 +32,7 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
         state.copyWith(
           isLoading: false,
           error: failure is NetworkFailure
-              ? 'No internet connection. Check your connection and scan again.'
+              ? AppLocale.l10n.scanOffline
               : failure.message,
         ),
       ),
@@ -41,9 +42,7 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
           product == null
               ? state.copyWith(
                   isLoading: false,
-                  error:
-                      "We couldn't find this product. Try again or add it "
-                      'manually.',
+                  error: AppLocale.l10n.scanNotFound,
                 )
               : state.copyWith(isLoading: false, product: product),
         );

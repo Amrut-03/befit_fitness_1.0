@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class HistoryPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.surfaceDim,
 
-      appBar: const AppHeader(title: "History"),
+      appBar: AppHeader(title: context.l10n.historyTitle),
 
       body: Padding(
         padding: EdgeInsets.all(16.w),
@@ -23,8 +24,8 @@ class HistoryPage extends StatelessWidget {
           children: [
             _HistoryCard(
               icon: Icons.restaurant_menu,
-              title: "Diet History",
-              subtitle: "View completed diet plans",
+              title: context.l10n.historyDietTitle,
+              subtitle: context.l10n.historyDietSubtitle,
               color: AppColors.primary,
               onTap: () {
                 context.push(Routes.dietHistory);
@@ -35,8 +36,8 @@ class HistoryPage extends StatelessWidget {
 
             _HistoryCard(
               icon: Icons.fitness_center,
-              title: "Workout History",
-              subtitle: "View completed workouts",
+              title: context.l10n.historyWorkoutTitle,
+              subtitle: context.l10n.historyWorkoutSubtitle,
               color: AppColors.accentOrange,
               onTap: () {
                 context.push(Routes.workoutHistory);

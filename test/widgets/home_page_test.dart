@@ -73,7 +73,11 @@ void main() {
 
   tearDown(() => GetIt.instance.reset());
 
-  Future<void> pump(WidgetTester tester, HomeState state) async {
+  Future<void> pump(
+    WidgetTester tester,
+    HomeState state, {
+    Locale locale = const Locale('en'),
+  }) async {
     when(() => home.state).thenReturn(state);
 
     final profile = _Profile();
@@ -108,6 +112,7 @@ void main() {
         ],
         child: const HomePage(),
       ),
+      locale: locale,
     );
     await tester.pumpForLoaders();
   }
@@ -134,4 +139,20 @@ void main() {
     expect(find.byType(RefreshIndicator), findsOneWidget);
     expect(find.byType(WaterIntakeCard), findsOneWidget);
   });
+
+  for (final code in ['hi', 'mr']) {
+    testWidgets('loaded fits the screen in $code (no overflow)', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const HomeLoaded(userName: 'Amrut', weight: 70),
+        locale: Locale(code),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('Amrut'), findsOneWidget);
+      expect(find.byType(WaterIntakeCard), findsOneWidget);
+    });
+  }
 }

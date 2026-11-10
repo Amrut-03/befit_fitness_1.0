@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/health_metrics/domain/entities/health_metrics_entity.dart';
 import 'package:fitness_app/features/health_metrics/presentation/bloc/health_metric_bloc.dart';
@@ -23,13 +24,13 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
   String get title {
     switch (widget.type) {
       case MetricType.weight:
-        return "Add Weight";
+        return context.l10n.metricAddWeight;
 
       case MetricType.heartRate:
-        return "Add Heart Rate";
+        return context.l10n.metricAddHeartRate;
 
       case MetricType.sleep:
-        return "Add Sleep";
+        return context.l10n.metricAddSleep;
     }
   }
 
@@ -39,10 +40,10 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
         return "KG";
 
       case MetricType.heartRate:
-        return "BPM";
+        return context.l10n.metricUnitBpm;
 
       case MetricType.sleep:
-        return "Hours";
+        return context.l10n.metricUnitHours;
     }
   }
 
@@ -146,7 +147,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
               style: const TextStyle(color: Colors.white),
 
               decoration: InputDecoration(
-                hintText: "Enter $unit",
+                hintText: context.l10n.metricEnter(unit),
 
                 hintStyle: TextStyle(
                   color: Colors.white.withValues(alpha: 0.4),
@@ -255,7 +256,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
                 },
 
                 child: Text(
-                  "Save",
+                  context.l10n.commonSave,
 
                   style: TextStyle(
                     fontSize: 16.sp,

@@ -1,8 +1,18 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+
+/// Localization delegates, as in `main.dart`.
+const testLocalizationsDelegates = [
+  AppLocalizations.delegate,
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
 
 /// Phone-sized surface matching the app's ScreenUtil design size.
 const testScreenSize = Size(375, 812);
@@ -15,12 +25,22 @@ extension PumpApp on WidgetTester {
   }
 
   /// Pumps [home] inside the app's theme and ScreenUtil, at phone size.
-  Future<void> pumpApp(Widget home) async {
+  /// [locale] defaults to English.
+  Future<void> pumpApp(
+    Widget home, {
+    Locale locale = const Locale('en'),
+  }) async {
     await _setPhoneSize();
     await pumpWidget(
       ScreenUtilInit(
         designSize: testScreenSize,
-        builder: (_, _) => MaterialApp(theme: AppTheme.dark, home: home),
+        builder: (_, _) => MaterialApp(
+          theme: AppTheme.dark,
+          locale: locale,
+          supportedLocales: appLocales,
+          localizationsDelegates: testLocalizationsDelegates,
+          home: home,
+        ),
       ),
     );
   }
@@ -37,6 +57,9 @@ extension PumpApp on WidgetTester {
         designSize: testScreenSize,
         builder: (_, _) => MaterialApp.router(
           theme: AppTheme.dark,
+          locale: const Locale('en'),
+          supportedLocales: appLocales,
+          localizationsDelegates: testLocalizationsDelegates,
           routerConfig: router,
           builder: (_, child) => wrap?.call(child!) ?? child!,
         ),

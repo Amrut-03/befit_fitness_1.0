@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/models/history_detail_data.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -68,18 +69,17 @@ class _HistoryDetailBottomSheet extends StatelessWidget {
               const SizedBox(height: 8),
 
               Text(
-                DateFormat(
-                  'dd MMM yyyy • hh:mm a',
-                ).format(data.completedAt).toString(),
+                '${DateFormat.yMMMd().format(data.completedAt)} • '
+                '${DateFormat.jm().format(data.completedAt)}',
                 style: const TextStyle(color: Colors.white54),
               ),
 
               const SizedBox(height: 20),
 
               if (data.stats.isNotEmpty) ...[
-                const Text(
-                  "Summary",
-                  style: TextStyle(
+                Text(
+                  context.l10n.historySummary,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -129,9 +129,9 @@ class _HistoryDetailBottomSheet extends StatelessWidget {
               const SizedBox(height: 24),
 
               if (data.items.isNotEmpty) ...[
-                const Text(
-                  "Details",
-                  style: TextStyle(
+                Text(
+                  context.l10n.historyDetails,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

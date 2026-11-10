@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -35,7 +36,7 @@ class _NotificationSettingsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      appBar: const AppHeader(title: "Notification Settings"),
+      appBar: AppHeader(title: context.l10n.notifSettingsTitle),
 
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.w),
@@ -46,21 +47,20 @@ class _NotificationSettingsView extends StatelessWidget {
           children: [
             if (cubit.state.permissionDenied) ...[
               Text(
-                'Notifications are turned off for BeFit. Enable them in your '
-                'device settings to receive reminders.',
+                context.l10n.notifDisabled,
                 style: TextStyle(color: Colors.orangeAccent, fontSize: 13.sp),
               ),
               SizedBox(height: 16.h),
             ],
 
-            _sectionTitle("Reminders"),
+            _sectionTitle(context.l10n.notifReminders),
 
             SizedBox(height: 16.h),
 
             _notificationTile(
-              title: "Workout Reminder",
+              title: context.l10n.notifWorkout,
 
-              subtitle: "Daily workout motivation",
+              subtitle: context.l10n.notifWorkoutHint,
 
               value: settings.workoutReminder,
 
@@ -69,10 +69,9 @@ class _NotificationSettingsView extends StatelessWidget {
             ),
 
             _notificationTile(
-              title: "Water Reminder",
+              title: context.l10n.notifWater,
 
-              subtitle:
-                  "Every 2 hours, 10 AM–6 PM. Paused once you hit your goal",
+              subtitle: context.l10n.notifWaterHint,
 
               value: settings.waterReminder,
 
@@ -81,9 +80,9 @@ class _NotificationSettingsView extends StatelessWidget {
             ),
 
             _notificationTile(
-              title: "Meal Reminder",
+              title: context.l10n.notifMeal,
 
-              subtitle: "Track your daily meals",
+              subtitle: context.l10n.notifMealHint,
 
               value: settings.mealReminder,
 
@@ -92,9 +91,9 @@ class _NotificationSettingsView extends StatelessWidget {
             ),
 
             _notificationTile(
-              title: "Streak Reminder",
+              title: context.l10n.notifStreak,
 
-              subtitle: "Keep your streak alive",
+              subtitle: context.l10n.notifStreakHint,
 
               value: settings.streakReminder,
 
@@ -104,7 +103,7 @@ class _NotificationSettingsView extends StatelessWidget {
 
             SizedBox(height: 30.h),
 
-            _sectionTitle("Reminder Time"),
+            _sectionTitle(context.l10n.notifReminderTime),
 
             SizedBox(height: 16.h),
 
@@ -147,7 +146,7 @@ class _NotificationSettingsView extends StatelessWidget {
 
                         children: [
                           Text(
-                            "Workout Reminder Time",
+                            context.l10n.notifWorkoutTime,
 
                             style: TextStyle(
                               color: Colors.white,

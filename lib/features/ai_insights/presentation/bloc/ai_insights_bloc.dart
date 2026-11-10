@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:io';
 
 import 'package:fitness_app/features/ai_insights/domain/entities/ai_insights_entity.dart';
@@ -31,20 +32,15 @@ class AIInsightsBloc extends Bloc<AIInsightsEvent, AIInsightsState> {
       );
 
       if (insights.isEmpty) {
-        emit(AIInsightsError('No insights today. Try again later.'));
+        emit(AIInsightsError(AppLocale.l10n.insightsEmpty));
       } else {
         emit(AIInsightsLoaded(insights));
       }
     } catch (e) {
       if (isOfflineError(e)) {
-        emit(
-          AIInsightsError(
-            'You\'re offline. Insights will load when you\'re back online, or download the on-device model in AI Coach to get them offline.',
-            offline: true,
-          ),
-        );
+        emit(AIInsightsError(AppLocale.l10n.insightsOffline, offline: true));
       } else {
-        emit(AIInsightsError('Couldn\'t load AI insights right now.'));
+        emit(AIInsightsError(AppLocale.l10n.insightsFailed));
       }
     }
   }

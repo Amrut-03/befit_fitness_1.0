@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:intl/intl.dart';
 
 import '../../domain/entities/weekly_report.dart';
@@ -5,8 +6,8 @@ import '../../domain/entities/weekly_report.dart';
 /// "This week", "Last week", or "3 – 9 Nov".
 String weekLabel(WeekRange week, DateTime now) {
   final current = WeekRange.of(now);
-  if (week == current) return 'This week';
-  if (week == current.shift(-1)) return 'Last week';
+  if (week == current) return AppLocale.l10n.reportThisWeek;
+  if (week == current.shift(-1)) return AppLocale.l10n.reportLastWeek;
   return weekDates(week);
 }
 

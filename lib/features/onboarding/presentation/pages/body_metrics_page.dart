@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
@@ -58,7 +59,7 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// TITLE
                       Text(
-                        "Body Metrics",
+                        context.l10n.onbMetricsTitle,
 
                         textAlign: TextAlign.center,
 
@@ -75,7 +76,7 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// SUBTITLE
                       Text(
-                        "Help us calculate your fitness data",
+                        context.l10n.onbMetricsSubtitle,
 
                         textAlign: TextAlign.center,
 
@@ -90,11 +91,11 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// WEIGHT
                       _MetricCard(
-                        title: "Weight",
+                        title: context.l10n.metricWeight,
 
                         value: state.weight.round(),
 
-                        unit: "kg",
+                        unit: context.l10n.unitKgShort,
 
                         icon: Icons.monitor_weight,
 
@@ -113,11 +114,11 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// HEIGHT
                       _MetricCard(
-                        title: "Height",
+                        title: context.l10n.metricHeight,
 
                         value: state.height.round(),
 
-                        unit: "cm",
+                        unit: context.l10n.unitCmShort,
 
                         icon: Icons.height,
 
@@ -136,11 +137,11 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// AGE
                       _MetricCard(
-                        title: "Age",
+                        title: context.l10n.metricAge,
 
                         value: state.age.round(),
 
-                        unit: "yrs",
+                        unit: context.l10n.unitYearsShort,
 
                         icon: Icons.cake,
 
@@ -183,7 +184,7 @@ class BodyMetricsPage extends StatelessWidget {
                           },
 
                           child: Text(
-                            "Continue",
+                            context.l10n.commonContinue,
 
                             style: TextStyle(
                               color: Colors.black,

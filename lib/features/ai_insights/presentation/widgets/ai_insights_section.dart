@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/ai_insights/presentation/bloc/ai_insights_bloc.dart';
@@ -109,7 +110,7 @@ class _AIInsightsSectionState extends State<AIInsightsSection> {
       children: [
         Flexible(
           child: Text(
-            'AI Insights',
+            context.l10n.insightsTitle,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -146,7 +147,7 @@ class _AIInsightsSectionState extends State<AIInsightsSection> {
           ),
           icon: Icon(Icons.chat_bubble_outline, size: 15.sp, color: _accent),
           label: Text(
-            'Ask coach',
+            context.l10n.insightsAskCoach,
             style: TextStyle(color: _accent, fontSize: 12.sp),
           ),
         ),
@@ -202,7 +203,10 @@ class _AIInsightsSectionState extends State<AIInsightsSection> {
           ),
           TextButton(
             onPressed: onRetry,
-            child: const Text('Retry', style: TextStyle(color: _accent)),
+            child: Text(
+              context.l10n.commonRetry,
+              style: const TextStyle(color: _accent),
+            ),
           ),
         ],
       ),

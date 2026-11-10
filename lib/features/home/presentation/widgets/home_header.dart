@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,16 +9,12 @@ class HomeHeader extends StatelessWidget {
 
   const HomeHeader({super.key, required this.userName});
 
-  String getGreeting() {
+  String getGreeting(BuildContext context) {
     final hour = DateTime.now().hour;
-
-    if (hour < 12) {
-      return 'Good Morning';
-    } else if (hour < 17) {
-      return 'Good Afternoon';
-    } else {
-      return 'Good Evening';
-    }
+    final l10n = context.l10n;
+    if (hour < 12) return l10n.homeGoodMorning;
+    if (hour < 17) return l10n.homeGoodAfternoon;
+    return l10n.homeGoodEvening;
   }
 
   @override
@@ -40,7 +37,7 @@ class HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                getGreeting(),
+                getGreeting(context),
                 style: TextStyle(color: Colors.white70, fontSize: 14.sp),
               ),
               SizedBox(height: 4.h),

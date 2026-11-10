@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:io' show Platform;
 
 import 'package:fitness_app/core/health/health_platform_service.dart';
@@ -58,7 +59,7 @@ class HealthPlatformPrompt extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Connect $storeName',
+                  context.l10n.healthConnectTitle(storeName),
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 15.sp,
@@ -68,10 +69,8 @@ class HealthPlatformPrompt extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Text(
                   needsInstall
-                      ? 'Install or update Health Connect to sync steps, '
-                            'calories, sleep and heart rate.'
-                      : 'Sync steps, calories, sleep, heart rate and weight '
-                            'from your watch and other apps.',
+                      ? context.l10n.healthConnectInstallBody
+                      : context.l10n.healthConnectBody,
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12.sp,
@@ -86,7 +85,9 @@ class HealthPlatformPrompt extends StatelessWidget {
               ConnectHealthPlatformRequested(),
             ),
             child: Text(
-              needsInstall ? 'Install' : 'Connect',
+              needsInstall
+                  ? context.l10n.healthInstall
+                  : context.l10n.healthConnect,
               style: const TextStyle(color: AppColors.primary),
             ),
           ),

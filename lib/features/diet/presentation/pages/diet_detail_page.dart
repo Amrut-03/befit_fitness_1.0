@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
@@ -90,15 +91,15 @@ class _DietDetailBottomSheet extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Column(
                       children: [
-                        _buildHeader(currentPlan),
+                        _buildHeader(context, currentPlan),
                         SizedBox(height: 16.h),
-                        _buildMacros(currentPlan),
+                        _buildMacros(context, currentPlan),
                         SizedBox(height: 16.h),
                         if (pendingMeals.isNotEmpty) ...[
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Pending Meals",
+                              context.l10n.dietPendingMeals,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.sp,
@@ -122,7 +123,7 @@ class _DietDetailBottomSheet extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Completed Meals",
+                              context.l10n.dietCompletedMeals,
                               style: TextStyle(
                                 color: Colors.green,
                                 fontSize: 16.sp,
@@ -155,7 +156,7 @@ class _DietDetailBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(DietPlanEntity plan) {
+  Widget _buildHeader(BuildContext context, DietPlanEntity plan) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -166,7 +167,7 @@ class _DietDetailBottomSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "${plan.totalMeals} meals",
+            context.l10n.dietMealsCount(plan.totalMeals),
             style: TextStyle(color: Colors.white70, fontSize: 14.sp),
           ),
           SizedBox(height: 12.h),
@@ -180,7 +181,7 @@ class _DietDetailBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildMacros(DietPlanEntity plan) {
+  Widget _buildMacros(BuildContext context, DietPlanEntity plan) {
     final protein = plan.meals.fold(0.0, (sum, m) => sum + m.protein);
 
     final carbs = plan.meals.fold(0.0, (sum, m) => sum + m.carbs);
@@ -199,7 +200,7 @@ class _DietDetailBottomSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Total Nutrition",
+            context.l10n.dietTotalNutrition,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.sp,
@@ -209,15 +210,20 @@ class _DietDetailBottomSheet extends StatelessWidget {
           SizedBox(height: 16.h),
           Row(
             children: [
-              _macro("Calories", calories, "kcal", Colors.orange),
-              _macro("Protein", protein, "g", Colors.blue),
+              _macro(
+                context.l10n.statCalories,
+                calories,
+                "kcal",
+                Colors.orange,
+              ),
+              _macro(context.l10n.macroProtein, protein, "g", Colors.blue),
             ],
           ),
           SizedBox(height: 10.h),
           Row(
             children: [
-              _macro("Carbs", carbs, "g", Colors.green),
-              _macro("Fat", fat, "g", Colors.red),
+              _macro(context.l10n.macroCarbs, carbs, "g", Colors.green),
+              _macro(context.l10n.macroFat, fat, "g", Colors.red),
             ],
           ),
         ],

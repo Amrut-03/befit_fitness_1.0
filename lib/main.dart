@@ -4,6 +4,8 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/l10n/locale_cubit.dart';
 import 'package:fitness_app/core/routes/app_router.dart';
 import 'package:fitness_app/core/services/notification_service.dart';
 import 'package:fitness_app/core/services/reminder_sync.dart';
@@ -35,8 +37,10 @@ import 'package:fitness_app/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +67,11 @@ Future<void> main() async {
 
   await Hive.openBox<NotificationModel>('notifications');
   await init();
+  // Marathi defaults to Devanagari digits in dates; the rest of the app
+  // (charts, numbers) uses Latin digits, so keep dates consistent.
+  DateFormat.useNativeDigitsByDefaultFor('mr', false);
+  // Restores the chosen language before anything builds a message.
+  sl<LocaleCubit>();
 
   // FCM: background/terminated messages are stored for the in-app list.
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -86,16 +95,36 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => sl<AuthBloc>()),
+            BlocProvider.value(value: sl<LocaleCubit>()),
             // Device-level: a model download survives logout and navigation.
             BlocProvider(create: (_) => sl<OnDeviceModelCubit>()..check()),
           ],
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.dark,
-            darkTheme: AppTheme.dark,
-            themeMode: ThemeMode.dark,
-            routerConfig: AppRouter.router,
-            builder: (context, child) => UserScope(child: child!),
+          child: BlocBuilder<LocaleCubit, Locale?>(
+            builder: (context, locale) => MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              onGenerateTitle: (context) => context.l10n.appTitle,
+              theme: AppTheme.dark,
+              darkTheme: AppTheme.dark,
+              themeMode: ThemeMode.dark,
+              locale: locale,
+              supportedLocales: appLocales,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              localeListResolutionCallback: (preferred, _) =>
+                  AppLocale.resolve(preferred ?? const []),
+              routerConfig: AppRouter.router,
+              builder: (context, child) {
+                // DateFormat without an explicit locale follows the app.
+                Intl.defaultLocale = Localizations.localeOf(
+                  context,
+                ).languageCode;
+                return UserScope(child: child!);
+              },
+            ),
           ),
         );
       },

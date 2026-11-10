@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class FoodEntryList extends StatelessWidget {
             SizedBox(height: 16.h),
 
             Text(
-              'No food added yet',
+              context.l10n.dietNoFood,
 
               style: TextStyle(
                 color: Colors.white70,
@@ -52,7 +53,7 @@ class FoodEntryList extends StatelessWidget {
             SizedBox(height: 8.h),
 
             Text(
-              'Tap "Add Food" to build your diet plan',
+              context.l10n.dietNoFoodHint,
 
               textAlign: TextAlign.center,
 

@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_repository.dart';
 
 import '../../domain/entities/calculator_result_entity.dart';
@@ -29,12 +30,12 @@ class HealthCalculatorRepositoryImpl implements HealthCalculatorRepository {
     final model = await localDatasource.getLastResult();
 
     if (model == null) {
-      return const CalculatorResultEntity(
+      return CalculatorResultEntity(
         value: 0,
 
-        title: 'No results',
+        title: AppLocale.l10n.calcNoResults,
 
-        description: 'Complete a calculation to see results here.',
+        description: AppLocale.l10n.calcNoResultsBody,
       );
     }
 

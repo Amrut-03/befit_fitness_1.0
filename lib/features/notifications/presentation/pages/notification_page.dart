@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:fitness_app/core/di/injection_container.dart';
@@ -65,7 +66,7 @@ class _NotificationViewState extends State<_NotificationView> {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      appBar: const AppHeader(title: "Notifications"),
+      appBar: AppHeader(title: context.l10n.notifTitle),
 
       body: RefreshIndicator(
         onRefresh: () async {
@@ -98,7 +99,7 @@ class _NotificationViewState extends State<_NotificationView> {
                       SizedBox(height: 18.h),
 
                       Text(
-                        "No Notifications Yet",
+                        context.l10n.notifEmpty,
 
                         style: TextStyle(
                           color: Colors.white70,

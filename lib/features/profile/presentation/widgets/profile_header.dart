@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -111,7 +113,7 @@ class ProfileHeader extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  profile.goal,
+                  goalLabel(context.l10n, profile.goal),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

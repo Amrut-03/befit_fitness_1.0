@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
@@ -201,7 +202,7 @@ class WaterIntakeBloc extends Bloc<WaterIntakeEvent, WaterIntakeState> {
       WaterDay(day: d.day, goalMl: goalMl, entries: d.entries);
 
   static String _messageFor(Object e) => e is ArgumentError
-      ? 'Enter an amount between 1 and 3000 ml.'
+      ? AppLocale.l10n.waterInvalidAmount
       : Failure.fromException(e).message;
 
   @override

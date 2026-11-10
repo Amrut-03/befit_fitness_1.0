@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
@@ -31,7 +32,7 @@ class WeeklyReportPage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.background,
-          appBar: const AppHeader(title: 'Weekly report'),
+          appBar: AppHeader(title: context.l10n.reportTitle),
           body: Column(
             children: [
               _WeekSwitcher(
@@ -51,7 +52,7 @@ class WeeklyReportPage extends StatelessWidget {
                               child: TextButton(
                                 onPressed: () =>
                                     bloc.add(const WeeklyReportRefreshed()),
-                                child: const Text("Couldn't load. Retry"),
+                                child: Text(context.l10n.reportLoadFailed),
                               ),
                             )
                           : const AppLoader())
@@ -64,11 +65,12 @@ class WeeklyReportPage extends StatelessWidget {
                             ReportStatTiles(report: report),
                             SizedBox(height: 20.h),
                             _Section(
-                              title: 'Weight trend',
+                              title: context.l10n.reportWeightTrend,
                               subtitle: report.latestWeightKg == null
-                                  ? 'Weekly average, last 8 weeks'
-                                  : 'Latest ${kg(report.latestWeightKg!)} · '
-                                        'weekly average, last 8 weeks',
+                                  ? context.l10n.reportWeightTrendSub
+                                  : context.l10n.reportWeightTrendLatest(
+                                      kg(report.latestWeightKg!),
+                                    ),
                               child: WeightTrendChart(
                                 trend: report.weightTrend,
                                 week: report.week,
@@ -76,12 +78,13 @@ class WeeklyReportPage extends StatelessWidget {
                             ),
                             SizedBox(height: 16.h),
                             _Section(
-                              title: 'Macro adherence',
+                              title: context.l10n.reportMacroAdherence,
                               subtitle: report.adherencePct == null
-                                  ? 'Eaten vs. your daily goals'
-                                  : '${report.adherencePct!.round()}% on '
-                                        'target over ${report.loggedDays} '
-                                        'logged days',
+                                  ? context.l10n.reportMacroSub
+                                  : context.l10n.reportMacroOnTarget(
+                                      report.adherencePct!.round(),
+                                      report.loggedDays,
+                                    ),
                               child: Column(
                                 children: [
                                   MacroAdherenceChart(
@@ -129,7 +132,7 @@ class _WeekSwitcher extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            tooltip: 'Previous week',
+            tooltip: context.l10n.reportPrevWeek,
             onPressed: onPrevious,
             icon: const Icon(Icons.chevron_left),
             color: AppColors.textPrimary,
@@ -157,7 +160,7 @@ class _WeekSwitcher extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Next week',
+            tooltip: context.l10n.reportNextWeek,
             onPressed: onNext,
             icon: const Icon(Icons.chevron_right),
             color: AppColors.textPrimary,
@@ -239,9 +242,9 @@ class _MacroTable extends StatelessWidget {
     return Table(
       columnWidths: const {0: FlexColumnWidth(1.2)},
       children: [
-        row(['', 'kcal', 'P', 'C', 'F', 'Score'], head),
+        row(['', 'kcal', 'P', 'C', 'F', context.l10n.reportScore], head),
         row([
-          'Goal',
+          context.l10n.reportGoal,
           '${g.calories.round()}',
           '${g.protein.round()}',
           '${g.carbs.round()}',

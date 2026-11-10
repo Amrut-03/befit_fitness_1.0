@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
@@ -22,29 +23,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int currentPage = 0;
 
   final List<Map<String, String>> items = [
-    {
-      "title": "Track Workouts",
-
-      "description": "Monitor your daily fitness journey.",
-
-      "image": "assets/lotties/self_work_out.json",
-    },
-
-    {
-      "title": "Healthy Nutrition",
-
-      "description": "Plan meals and calories smartly.",
-
-      "image": "assets/lotties/nutrition.json",
-    },
-
-    {
-      "title": "Stay Consistent",
-
-      "description": "Build habits and reach your goals.",
-
-      "image": "assets/lotties/consistent.json",
-    },
+    {"image": "assets/lotties/self_work_out.json"},
+    {"image": "assets/lotties/nutrition.json"},
+    {"image": "assets/lotties/consistent.json"},
   ];
 
   @override
@@ -123,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           },
 
                           child: Text(
-                            "Skip",
+                            context.l10n.commonSkip,
 
                             style: TextStyle(
                               color: Colors.white,
@@ -151,8 +132,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       itemCount: items.length,
 
-                      itemBuilder: (_, index) {
+                      itemBuilder: (context, index) {
                         final item = items[index];
+                        final l10n = context.l10n;
+                        final (title, description) = switch (index) {
+                          0 => (l10n.onbTrackTitle, l10n.onbTrackBody),
+                          1 => (l10n.onbNutritionTitle, l10n.onbNutritionBody),
+                          _ => (
+                            l10n.onbConsistentTitle,
+                            l10n.onbConsistentBody,
+                          ),
+                        };
 
                         return AnimatedSwitcher(
                           duration: const Duration(milliseconds: 500),
@@ -193,7 +183,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                                 /// TITLE
                                 Text(
-                                  item['title'] ?? '',
+                                  title,
 
                                   textAlign: TextAlign.center,
 
@@ -212,7 +202,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                                 /// DESCRIPTION
                                 Text(
-                                  item['description'] ?? '',
+                                  description,
 
                                   textAlign: TextAlign.center,
 
@@ -272,8 +262,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         child: Text(
                           currentPage == items.length - 1
-                              ? "Get Started"
-                              : "Continue",
+                              ? context.l10n.onbGetStarted
+                              : context.l10n.commonContinue,
 
                           style: TextStyle(
                             color: Colors.black,

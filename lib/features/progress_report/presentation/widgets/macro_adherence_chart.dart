@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +34,10 @@ class MacroAdherenceChart extends StatelessWidget {
     final h = height ?? 150.h;
     final g = goals;
     if (g == null || !g.isSet) {
-      return _note(h, 'Set macro goals in your profile to track adherence.');
+      return _note(h, context.l10n.reportSetMacroGoals);
     }
     if (!days.any((d) => d.logged)) {
-      return _note(h, 'Tick off meals in your diet plan to see your macros.');
+      return _note(h, context.l10n.reportTickMeals);
     }
 
     double pct(double eaten, double goal) =>
@@ -75,7 +76,11 @@ class MacroAdherenceChart extends StatelessWidget {
                   getTooltipItem: (group, _, rod, i) {
                     final d = days[group.x];
                     if (!d.logged) return null;
-                    final label = ['Protein', 'Carbs', 'Fat'][i];
+                    final label = [
+                      context.l10n.macroProtein,
+                      context.l10n.macroCarbs,
+                      context.l10n.macroFat,
+                    ][i];
                     final eaten = [d.protein, d.carbs, d.fat][i];
                     final goal = [g.protein, g.carbs, g.fat][i];
                     return BarTooltipItem(
@@ -174,9 +179,9 @@ class MacroLegend extends StatelessWidget {
       runSpacing: 4.h,
       alignment: WrapAlignment.center,
       children: [
-        item('Protein', MacroColors.protein),
-        item('Carbs', MacroColors.carbs),
-        item('Fat', MacroColors.fat),
+        item(context.l10n.macroProtein, MacroColors.protein),
+        item(context.l10n.macroCarbs, MacroColors.carbs),
+        item(context.l10n.macroFat, MacroColors.fat),
         Text(
           '- - 100% of goal',
           style: TextStyle(color: AppColors.textMuted, fontSize: 11.sp),

@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,7 +65,7 @@ class SessionExerciseCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: 'Remove exercise',
+                tooltip: context.l10n.workoutRemoveExercise,
                 icon: const Icon(Icons.close, color: AppColors.textMuted),
                 onPressed: () => cubit.removeExercise(index),
               ),
@@ -84,7 +85,7 @@ class SessionExerciseCard extends StatelessWidget {
               TextButton.icon(
                 onPressed: () => cubit.addSet(index),
                 icon: const Icon(Icons.add, size: 18),
-                label: const Text('Add set'),
+                label: Text(context.l10n.workoutAddSet),
               ),
               if (exercise.sets.length > 1)
                 TextButton.icon(
@@ -94,7 +95,7 @@ class SessionExerciseCard extends StatelessWidget {
                     foregroundColor: AppColors.textMuted,
                   ),
                   icon: const Icon(Icons.remove, size: 18),
-                  label: const Text('Remove set'),
+                  label: Text(context.l10n.workoutRemoveSet),
                 ),
             ],
           ),
@@ -116,13 +117,21 @@ class _HeaderRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 32.w,
-            child: Text('SET', style: style),
+            child: Text(context.l10n.workoutColSet, style: style),
           ),
           Expanded(
-            child: Text('KG', style: style, textAlign: TextAlign.center),
+            child: Text(
+              context.l10n.workoutColKg,
+              style: style,
+              textAlign: TextAlign.center,
+            ),
           ),
           Expanded(
-            child: Text('REPS', style: style, textAlign: TextAlign.center),
+            child: Text(
+              context.l10n.workoutColReps,
+              style: style,
+              textAlign: TextAlign.center,
+            ),
           ),
           SizedBox(width: 48.w),
         ],
@@ -162,7 +171,7 @@ class _SetRow extends StatelessWidget {
           ),
           Expanded(
             child: _NumberField(
-              label: 'Set ${setIndex + 1} weight in kg',
+              label: context.l10n.workoutSetWeightLabel(setIndex + 1),
               value: set.weightKg == null ? '' : _kg(set.weightKg!),
               hint: '–',
               decimal: true,
@@ -179,7 +188,7 @@ class _SetRow extends StatelessWidget {
           SizedBox(width: 8.w),
           Expanded(
             child: _NumberField(
-              label: 'Set ${setIndex + 1} reps',
+              label: context.l10n.workoutSetRepsLabel(setIndex + 1),
               value: '${set.reps}',
               hint: '0',
               onChanged: (text) {
@@ -193,7 +202,9 @@ class _SetRow extends StatelessWidget {
           SizedBox(
             width: 48.w,
             child: IconButton(
-              tooltip: set.done ? 'Mark set not done' : 'Complete set',
+              tooltip: set.done
+                  ? context.l10n.workoutSetUndone
+                  : context.l10n.workoutSetDone,
               onPressed: () {
                 HapticFeedback.selectionClick();
                 cubit.toggleSet(exerciseIndex, setIndex);

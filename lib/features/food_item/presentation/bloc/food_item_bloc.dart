@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -30,7 +31,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
       await _foodItemsSubscription?.cancel();
       _foodItemsSubscription = null;
       emit(
-        state.copyWith(isLoading: false, error: 'Failed to load food items'),
+        state.copyWith(isLoading: false, error: AppLocale.l10n.foodLoadFailed),
       );
     });
   }
@@ -42,7 +43,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     try {
       await deleteFoodItem(event.id);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to delete food item'));
+      emit(state.copyWith(error: AppLocale.l10n.foodDeleteFailed));
     }
   }
 
@@ -75,7 +76,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     try {
       await saveFoodItem(event.item);
     } catch (e) {
-      emit(state.copyWith(error: "Failed to save"));
+      emit(state.copyWith(error: AppLocale.l10n.foodSaveFailed));
     }
   }
 
@@ -86,7 +87,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     try {
       await updateFoodItem(event.item);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to update food item'));
+      emit(state.copyWith(error: AppLocale.l10n.foodUpdateFailed));
     }
   }
 

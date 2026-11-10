@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -123,7 +124,7 @@ class MacroInputField extends StatelessWidget {
               final parsed = double.tryParse(value);
 
               if (parsed == null || parsed < 0) {
-                return 'Enter a valid number';
+                return context.l10n.foodValidNumber;
               }
 
               return null;

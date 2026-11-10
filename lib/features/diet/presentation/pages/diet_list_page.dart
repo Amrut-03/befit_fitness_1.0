@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -33,7 +34,7 @@ class _DietListPageState extends State<DietListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surfaceDim,
-      appBar: const AppHeader(title: "Diet Planning"),
+      appBar: AppHeader(title: context.l10n.dietPlanningTitle),
       body: BlocBuilder<DietBloc, DietState>(
         builder: (context, state) {
           final visiblePlans = state.plans;
@@ -64,7 +65,7 @@ class _DietListPageState extends State<DietListPage> {
                   SizedBox(height: 16.h),
 
                   Text(
-                    'No diet plans saved yet',
+                    context.l10n.dietNoPlans,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 18.sp,
@@ -74,7 +75,7 @@ class _DietListPageState extends State<DietListPage> {
                   SizedBox(height: 8.h),
 
                   Text(
-                    'Tap the button below to plan your diet',
+                    context.l10n.dietNoPlansHint,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.5),
                       fontSize: 14.sp,
@@ -102,9 +103,12 @@ class _DietListPageState extends State<DietListPage> {
         },
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.restaurant_menu, color: Colors.black),
-        label: const Text(
-          'Plan Your Diet',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        label: Text(
+          context.l10n.dietPlanYourDiet,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -122,27 +126,27 @@ class _DietListPageState extends State<DietListPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
-          title: const Text(
-            "Delete Diet Plan",
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            context.l10n.dietDeleteTitle,
+            style: const TextStyle(color: Colors.white),
           ),
           content: Text(
-            'Are you sure you want to delete "${plan.name}"?',
+            context.l10n.dietDeleteConfirm(plan.name),
             style: const TextStyle(color: Colors.white70),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text(
-                "Cancel",
-                style: TextStyle(color: Colors.white60),
+              child: Text(
+                context.l10n.commonCancel,
+                style: const TextStyle(color: Colors.white60),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text(
-                "Delete",
-                style: TextStyle(color: Colors.redAccent),
+              child: Text(
+                context.l10n.commonDelete,
+                style: const TextStyle(color: Colors.redAccent),
               ),
             ),
           ],
@@ -218,7 +222,7 @@ class _DietListPageState extends State<DietListPage> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        "${plan.totalMeals} meals",
+                        context.l10n.dietMealsCount(plan.totalMeals),
                         style: TextStyle(
                           color: Colors.white60,
                           fontSize: 12.sp,
@@ -243,7 +247,9 @@ class _DietListPageState extends State<DietListPage> {
                     ),
                   ),
                   child: Text(
-                    plan.isActiveToday ? "ACTIVE" : "INACTIVE",
+                    plan.isActiveToday
+                        ? context.l10n.dietCardActiveBadge
+                        : context.l10n.dietInactiveBadge,
                     style: TextStyle(
                       color: plan.isActiveToday
                           ? Colors.greenAccent
@@ -261,11 +267,11 @@ class _DietListPageState extends State<DietListPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Calories",
+                  context.l10n.statCalories,
                   style: TextStyle(color: Colors.white70, fontSize: 13.sp),
                 ),
                 Text(
-                  "${plan.totalCalories.toInt()} kcal",
+                  context.l10n.unitKcal(plan.totalCalories.toInt().toString()),
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
@@ -289,7 +295,10 @@ class _DietListPageState extends State<DietListPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${plan.consumedMeals}/${plan.totalMeals} meals completed",
+                  context.l10n.dietMealsCompleted(
+                    plan.consumedMeals,
+                    plan.totalMeals,
+                  ),
                   style: TextStyle(color: Colors.white60, fontSize: 12.sp),
                 ),
                 Text(
@@ -331,7 +340,9 @@ class _DietListPageState extends State<DietListPage> {
                       size: 18.sp,
                     ),
                     label: Text(
-                      plan.isActiveToday ? "Activated" : "Set Active",
+                      plan.isActiveToday
+                          ? context.l10n.dietActivated
+                          : context.l10n.dietSetActive,
                       style: TextStyle(
                         color: plan.isActiveToday
                             ? Colors.green

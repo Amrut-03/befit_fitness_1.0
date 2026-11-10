@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/constants/education_data.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -187,7 +188,9 @@ class _HomePageState extends State<HomePage> {
                                             onInfoTap: () {
                                               EducationBottomSheet.show(
                                                 context,
-                                                EducationData.overallHealth,
+                                                EducationData.overallHealth(
+                                                  context.l10n,
+                                                ),
                                               );
                                             },
                                           ),
@@ -227,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Today's Goals",
+                                            context.l10n.homeTodaysGoals,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 18.sp,
@@ -237,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                                           SizedBox(height: 20.h),
                                           GoalProgressBar(
                                             icon: Icons.directions_walk,
-                                            title: "Steps",
+                                            title: context.l10n.statSteps,
                                             current: data.steps,
                                             goal: stepGoal,
                                             color: AppColors.primary,
@@ -319,25 +322,25 @@ class _HomePageState extends State<HomePage> {
 
                         child: Row(
                           children: [
-                            const HealthMetricCard(
+                            HealthMetricCard(
                               type: MetricType.heartRate,
-                              title: "Heart Rate",
+                              title: context.l10n.homeHeartRate,
                               color: AppColors.accentPink,
                             ),
 
                             SizedBox(width: 12.w),
 
-                            const HealthMetricCard(
+                            HealthMetricCard(
                               type: MetricType.sleep,
-                              title: "Sleep",
-                              color: Color(0xFF5B8CFF),
+                              title: context.l10n.homeSleep,
+                              color: const Color(0xFF5B8CFF),
                             ),
 
                             SizedBox(width: 12.w),
 
-                            const HealthMetricCard(
+                            HealthMetricCard(
                               type: MetricType.weight,
-                              title: "Weight",
+                              title: context.l10n.statWeight,
                               color: AppColors.primary,
                             ),
                           ],

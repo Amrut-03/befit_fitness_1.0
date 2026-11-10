@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'dart:async';
 
@@ -41,7 +42,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
 
     on<WorkoutHistoryFailed>(
       (event, emit) =>
-          emit(state.copyWith(error: 'Failed to load workout history')),
+          emit(state.copyWith(error: AppLocale.l10n.workoutHistoryFailed)),
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/features/health_calculator/presentation/widgets/calculator_inputs.dart';
 import 'package:fitness_app/features/health_calculator/presentation/widgets/calculator_result_card.dart';
@@ -7,6 +8,9 @@ import 'package:fitness_app/features/health_calculator/presentation/bloc/health_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+
+import '../calculator_labels.dart';
 
 class HealthCalculatorPage extends StatefulWidget {
   final String type;
@@ -36,7 +40,9 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
       create: (_) => sl<HealthCalculatorBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppHeader(title: widget.type),
+        appBar: AppHeader(
+          title: calculatorTypeLabel(context.l10n, widget.type),
+        ),
         // AppBar(
         //   backgroundColor:
         //       Colors.transparent,
@@ -63,24 +69,28 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                   if (_needsWeight())
                     CalculatorTextField(
                       controller: weightController,
-                      hint: "Weight (kg)",
+                      hint: context.l10n.calcWeightHint,
                     ),
                   if (_needsHeight()) ...[
                     SizedBox(height: 16.h),
                     CalculatorTextField(
                       controller: heightController,
-                      hint: "Height (cm)",
+                      hint: context.l10n.calcHeightHint,
                     ),
                   ],
                   if (_needsAge()) ...[
                     SizedBox(height: 16.h),
-                    CalculatorTextField(controller: ageController, hint: "Age"),
+                    CalculatorTextField(
+                      controller: ageController,
+                      hint: context.l10n.statAge,
+                    ),
                   ],
                   if (_needsGender()) ...[
                     SizedBox(height: 16.h),
                     CalculatorDropdown(
                       value: gender,
                       items: const ["Male", "Female"],
+                      labelOf: (v) => genderLabel(context.l10n, v),
                       onChanged: (v) {
                         setState(() {
                           gender = v!;
@@ -93,6 +103,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                     CalculatorDropdown(
                       value: goal,
                       items: const ["Maintain", "Fat Loss", "Muscle Gain"],
+                      labelOf: (v) => proteinGoalLabel(context.l10n, v),
                       onChanged: (v) {
                         setState(() {
                           goal = v!;
@@ -106,7 +117,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Activity Level",
+                          context.l10n.calcActivityLevel,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14.sp,
@@ -149,7 +160,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                               height <= 0) {
                             _showError(
                               context,
-                              'Please enter valid positive weight and height',
+                              context.l10n.calcErrWeightHeight,
                             );
                             return;
                           }
@@ -159,20 +170,14 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                         } else if (widget.type == "Water Intake") {
                           final weight = double.tryParse(weightController.text);
                           if (weight == null || weight <= 0) {
-                            _showError(
-                              context,
-                              'Please enter valid positive weight',
-                            );
+                            _showError(context, context.l10n.calcErrWeight);
                             return;
                           }
                           bloc.add(CalculateWaterEvent(weight: weight));
                         } else if (widget.type == "Protein") {
                           final weight = double.tryParse(weightController.text);
                           if (weight == null || weight <= 0) {
-                            _showError(
-                              context,
-                              'Please enter valid positive weight',
-                            );
+                            _showError(context, context.l10n.calcErrWeight);
                             return;
                           }
                           bloc.add(
@@ -188,10 +193,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                               height <= 0 ||
                               age == null ||
                               age <= 0) {
-                            _showError(
-                              context,
-                              'Please enter valid positive weight, height and age',
-                            );
+                            _showError(context, context.l10n.calcErrAll);
                             return;
                           }
                           bloc.add(
@@ -206,7 +208,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                         }
                       },
                       child: Text(
-                        "Calculate",
+                        context.l10n.calcCalculate,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16.sp,
@@ -241,7 +243,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.type,
+            calculatorTypeLabel(context.l10n, widget.type),
             style: TextStyle(
               color: Colors.black,
               fontSize: 24.sp,
@@ -250,7 +252,7 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
           ),
           SizedBox(height: 6.h),
           Text(
-            "Track your fitness smarter",
+            context.l10n.calcTagline,
             style: TextStyle(
               color: Colors.black.withValues(alpha: 0.7),
               fontSize: 13.sp,

@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,7 +74,7 @@ class FoodEntryCard extends StatelessWidget {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
-                      entry.name,
+                      mealLabel(context.l10n, entry.name),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -98,13 +100,16 @@ class FoodEntryCard extends StatelessWidget {
                           (e) => PopupMenuItem(
                             value: e,
                             child: Text(
-                              e,
+                              mealLabel(context.l10n, e),
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         )
                         .toList(),
-                    child: _chip(entry.name, Colors.green),
+                    child: _chip(
+                      mealLabel(context.l10n, entry.name),
+                      Colors.green,
+                    ),
                   ),
                   // PopupMenuButton<String>(
                   //   onSelected: onAlarmAction,
@@ -133,10 +138,10 @@ class FoodEntryCard extends StatelessWidget {
               SizedBox(height: 12.h),
               Row(
                 children: [
-                  _macro("Cal", entry.calories),
-                  _macro("Carb", entry.carbs),
-                  _macro("Prot", entry.protein),
-                  _macro("Fat", entry.fat),
+                  _macro(context.l10n.macroCalShort, entry.calories),
+                  _macro(context.l10n.macroCarbShort, entry.carbs),
+                  _macro(context.l10n.macroProtShort, entry.protein),
+                  _macro(context.l10n.macroFat, entry.fat),
                 ],
               ),
               SizedBox(height: 12.h),
@@ -149,7 +154,8 @@ class FoodEntryCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Text(
-                    "${entry.quantity.toStringAsFixed(0)} ${entry.unit}",
+                    "${entry.quantity.toStringAsFixed(0)} "
+                    "${foodUnitLabel(context.l10n, entry.unit)}",
                     style: const TextStyle(color: Colors.cyanAccent),
                   ),
                 ),

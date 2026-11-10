@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
@@ -231,7 +232,7 @@ class WorkoutSessionCubit extends Cubit<WorkoutSessionState> {
     final s = state.session;
     if (s == null || state.saving) return;
     if (s.completedSets == 0) {
-      emit(_copy(message: 'Complete at least one set to save the workout.'));
+      emit(_copy(message: AppLocale.l10n.workoutNeedOneSet));
       return;
     }
 

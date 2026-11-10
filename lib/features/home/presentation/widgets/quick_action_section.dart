@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,52 +11,69 @@ class QuickActionsSection extends StatelessWidget {
   final List<Map<String, dynamic>> _actions = const [
     {
       'icon': Icons.restaurant_menu,
-      'title': 'Diet Plan',
-      'subtitle': 'Track your macros',
+      'title': 'qaDietPlan',
+      'subtitle': 'qaDietPlanSub',
       'key': 'diet',
       'color': AppColors.primary,
     },
 
     {
       'icon': Icons.fitness_center,
-      'title': 'Workout',
-      'subtitle': 'Training plans',
+      'title': 'qaWorkout',
+      'subtitle': 'qaWorkoutSub',
       'key': 'workout',
       'color': AppColors.accentOrange,
     },
 
     {
       'icon': Icons.calculate,
-      'title': 'Health Calculator',
-      'subtitle': 'BMI & nutrition',
+      'title': 'qaCalculator',
+      'subtitle': 'qaCalculatorSub',
       'key': 'calculator',
       'color': AppColors.primary,
     },
 
     {
       'icon': Icons.qr_code_scanner,
-      'title': 'Scan Food',
-      'subtitle': 'Barcode scanner',
+      'title': 'qaScanFood',
+      'subtitle': 'qaScanFoodSub',
       'key': 'scanner',
       'color': Color(0xFF8338EC),
     },
 
     {
       'icon': Icons.fastfood,
-      'title': 'My Foods',
-      'subtitle': 'Manage items',
+      'title': 'qaMyFoods',
+      'subtitle': 'qaMyFoodsSub',
       'key': 'food',
       'color': Color(0xFFFB5607),
     },
 
     {
       'icon': Icons.history,
-      'title': 'History',
-      'subtitle': 'Diet & workouts',
+      'title': 'historyTitle',
+      'subtitle': 'qaHistorySub',
       'key': 'history',
       'color': AppColors.success,
     },
   ];
+
+  /// Card texts are stored as l10n keys (the list is const).
+  static String _text(AppLocalizations l10n, String key) => switch (key) {
+    'qaDietPlan' => l10n.qaDietPlan,
+    'qaDietPlanSub' => l10n.qaDietPlanSub,
+    'qaWorkout' => l10n.qaWorkout,
+    'qaWorkoutSub' => l10n.qaWorkoutSub,
+    'qaCalculator' => l10n.qaCalculator,
+    'qaCalculatorSub' => l10n.qaCalculatorSub,
+    'qaScanFood' => l10n.qaScanFood,
+    'qaScanFoodSub' => l10n.qaScanFoodSub,
+    'qaMyFoods' => l10n.qaMyFoods,
+    'qaMyFoodsSub' => l10n.qaMyFoodsSub,
+    'historyTitle' => l10n.historyTitle,
+    'qaHistorySub' => l10n.qaHistorySub,
+    _ => key,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +81,7 @@ class QuickActionsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Quick Actions",
+          context.l10n.homeQuickActions,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -86,8 +104,8 @@ class QuickActionsSection extends StatelessWidget {
 
             return _ActionCard(
               icon: item['icon'],
-              title: item['title'],
-              subtitle: item['subtitle'],
+              title: _text(context.l10n, item['title']),
+              subtitle: _text(context.l10n, item['subtitle']),
               color: item['color'],
               onTap: () async {
                 await onCardTap?.call(item['key']);

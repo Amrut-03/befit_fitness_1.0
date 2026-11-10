@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/constants/education_data.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
@@ -47,7 +48,7 @@ class _BodyChart extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Body Chart',
+                    context.l10n.bodyChartTitle,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.sp,
@@ -59,7 +60,7 @@ class _BodyChart extends StatelessWidget {
                     onTap: () {
                       EducationBottomSheet.show(
                         context,
-                        EducationData.bodyChart,
+                        EducationData.bodyChart(context.l10n),
                       );
                     },
                     borderRadius: BorderRadius.circular(20),
@@ -135,7 +136,7 @@ class _BodyChart extends StatelessWidget {
             SizedBox(width: 8.w),
 
             Text(
-              'Search Workouts',
+              context.l10n.bodySearchWorkouts,
 
               style: TextStyle(
                 color: Colors.black,
@@ -158,7 +159,7 @@ class _BodyChart extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                state.isFront ? 'Front' : 'Back',
+                state.isFront ? context.l10n.bodyFront : context.l10n.bodyBack,
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 12.sp,
@@ -214,7 +215,7 @@ class _BodyChart extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(8.w),
             child: Text(
-              'Muscles',
+              context.l10n.bodyMuscles,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 12.sp,

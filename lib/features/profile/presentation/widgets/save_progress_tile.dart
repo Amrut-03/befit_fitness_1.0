@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
@@ -45,7 +46,10 @@ class _SaveProgressTileState extends State<SaveProgressTile> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Progress saved to ${state.user.email ?? 'your Google account'}.',
+                    context.l10n.progressSavedTo(
+                      state.user.email ??
+                          context.l10n.progressYourGoogleAccount,
+                    ),
                   ),
                 ),
               );
@@ -84,7 +88,9 @@ class _SaveProgressTileState extends State<SaveProgressTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            linking ? 'Linking…' : 'Save your progress',
+                            linking
+                                ? context.l10n.progressLinking
+                                : context.l10n.progressSave,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14.sp,
@@ -93,8 +99,7 @@ class _SaveProgressTileState extends State<SaveProgressTile> {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            "You're using a guest account. Link Google to "
-                            'keep your data if you sign out or change phones.',
+                            context.l10n.progressGuestHint,
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.6),
                               fontSize: 12.sp,

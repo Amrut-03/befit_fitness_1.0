@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/session/session_notifier.dart';
@@ -75,7 +77,7 @@ class ActivityLevelPage extends StatelessWidget {
                           height: MediaQuery.of(context).size.height * 0.12,
                         ),
                         Text(
-                          "Activity Level",
+                          context.l10n.onbActivityTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -85,7 +87,7 @@ class ActivityLevelPage extends StatelessWidget {
                         ),
                         SizedBox(height: 12.h),
                         Text(
-                          "Tell us about your daily activity",
+                          context.l10n.onbActivitySubtitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.6),
@@ -99,7 +101,10 @@ class ActivityLevelPage extends StatelessWidget {
                                 state.activityLevel == level["title"];
 
                             return OnboardingOptionCard(
-                              title: level["title"].toString(),
+                              title: activityLabel(
+                                context.l10n,
+                                level["title"].toString(),
+                              ),
                               emoji: level["emoji"].toString(),
                               isSelected: isSelected,
                               onTap: () {
@@ -182,7 +187,7 @@ class ActivityLevelPage extends StatelessWidget {
                             child: state.isLoading
                                 ? const AppLoader()
                                 : Text(
-                                    "Continue",
+                                    context.l10n.commonContinue,
                                     style: TextStyle(
                                       color: state.activityLevel != null
                                           ? Colors.black

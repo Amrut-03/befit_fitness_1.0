@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _WaterIntakeCardState extends State<WaterIntakeCard> {
                 Icon(Icons.water_drop_rounded, color: color, size: 22.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  'Water',
+                  context.l10n.waterTitle,
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 16.sp,
@@ -87,7 +88,7 @@ class _WaterIntakeCardState extends State<WaterIntakeCard> {
                 for (final ml in const [250, 500]) _AddButton(ml: ml),
                 if (reached)
                   Text(
-                    'Goal reached 🎉',
+                    context.l10n.waterGoalReached,
                     style: TextStyle(color: AppColors.success, fontSize: 12.sp),
                   ),
               ],

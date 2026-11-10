@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
@@ -59,7 +60,7 @@ class _PlanDietPageState extends State<PlanDietPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppHeader(
-        title: "Plan Your Diet",
+        title: context.l10n.dietPlanYourDiet,
         actions: [
           IconButton(
             icon: const Icon(Icons.save, color: AppColors.primary),
@@ -83,7 +84,7 @@ class _PlanDietPageState extends State<PlanDietPage> {
 
               context.pop();
             },
-            tooltip: 'Save Diet Plan',
+            tooltip: context.l10n.dietSavePlan,
           ),
         ],
       ),
@@ -186,9 +187,12 @@ class _PlanDietPageState extends State<PlanDietPage> {
         },
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.black),
-        label: const Text(
-          'Add Food',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        label: Text(
+          context.l10n.dietAddFood,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

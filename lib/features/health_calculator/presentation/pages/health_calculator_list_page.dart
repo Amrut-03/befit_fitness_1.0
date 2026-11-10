@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
@@ -5,27 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../calculator_labels.dart';
+
 class HealthCalculatorListPage extends StatelessWidget {
   const HealthCalculatorListPage({super.key});
 
   static const calculators = [
-    {
-      'title': 'BMI Calculator',
-
-      'subtitle': 'Check body mass index',
-
-      'type': 'BMI',
-
-      'icon': Icons.monitor_weight,
-
-      'color': AppColors.primary,
-    },
+    {'type': 'BMI', 'icon': Icons.monitor_weight, 'color': AppColors.primary},
 
     {
-      'title': 'Water Intake',
-
-      'subtitle': 'Daily hydration goal',
-
       'type': 'Water Intake',
 
       'icon': Icons.water_drop,
@@ -33,23 +22,9 @@ class HealthCalculatorListPage extends StatelessWidget {
       'color': Color(0xFF4D96FF),
     },
 
-    {
-      'title': 'Protein Calculator',
-
-      'subtitle': 'Daily protein target',
-
-      'type': 'Protein',
-
-      'icon': Icons.egg_alt,
-
-      'color': AppColors.accentPink,
-    },
+    {'type': 'Protein', 'icon': Icons.egg_alt, 'color': AppColors.accentPink},
 
     {
-      'title': 'Calories Calculator',
-
-      'subtitle': 'Maintenance calories',
-
       'type': 'Calories',
 
       'icon': Icons.local_fire_department,
@@ -63,7 +38,7 @@ class HealthCalculatorListPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      appBar: const AppHeader(title: "Health Calculators"),
+      appBar: AppHeader(title: context.l10n.calcTitle),
 
       body: ListView.separated(
         padding: EdgeInsets.all(20.w),
@@ -119,7 +94,10 @@ class HealthCalculatorListPage extends StatelessWidget {
 
                       children: [
                         Text(
-                          item['title'] as String,
+                          calculatorTitle(
+                            context.l10n,
+                            item['type']! as String,
+                          ),
 
                           style: TextStyle(
                             color: Colors.white,
@@ -133,7 +111,10 @@ class HealthCalculatorListPage extends StatelessWidget {
                         SizedBox(height: 4.h),
 
                         Text(
-                          item['subtitle'] as String,
+                          calculatorSubtitle(
+                            context.l10n,
+                            item['type']! as String,
+                          ),
 
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.6),

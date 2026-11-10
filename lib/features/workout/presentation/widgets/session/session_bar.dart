@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +38,7 @@ class SessionBar extends StatelessWidget {
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Text(
-                    'Workout in progress · $count '
-                    '${count == 1 ? 'exercise' : 'exercises'}',
+                    context.l10n.workoutInProgress(count),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.black,

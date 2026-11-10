@@ -12,7 +12,12 @@ import 'package:fitness_app/features/ai_insights/data/models/ai_insight_model.da
 class AIInsightsRemoteDatasource {
   final GenerativeModel model;
 
-  AIInsightsRemoteDatasource(this.model);
+  /// Language the insight text is written in, e.g. "Hindi".
+  final String Function() language;
+
+  AIInsightsRemoteDatasource(this.model, {this.language = _english});
+
+  static String _english() => 'English';
 
   static const int _insightCount = 4;
 
@@ -58,12 +63,19 @@ class AIInsightsRemoteDatasource {
         'Steps: $steps\n'
         'Calories burned: $calories\n'
         'Workout streak (days): $streak\n'
-        'BMI: ${bmi.toStringAsFixed(1)}';
+        'BMI: ${bmi.toStringAsFixed(1)}'
+        '${languageInstruction(language())}';
 
     final response = await model.generateContent([Content.text(prompt)]);
 
     return parseInsights(response.text);
   }
+
+  /// Asks for title and message in [language]; empty for English.
+  static String languageInstruction(String language) => language == 'English'
+      ? ''
+      : '\nWrite "title" and "message" in $language. Keep the JSON keys in '
+            'English.';
 
   /// Parses the model's JSON array response into at most four insights.
   static List<AIInsightModel> parseInsights(String? text) {

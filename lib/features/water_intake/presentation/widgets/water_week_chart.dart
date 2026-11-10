@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class WaterWeekChart extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Last 7 days',
+                  context.l10n.metricLast7Days,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: AppColors.textPrimary,
@@ -45,7 +46,7 @@ class WaterWeekChart extends StatelessWidget {
                 ),
               ),
               Text(
-                'Goal met $metCount/7',
+                context.l10n.waterGoalMet(metCount),
                 style: TextStyle(color: AppColors.textMuted, fontSize: 12.sp),
               ),
             ],

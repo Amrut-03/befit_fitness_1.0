@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +73,7 @@ Future<void> showEditQuantityBottomSheet({
                 SizedBox(height: 24.h),
 
                 Text(
-                  "Edit Quantity",
+                  context.l10n.dietEditQuantity,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22.sp,
@@ -96,7 +98,7 @@ Future<void> showEditQuantityBottomSheet({
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Quantity",
+                            context.l10n.dietQuantity,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 13.sp,
@@ -148,7 +150,7 @@ Future<void> showEditQuantityBottomSheet({
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Unit",
+                            context.l10n.dietUnit,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 13.sp,
@@ -180,7 +182,9 @@ Future<void> showEditQuantityBottomSheet({
                                     return DropdownMenuItem(
                                       value: unit,
 
-                                      child: Text(unit),
+                                      child: Text(
+                                        foodUnitLabel(context.l10n, unit),
+                                      ),
                                     );
                                   },
                                 ).toList(),
@@ -215,32 +219,36 @@ Future<void> showEditQuantityBottomSheet({
                   child: Column(
                     children: [
                       _macroRow(
-                        "Calories",
-                        "${updatedCalories.toStringAsFixed(1)} kcal",
+                        context.l10n.statCalories,
+                        context.l10n.unitKcal(
+                          updatedCalories.toStringAsFixed(1),
+                        ),
                         Colors.orangeAccent,
                       ),
 
                       SizedBox(height: 14.h),
 
                       _macroRow(
-                        "Protein",
-                        "${updatedProtein.toStringAsFixed(1)} g",
+                        context.l10n.macroProtein,
+                        context.l10n.unitGrams(
+                          updatedProtein.toStringAsFixed(1),
+                        ),
                         Colors.greenAccent,
                       ),
 
                       SizedBox(height: 14.h),
 
                       _macroRow(
-                        "Carbs",
-                        "${updatedCarbs.toStringAsFixed(1)} g",
+                        context.l10n.macroCarbs,
+                        context.l10n.unitGrams(updatedCarbs.toStringAsFixed(1)),
                         Colors.blueAccent,
                       ),
 
                       SizedBox(height: 14.h),
 
                       _macroRow(
-                        "Fat",
-                        "${updatedFat.toStringAsFixed(1)} g",
+                        context.l10n.macroFat,
+                        context.l10n.unitGrams(updatedFat.toStringAsFixed(1)),
                         Colors.pinkAccent,
                       ),
                     ],
@@ -282,7 +290,7 @@ Future<void> showEditQuantityBottomSheet({
                     ),
 
                     child: Text(
-                      "Update Quantity",
+                      context.l10n.dietUpdateQuantity,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,

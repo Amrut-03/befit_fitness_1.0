@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/services/notification_service.dart';
 import 'package:fitness_app/features/notifications/domain/entities/notification_settings.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -69,8 +70,8 @@ class ReminderScheduler {
         s.workoutHour,
         s.workoutMinute,
         now,
-        '💪 Time to move',
-        'Your workout is waiting. A short session still counts!',
+        AppLocale.l10n.reminderWorkoutTitle,
+        AppLocale.l10n.reminderWorkoutBody,
       );
     }
     if (s.streakReminder) {
@@ -83,8 +84,8 @@ class ReminderScheduler {
           _mealTimes[i].hour,
           _mealTimes[i].minute,
           now,
-          '🍽️ Log your meal',
-          'Tick off your meal to stay on track with your plan.',
+          AppLocale.l10n.reminderMealTitle,
+          AppLocale.l10n.reminderMealBody,
         );
       }
     }
@@ -125,8 +126,8 @@ class ReminderScheduler {
         _waterTimes[i].hour,
         _waterTimes[i].minute,
         now,
-        '💧 Hydration check',
-        'Time for a glass of water. Tap to log it in BeFit.',
+        AppLocale.l10n.reminderWaterTitle,
+        AppLocale.l10n.reminderWaterBody,
         skipToday: skipToday,
       );
     }
@@ -152,8 +153,8 @@ class ReminderScheduler {
       _streakTime.hour,
       _streakTime.minute,
       now,
-      '🔥 Streak at risk',
-      'Log a workout or meal today to keep your streak alive.',
+      AppLocale.l10n.reminderStreakTitle,
+      AppLocale.l10n.reminderStreakBody,
       skipToday: skipToday,
     );
   }

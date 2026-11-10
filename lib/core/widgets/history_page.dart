@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/models/history_item.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +156,7 @@ class _HistoryCard extends StatelessWidget {
                 SizedBox(height: 4.h),
 
                 Text(
-                  "${item.date.day}/${item.date.month}/${item.date.year}",
+                  DateFormat.yMd().format(item.date),
 
                   style: TextStyle(color: Colors.white38, fontSize: 11.sp),
                 ),
@@ -184,7 +186,7 @@ class _EmptyState extends StatelessWidget {
           SizedBox(height: 12.h),
 
           Text(
-            "No History Yet",
+            context.l10n.historyEmptyTitle,
 
             style: TextStyle(
               color: Colors.white,
@@ -197,10 +199,10 @@ class _EmptyState extends StatelessWidget {
 
           SizedBox(height: 6.h),
 
-          const Text(
-            "Complete workouts or diets to see history",
+          Text(
+            context.l10n.historyEmptyBody,
 
-            style: TextStyle(color: Colors.white54),
+            style: const TextStyle(color: Colors.white54),
           ),
         ],
       ),

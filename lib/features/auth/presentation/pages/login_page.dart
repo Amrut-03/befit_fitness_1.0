@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fitness_app/features/auth/presentation/widgets/google_signin_button.dart';
@@ -72,7 +73,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             SizedBox(height: 30.h),
                             Text(
-                              'Welcome to BeFit',
+                              context.l10n.loginWelcome,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -82,7 +83,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             SizedBox(height: 14.h),
                             Text(
-                              'Track workouts, build healthy habits,\nand transform your fitness journey.',
+                              context.l10n.loginTagline,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.65),
@@ -92,7 +93,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             SizedBox(height: 50.h),
                             AuthButton(
-                              title: "Continue with Google",
+                              title: context.l10n.loginGoogle,
                               isLoading: isLoading,
                               icon: SvgPicture.asset(
                                 'assets/icons/google.svg',
@@ -106,7 +107,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             SizedBox(height: 18.h),
                             AuthButton(
-                              title: "Continue as Guest",
+                              title: context.l10n.loginGuest,
                               isPrimary: true,
                               isLoading: isLoading,
                               icon: Icon(
@@ -122,7 +123,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             SizedBox(height: 28.h),
                             Text(
-                              "By continuing you agree to our\nTerms & Privacy Policy",
+                              context.l10n.loginTerms,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.35),

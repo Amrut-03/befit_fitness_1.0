@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _WeeklyReportCardState extends State<WeeklyReportCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Weekly progress',
+                      context.l10n.reportWeeklyProgress,
                       style: TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 18.sp,
@@ -71,7 +72,7 @@ class _WeeklyReportCardState extends State<WeeklyReportCard> {
               ),
               TextButton(
                 onPressed: () => context.push(Routes.weeklyReport),
-                child: const Text('Full report'),
+                child: Text(context.l10n.reportFull),
               ),
             ],
           ),
@@ -85,7 +86,7 @@ class _WeeklyReportCardState extends State<WeeklyReportCard> {
                         onPressed: () => context.read<WeeklyReportBloc>().add(
                           const WeeklyReportRefreshed(),
                         ),
-                        child: const Text("Couldn't load. Retry"),
+                        child: Text(context.l10n.reportLoadFailed),
                       )
                     : const CircularProgressIndicator(strokeWidth: 2),
               ),
@@ -93,14 +94,14 @@ class _WeeklyReportCardState extends State<WeeklyReportCard> {
           else ...[
             ReportStatTiles(report: report),
             SizedBox(height: 16.h),
-            const _SectionTitle('Weight trend'),
+            _SectionTitle(context.l10n.reportWeightTrend),
             WeightTrendChart(
               trend: report.weightTrend,
               week: report.week,
               height: 110.h,
             ),
             SizedBox(height: 16.h),
-            const _SectionTitle('Macro adherence'),
+            _SectionTitle(context.l10n.reportMacroAdherence),
             MacroAdherenceChart(
               days: report.macroDays,
               goals: report.goals,

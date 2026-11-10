@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class WeightTrendChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final h = height ?? 140.h;
     if (trend.isEmpty) {
-      return _Empty(height: h, text: 'Log your weight to see the trend.');
+      return _Empty(height: h, text: context.l10n.reportWeightEmpty);
     }
 
     final values = trend.map((w) => w.avgKg);
@@ -37,7 +38,9 @@ class WeightTrendChart extends StatelessWidget {
     };
 
     return Semantics(
-      label: 'Weight trend: ${trend.map((w) => kg(w.avgKg)).join(', ')}',
+      label: context.l10n.reportWeightTrendLabel(
+        trend.map((w) => kg(w.avgKg)).join(', '),
+      ),
       child: SizedBox(
         height: h,
         child: LineChart(

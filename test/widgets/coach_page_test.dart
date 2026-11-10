@@ -99,11 +99,11 @@ void main() {
     verify(() => report.add(const WeeklyReportRequested())).called(1);
     verify(() => water.add(const WaterIntakeStarted())).called(1);
 
-    await t.tap(find.text(CoachPage.suggestions.first));
+    await t.tap(find.text('How am I doing this week?'));
     final event =
         verify(() => coach.add(captureAny())).captured.single
             as CoachQuestionSubmitted;
-    expect(event.question, CoachPage.suggestions.first);
+    expect(event.question, 'How am I doing this week?');
     expect(event.context.streakDays, 2);
   });
 
@@ -172,7 +172,7 @@ void main() {
     expect(find.text('Great week so far.'), findsOneWidget);
     expect(find.text('On-device'), findsOneWidget);
     expect(find.text('Thinking…'), findsOneWidget);
-    expect(find.text(CoachPage.suggestions.first), findsNothing);
+    expect(find.text('How am I doing this week?'), findsNothing);
 
     await t.tap(find.byTooltip('Stop'));
     verify(() => coach.add(const CoachStopRequested())).called(1);

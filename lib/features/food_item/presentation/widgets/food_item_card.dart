@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/l10n/profile_labels.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +97,10 @@ class FoodItemCard extends StatelessWidget {
                     ),
 
                     child: Text(
-                      "Per ${item.quantity?.toStringAsFixed(0)} ${item.unit}",
+                      context.l10n.foodPer(
+                        item.quantity?.toStringAsFixed(0) ?? '',
+                        foodUnitLabel(context.l10n, item.unit ?? ''),
+                      ),
 
                       style: TextStyle(
                         color: AppColors.primary,
@@ -143,7 +148,9 @@ class FoodItemCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.r),
                   ),
                   child: Text(
-                    isManual ? "Manual" : "Scanned",
+                    isManual
+                        ? context.l10n.foodManual
+                        : context.l10n.foodScanned,
                     style: TextStyle(
                       color: isManual
                           ? Colors.greenAccent

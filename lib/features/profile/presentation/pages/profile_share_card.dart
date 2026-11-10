@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -144,9 +145,9 @@ class ProfileShareCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _statCard(
-                  title: "Weight",
+                  title: context.l10n.statWeight,
 
-                  value: "${weight.round()} kg",
+                  value: context.l10n.unitKg(weight.round().toString()),
 
                   icon: Icons.monitor_weight,
 
@@ -158,7 +159,7 @@ class ProfileShareCard extends StatelessWidget {
 
               Expanded(
                 child: _statCard(
-                  title: "BMI",
+                  title: context.l10n.statBmi,
 
                   value: bmi.toStringAsFixed(1),
 
@@ -176,9 +177,9 @@ class ProfileShareCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _statCard(
-                  title: "Calories",
+                  title: context.l10n.statCalories,
 
-                  value: "$calories kcal",
+                  value: context.l10n.unitKcal(calories.toString()),
 
                   icon: Icons.local_fire_department,
 
@@ -190,7 +191,7 @@ class ProfileShareCard extends StatelessWidget {
 
               Expanded(
                 child: _statCard(
-                  title: "Steps",
+                  title: context.l10n.statSteps,
 
                   value: "$steps",
 
@@ -244,7 +245,7 @@ class ProfileShareCard extends StatelessWidget {
 
                     children: [
                       Text(
-                        "$streak Day Streak",
+                        context.l10n.shareDayStreak(streak),
 
                         style: TextStyle(
                           color: Colors.white,
@@ -258,7 +259,7 @@ class ProfileShareCard extends StatelessWidget {
                       SizedBox(height: 4.h),
 
                       Text(
-                        "Consistency creates results",
+                        context.l10n.shareConsistency,
 
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.5),
@@ -280,7 +281,7 @@ class ProfileShareCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '"Discipline beats motivation."',
+                  context.l10n.shareQuote,
 
                   textAlign: TextAlign.center,
 
@@ -296,7 +297,7 @@ class ProfileShareCard extends StatelessWidget {
                 SizedBox(height: 10.h),
 
                 Text(
-                  "Generated with BeFit",
+                  context.l10n.shareGeneratedWith,
 
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.4),

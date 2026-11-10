@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/error/failures.dart';
 import 'package:fitness_app/features/onboarding/domain/entities/onboarding_entity.dart';
 import 'package:fitness_app/features/onboarding/domain/usecases/get_user_profile.dart';
@@ -102,7 +103,12 @@ class OnboardingProfileBloc
             ),
           );
         } else {
-          emit(state.copyWith(isLoading: false, error: "Profile not found"));
+          emit(
+            state.copyWith(
+              isLoading: false,
+              error: AppLocale.l10n.onbProfileNotFound,
+            ),
+          );
         }
       } catch (e) {
         emit(

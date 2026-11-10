@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _AddFoodItemsSheet extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             Text(
-              "Add Food Item",
+              context.l10n.foodAddTitle,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22.sp,
@@ -45,14 +46,14 @@ class _AddFoodItemsSheet extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              "Choose how you want to add food",
+              context.l10n.foodAddHow,
               style: TextStyle(color: Colors.white54, fontSize: 13.sp),
             ),
             SizedBox(height: 28.h),
             _OptionCard(
               icon: Icons.qr_code_scanner_rounded,
-              title: "Scan Barcode",
-              subtitle: "Quickly scan packaged food items",
+              title: context.l10n.foodScanBarcode,
+              subtitle: context.l10n.foodScanBarcodeHint,
               color: AppColors.primary,
               onTap: () {
                 Navigator.pop(context);
@@ -62,8 +63,8 @@ class _AddFoodItemsSheet extends StatelessWidget {
             SizedBox(height: 16.h),
             _OptionCard(
               icon: Icons.edit_note_rounded,
-              title: "Add Manually",
-              subtitle: "Create your own custom food item",
+              title: context.l10n.foodAddManually,
+              subtitle: context.l10n.foodAddManuallyHint,
               color: Colors.greenAccent,
               onTap: () {
                 Navigator.pop(context);

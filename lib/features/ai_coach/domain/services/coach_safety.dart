@@ -1,11 +1,18 @@
 /// Questions the coach must not answer with generated text: possible medical
 /// emergencies and topics that need a professional. Answered with a fixed,
 /// safe reply instead of the model.
+enum CannedReply { emergency, professional }
+
 abstract final class CoachSafety {
+  // English plus common Hindi/Marathi phrasings, since the coach is asked in
+  // the app's language.
   static final _emergency = RegExp(
     r'chest pain|can.?t breathe|cannot breathe|short(ness)? of breath|'
     r'faint(ed|ing)?|pass(ed)? out|heart attack|stroke|suicid|kill myself|'
-    r'self.?harm|severe pain',
+    r'self.?harm|severe pain|'
+    r'सीने में दर्द|छाती में दर्द|छातीत दुख|छातीत वेदना|सांस नहीं|'
+    r'श्वास घेता येत नाही|बेहोश|शुद्ध हरपल|हार्ट अटैक|हृदयविकाराचा झटका|'
+    r'आत्महत्या|खुद को नुकसान|जीव द्यावा|तेज़ दर्द|तीव्र वेदना',
     caseSensitive: false,
   );
 
@@ -29,10 +36,17 @@ abstract final class CoachSafety {
       'dietitian. I can still help with general training, steps, water and '
       'balanced eating.';
 
-  /// A fixed reply for [question], or null when the model may answer.
-  static String? cannedReply(String question) {
-    if (_emergency.hasMatch(question)) return emergencyReply;
-    if (_professional.hasMatch(question)) return professionalReply;
+  /// Which fixed reply [question] needs, or null when the model may answer.
+  static CannedReply? classify(String question) {
+    if (_emergency.hasMatch(question)) return CannedReply.emergency;
+    if (_professional.hasMatch(question)) return CannedReply.professional;
     return null;
   }
+
+  /// The English fixed reply for [question], or null.
+  static String? cannedReply(String question) => switch (classify(question)) {
+    CannedReply.emergency => emergencyReply,
+    CannedReply.professional => professionalReply,
+    null => null,
+  };
 }
