@@ -21,6 +21,7 @@ dependencies:
   bloc: ^9.2.0
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^10.0.0
+  http: ^1.2.2
   get_it: ^9.2.1
   equatable: ^2.0.8
   firebase_core: ^4.7.0
@@ -50,12 +51,15 @@ dependencies:
   timezone: ^0.11.0
   flutter_timezone: ^5.1.0
   pedometer_2: ^5.0.4
+  firebase_ai: ^4.0.0
+  firebase_app_check: ^0.4.9
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
+  fake_cloud_firestore: ^4.4.0
 
 flutter_launcher_icons:
   android: true

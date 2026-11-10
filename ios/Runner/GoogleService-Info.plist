@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>475383477382-b8mh63e8tfffmlm82lrb7k9t4dnp6qpa.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDMDD5RkhnMjxOyNtpc03OY4w4qJBQPfB4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>475383477382</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.fitnessApp</string>
+	<key>PROJECT_ID</key>
+	<string>fitness-app-9dac8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fitness-app-9dac8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:475383477382:ios:c0436844b8d6b8e9c44d07</string>
+</dict>
+</plist>
