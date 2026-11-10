@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,7 +22,7 @@ class ProfileTextField extends StatelessWidget {
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
+        hintStyle: const TextStyle(color: AppColors.textMuted),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.05),
         border: OutlineInputBorder(

@@ -149,9 +149,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
               decoration: InputDecoration(
                 hintText: context.l10n.metricEnter(unit),
 
-                hintStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                ),
+                hintStyle: const TextStyle(color: AppColors.textMuted),
 
                 suffixText: unit,
 
@@ -171,46 +169,52 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
 
             SizedBox(height: 16.h),
 
-            InkWell(
-              onTap: () async {
-                final picked = await showDatePicker(
-                  context: context,
+            Semantics(
+              button: true,
+              child: InkWell(
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
 
-                  initialDate: selectedDate,
+                    initialDate: selectedDate,
 
-                  firstDate: DateTime(2020),
+                    firstDate: DateTime(2020),
 
-                  lastDate: DateTime.now(),
-                );
+                    lastDate: DateTime.now(),
+                  );
 
-                if (picked != null) {
-                  setState(() {
-                    selectedDate = picked;
-                  });
-                }
-              },
+                  if (picked != null) {
+                    setState(() {
+                      selectedDate = picked;
+                    });
+                  }
+                },
 
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
 
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
 
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
 
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today, color: Colors.white),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.calendar_today, color: Colors.white),
 
-                    SizedBox(width: 12.w),
+                      SizedBox(width: 12.w),
 
-                    Text(
-                      "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                      Text(
+                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
 
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

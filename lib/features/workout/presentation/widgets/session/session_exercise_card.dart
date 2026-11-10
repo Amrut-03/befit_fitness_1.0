@@ -288,6 +288,7 @@ class _NumberFieldState extends State<_NumberField> {
         onChanged: widget.onChanged,
         decoration: InputDecoration(
           isDense: true,
+          constraints: const BoxConstraints(minHeight: 48),
           hintText: widget.hint,
           hintStyle: const TextStyle(color: AppColors.textMuted),
           filled: true,

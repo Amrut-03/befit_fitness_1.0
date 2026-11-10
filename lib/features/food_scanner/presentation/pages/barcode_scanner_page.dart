@@ -257,12 +257,16 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                     children: [
                       _circleButton(
                         icon: Icons.arrow_back_ios_new,
+                        label: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
                         onTap: () {
                           Navigator.pop(context);
                         },
                       ),
                       _circleButton(
                         icon: Icons.flash_on_rounded,
+                        label: context.l10n.a11yTorch,
                         onTap: () async {
                           await _controller.toggleTorch();
                           setState(() {});
@@ -308,18 +312,28 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
     );
   }
 
-  Widget _circleButton({required IconData icon, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 48.w,
-        height: 48.w,
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.45),
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white24),
+  Widget _circleButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 48.w,
+          height: 48.w,
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.45),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Icon(icon, color: Colors.white, size: 20.sp),
         ),
-        child: Icon(icon, color: Colors.white, size: 20.sp),
       ),
     );
   }

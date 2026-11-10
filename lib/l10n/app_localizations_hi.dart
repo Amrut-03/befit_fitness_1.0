@@ -1670,4 +1670,49 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get coachProfessional =>
       'इस विषय पर सलाह आपके स्वास्थ्य इतिहास के अनुसार होनी चाहिए, इसलिए मैं इस पर मार्गदर्शन नहीं दे सकता। कृपया डॉक्टर या रजिस्टर्ड डाइटीशियन से बात करें। मैं सामान्य ट्रेनिंग, कदम, पानी और संतुलित खाने में मदद कर सकता हूं।';
+
+  @override
+  String get a11yProfile => 'प्रोफ़ाइल';
+
+  @override
+  String get a11yLearnMore => 'और जानें';
+
+  @override
+  String get bodyShowBack => 'पीछे का हिस्सा दिखाएं';
+
+  @override
+  String get bodyShowFront => 'सामने का हिस्सा दिखाएं';
+
+  @override
+  String get bodyExcludeHint => 'वर्कआउट खोज से हटाएं';
+
+  @override
+  String get bodyExcluded => 'हटाया गया';
+
+  @override
+  String waterOfGoal(String goal) {
+    return '$goal में से';
+  }
+
+  @override
+  String get a11yTorch => 'फ़्लैशलाइट';
+
+  @override
+  String get a11yClearSearch => 'खोज साफ़ करें';
+
+  @override
+  String get metricWeek => 'सप्ताह';
+
+  @override
+  String get metricMonth => 'महीना';
+
+  @override
+  String a11yOverallHealth(
+    String percent,
+    int steps,
+    int calories,
+    int minutes,
+  ) {
+    return 'कुल सेहत $percent%: $steps कदम, $calories kcal, $minutes सक्रिय मिनट';
+  }
 }

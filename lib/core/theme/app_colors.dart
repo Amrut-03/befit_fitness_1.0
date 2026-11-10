@@ -10,6 +10,9 @@ abstract final class AppColors {
   static const Color warning = Color(0xFFFFB703);
   static const Color water = Color(0xFF4D96FF);
 
+  /// Text and icons on [primary] (cyan): near-black, 14:1 contrast.
+  static const Color onPrimary = background;
+
   // Surfaces, darkest first
   static const Color background = Color(0xFF050505);
   static const Color surfaceDim = Color(0xFF0B0B0B);

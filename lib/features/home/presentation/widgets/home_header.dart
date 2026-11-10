@@ -21,14 +21,23 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        InkWell(
-          onTap: () {
-            context.push(Routes.profile);
-          },
-          child: CircleAvatar(
-            radius: 24.r,
-            backgroundColor: Colors.white12,
-            child: Icon(Icons.person, color: Colors.white, size: 24.sp),
+        Semantics(
+          button: true,
+          label: context.l10n.a11yProfile,
+          excludeSemantics: true,
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () {
+              context.push(Routes.profile);
+            },
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              child: CircleAvatar(
+                radius: 24.r,
+                backgroundColor: Colors.white12,
+                child: Icon(Icons.person, color: Colors.white, size: 24.sp),
+              ),
+            ),
           ),
         ),
         SizedBox(width: 12.w),
@@ -54,6 +63,7 @@ class HomeHeader extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(Icons.notifications_none, size: 28.sp),
+          tooltip: context.l10n.notifTitle,
           color: Colors.white,
           onPressed: () {
             context.push(Routes.notifications);

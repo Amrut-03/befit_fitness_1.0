@@ -108,6 +108,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
                 ),
               ),
               IconButton(
+                tooltip: context.l10n.commonClose,
                 icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () => Navigator.pop(context),
               ),

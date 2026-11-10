@@ -22,13 +22,18 @@ class WaterProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reached = totalMl >= goalMl;
-    final size = 200.w;
+    // Grows a little with the font size; the text inside scales down to fit
+    // beyond that.
+    final textScale = MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 1.3);
+    final size = 200.w * textScale;
+    final status = reached
+        ? context.l10n.waterGoalReached
+        : context.l10n.waterToGo(formatWater(goalMl - totalMl));
 
     return Semantics(
-      label: context.l10n.waterTodayLabel(
-        formatWater(totalMl),
-        formatWater(goalMl),
-      ),
+      label:
+          '${context.l10n.waterTodayLabel(formatWater(totalMl), formatWater(goalMl))}. $status',
+      excludeSemantics: true,
       child: SizedBox.square(
         dimension: size,
         child: TweenAnimationBuilder<double>(
@@ -37,43 +42,45 @@ class WaterProgressRing extends StatelessWidget {
           curve: Curves.easeOutCubic,
           builder: (context, value, _) => CustomPaint(
             painter: _RingPainter(value),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.water_drop_rounded,
-                    color: AppColors.water,
-                    size: 28.sp,
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    formatWater(totalMl),
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 30.sp,
-                      fontWeight: FontWeight.w800,
+            child: Padding(
+              padding: EdgeInsets.all(size * 0.14),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.water_drop_rounded,
+                      color: AppColors.water,
+                      size: 28.sp,
                     ),
-                  ),
-                  Text(
-                    'of ${formatWater(goalMl)}',
-                    style: TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 13.sp,
+                    SizedBox(height: 6.h),
+                    Text(
+                      formatWater(totalMl),
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 30.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    reached
-                        ? context.l10n.waterGoalReached
-                        : context.l10n.waterToGo(formatWater(goalMl - totalMl)),
-                    style: TextStyle(
-                      color: reached ? AppColors.success : AppColors.water,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
+                    Text(
+                      context.l10n.waterOfGoal(formatWater(goalMl)),
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 13.sp,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 6.h),
+                    Text(
+                      status,
+                      style: TextStyle(
+                        color: reached ? AppColors.success : AppColors.water,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

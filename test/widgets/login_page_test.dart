@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _MockAuthBloc extends MockBloc<AuthEvent, AuthState>
@@ -67,5 +68,19 @@ void main() {
 
     expect(find.text('Google sign-in failed.'), findsOneWidget);
     expect(find.byType(SnackBar), findsOneWidget);
+  });
+
+  testWidgets('meets accessibility guidelines', (tester) async {
+    when(() => bloc.state).thenReturn(const AuthInitial());
+    final semantics = tester.ensureSemantics();
+    await pump(tester);
+    await expectAccessible(tester, semantics);
+  });
+
+  testWidgets('largest text size: no overflow', (tester) async {
+    when(() => bloc.state).thenReturn(const AuthInitial());
+    useLargestText(tester);
+    await pump(tester);
+    expectNoOverflow(tester);
   });
 }

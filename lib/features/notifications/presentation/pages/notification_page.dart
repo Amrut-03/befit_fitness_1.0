@@ -211,7 +211,7 @@ class _NotificationViewState extends State<_NotificationView> {
                               ).format(notification.createdAt),
 
                               style: TextStyle(
-                                color: Colors.white38,
+                                color: AppColors.textMuted,
 
                                 fontSize: 11.sp,
                               ),

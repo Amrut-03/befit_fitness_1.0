@@ -107,79 +107,82 @@ class _NotificationSettingsView extends StatelessWidget {
 
             SizedBox(height: 16.h),
 
-            GestureDetector(
-              onTap: () async {
-                final picked = await showTimePicker(
-                  context: context,
+            Semantics(
+              button: true,
+              child: GestureDetector(
+                onTap: () async {
+                  final picked = await showTimePicker(
+                    context: context,
 
-                  initialTime: workoutTime,
-                );
-
-                if (picked != null) {
-                  await cubit.update(
-                    settings.copyWith(
-                      workoutHour: picked.hour,
-                      workoutMinute: picked.minute,
-                    ),
+                    initialTime: workoutTime,
                   );
-                }
-              },
 
-              child: Container(
-                padding: EdgeInsets.all(18.w),
-
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-
-                child: Row(
-                  children: [
-                    const Icon(Icons.access_time, color: AppColors.primary),
-
-                    SizedBox(width: 14.w),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-
-                        children: [
-                          Text(
-                            context.l10n.notifWorkoutTime,
-
-                            style: TextStyle(
-                              color: Colors.white,
-
-                              fontSize: 14.sp,
-
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-
-                          SizedBox(height: 4.h),
-
-                          Text(
-                            workoutTime.format(context),
-
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.6),
-
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                        ],
+                  if (picked != null) {
+                    await cubit.update(
+                      settings.copyWith(
+                        workoutHour: picked.hour,
+                        workoutMinute: picked.minute,
                       ),
-                    ),
+                    );
+                  }
+                },
 
-                    Icon(
-                      Icons.arrow_forward_ios,
+                child: Container(
+                  padding: EdgeInsets.all(18.w),
 
-                      color: Colors.white.withValues(alpha: 0.4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
 
-                      size: 16.sp,
-                    ),
-                  ],
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+
+                  child: Row(
+                    children: [
+                      const Icon(Icons.access_time, color: AppColors.primary),
+
+                      SizedBox(width: 14.w),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+                            Text(
+                              context.l10n.notifWorkoutTime,
+
+                              style: TextStyle(
+                                color: Colors.white,
+
+                                fontSize: 14.sp,
+
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+
+                            SizedBox(height: 4.h),
+
+                            Text(
+                              workoutTime.format(context),
+
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.6),
+
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Icon(
+                        Icons.arrow_forward_ios,
+
+                        color: Colors.white.withValues(alpha: 0.4),
+
+                        size: 16.sp,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

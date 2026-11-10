@@ -161,19 +161,16 @@ class FoodItemCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 18.h),
-                GestureDetector(
-                  onTap: onDelete,
-                  child: Container(
-                    padding: EdgeInsets.all(8.w),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.delete_outline_rounded,
-                      color: Colors.redAccent,
-                      size: 20.sp,
-                    ),
+                IconButton(
+                  onPressed: onDelete,
+                  tooltip: context.l10n.commonDelete,
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.red.withValues(alpha: 0.12),
+                  ),
+                  icon: Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.redAccent,
+                    size: 20.sp,
                   ),
                 ),
               ],

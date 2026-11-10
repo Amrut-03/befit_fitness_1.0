@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _Coach extends MockBloc<CoachEvent, CoachState> implements CoachBloc {}
@@ -176,5 +177,17 @@ void main() {
 
     await t.tap(find.byTooltip('Stop'));
     verify(() => coach.add(const CoachStopRequested())).called(1);
+  });
+
+  testWidgets('meets accessibility guidelines', (t) async {
+    final semantics = t.ensureSemantics();
+    await pump(t);
+    await expectAccessible(t, semantics);
+  });
+
+  testWidgets('largest text size: no overflow', (t) async {
+    useLargestText(t);
+    await pump(t);
+    expectNoOverflow(t);
   });
 }

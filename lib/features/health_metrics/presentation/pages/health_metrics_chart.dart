@@ -134,20 +134,13 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
 
   Widget _actionWidget() {
     if (widget.onAddTap != null) {
-      return GestureDetector(
-        onTap: widget.onAddTap,
-
-        child: Container(
-          padding: EdgeInsets.all(8.w),
-
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-
-            color: widget.color.withValues(alpha: 0.15),
-          ),
-
-          child: Icon(Icons.add, color: widget.color),
+      return IconButton(
+        onPressed: widget.onAddTap,
+        tooltip: context.l10n.metricAddManually,
+        style: IconButton.styleFrom(
+          backgroundColor: widget.color.withValues(alpha: 0.15),
         ),
+        icon: Icon(Icons.add, color: widget.color),
       );
     }
 
@@ -160,45 +153,56 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
 
       child: Row(
         children: [
-          _toggle(context.l10n.metricWeekShort, true),
-          _toggle(context.l10n.metricMonthShort, false),
+          _toggle(context.l10n.metricWeekShort, context.l10n.metricWeek, true),
+          _toggle(
+            context.l10n.metricMonthShort,
+            context.l10n.metricMonth,
+            false,
+          ),
         ],
       ),
     );
   }
 
-  Widget _toggle(String label, bool isWeek) {
+  Widget _toggle(String label, String fullLabel, bool isWeek) {
     final isSelected = _isWeekly == isWeek;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isWeekly = isWeek;
-        });
-      },
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      inMutuallyExclusiveGroup: true,
+      label: fullLabel,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _isWeekly = isWeek;
+          });
+        },
 
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
 
-        decoration: BoxDecoration(
-          color: isSelected
-              ? widget.color.withValues(alpha: 0.2)
-              : Colors.transparent,
-
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-
-        child: Text(
-          label,
-
-          style: TextStyle(
-            fontSize: 11.sp,
-
-            fontWeight: FontWeight.bold,
-
+          decoration: BoxDecoration(
             color: isSelected
-                ? widget.color
-                : Colors.white.withValues(alpha: 0.5),
+                ? widget.color.withValues(alpha: 0.2)
+                : Colors.transparent,
+
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+
+          child: Text(
+            label,
+
+            style: TextStyle(
+              fontSize: 11.sp,
+
+              fontWeight: FontWeight.bold,
+
+              color: isSelected
+                  ? widget.color
+                  : Colors.white.withValues(alpha: 0.5),
+            ),
           ),
         ),
       ),

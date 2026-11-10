@@ -27,6 +27,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _Home extends MockBloc<HomeEvent, HomeState> implements HomeBloc {}
@@ -155,4 +156,16 @@ void main() {
       expect(find.byType(WaterIntakeCard), findsOneWidget);
     });
   }
+
+  testWidgets('loaded meets accessibility guidelines', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pump(tester, const HomeLoaded(userName: 'Amrut', weight: 70));
+    await expectAccessible(tester, semantics);
+  });
+
+  testWidgets('loaded at the largest text size: no overflow', (tester) async {
+    useLargestText(tester);
+    await pump(tester, const HomeLoaded(userName: 'Amrut', weight: 70));
+    expectNoOverflow(tester);
+  });
 }

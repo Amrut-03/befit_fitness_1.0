@@ -1708,4 +1708,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get coachProfessional =>
       'That\'s a topic where advice needs to fit your health history, so I can\'t give guidance on it. Please talk to a doctor or a registered dietitian. I can still help with general training, steps, water and balanced eating.';
+
+  @override
+  String get a11yProfile => 'Profile';
+
+  @override
+  String get a11yLearnMore => 'Learn more';
+
+  @override
+  String get bodyShowBack => 'Show back view';
+
+  @override
+  String get bodyShowFront => 'Show front view';
+
+  @override
+  String get bodyExcludeHint => 'exclude from workout search';
+
+  @override
+  String get bodyExcluded => 'Excluded';
+
+  @override
+  String waterOfGoal(String goal) {
+    return 'of $goal';
+  }
+
+  @override
+  String get a11yTorch => 'Flashlight';
+
+  @override
+  String get a11yClearSearch => 'Clear search';
+
+  @override
+  String get metricWeek => 'Week';
+
+  @override
+  String get metricMonth => 'Month';
+
+  @override
+  String a11yOverallHealth(
+    String percent,
+    int steps,
+    int calories,
+    int minutes,
+  ) {
+    return 'Overall health $percent%: $steps steps, $calories kcal, $minutes active minutes';
+  }
 }

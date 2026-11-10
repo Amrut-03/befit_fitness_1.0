@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _Water extends MockBloc<WaterIntakeEvent, WaterIntakeState>
@@ -110,6 +111,32 @@ void main() {
 
       expect(find.text('2.1 L / 2 L'), findsOneWidget);
       expect(find.text('Goal reached 🎉'), findsOneWidget);
+    });
+  });
+
+  group('accessibility', () {
+    testWidgets('page meets accessibility guidelines', (t) async {
+      final semantics = t.ensureSemantics();
+      await pump(t, ready([250, 300]), const WaterIntakePage());
+      await t.pumpAndSettle();
+      await expectAccessible(t, semantics);
+    });
+
+    testWidgets('page and card at the largest text size: no overflow', (
+      t,
+    ) async {
+      useLargestText(t);
+      await pump(t, ready([250, 300]), const WaterIntakePage());
+      await t.pumpAndSettle();
+      expectNoOverflow(t);
+
+      await pump(
+        t,
+        ready([1500, 600]),
+        const Scaffold(body: WaterIntakeCard()),
+      );
+      await t.pumpAndSettle();
+      expectNoOverflow(t);
     });
   });
 }

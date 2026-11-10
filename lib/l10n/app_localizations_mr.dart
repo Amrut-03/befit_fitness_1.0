@@ -1663,4 +1663,49 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get coachProfessional =>
       'या विषयावरचा सल्ला तुमच्या आरोग्य इतिहासानुसार असायला हवा, त्यामुळे मी यावर मार्गदर्शन करू शकत नाही. कृपया डॉक्टर किंवा नोंदणीकृत आहारतज्ज्ञांशी बोला. मी सामान्य ट्रेनिंग, पावले, पाणी आणि संतुलित आहाराबाबत मदत करू शकतो.';
+
+  @override
+  String get a11yProfile => 'प्रोफाइल';
+
+  @override
+  String get a11yLearnMore => 'अधिक जाणून घ्या';
+
+  @override
+  String get bodyShowBack => 'पाठीमागील बाजू दाखवा';
+
+  @override
+  String get bodyShowFront => 'पुढील बाजू दाखवा';
+
+  @override
+  String get bodyExcludeHint => 'वर्कआउट शोधातून वगळा';
+
+  @override
+  String get bodyExcluded => 'वगळलेले';
+
+  @override
+  String waterOfGoal(String goal) {
+    return '$goal पैकी';
+  }
+
+  @override
+  String get a11yTorch => 'फ्लॅशलाइट';
+
+  @override
+  String get a11yClearSearch => 'शोध साफ करा';
+
+  @override
+  String get metricWeek => 'आठवडा';
+
+  @override
+  String get metricMonth => 'महिना';
+
+  @override
+  String a11yOverallHealth(
+    String percent,
+    int steps,
+    int calories,
+    int minutes,
+  ) {
+    return 'एकूण आरोग्य $percent%: $steps पावले, $calories kcal, $minutes सक्रिय मिनिटे';
+  }
 }

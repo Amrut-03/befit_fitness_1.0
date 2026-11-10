@@ -334,26 +334,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final isSelected = gender == value;
 
     return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            gender = value;
-          });
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 14.h),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.primary
-                : Colors.white.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(18.r),
-          ),
-          child: Center(
-            child: Text(
-              genderLabel(context.l10n, value),
-              style: TextStyle(
-                color: isSelected ? Colors.black : Colors.white,
-                fontWeight: FontWeight.bold,
+      child: Semantics(
+        button: true,
+        selected: isSelected,
+        inMutuallyExclusiveGroup: true,
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              gender = value;
+            });
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 14.h),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.primary
+                  : Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(18.r),
+            ),
+            child: Center(
+              child: Text(
+                genderLabel(context.l10n, value),
+                style: TextStyle(
+                  color: isSelected ? Colors.black : Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

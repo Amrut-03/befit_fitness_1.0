@@ -158,7 +158,7 @@ class _HistoryCard extends StatelessWidget {
                 Text(
                   DateFormat.yMd().format(item.date),
 
-                  style: TextStyle(color: Colors.white38, fontSize: 11.sp),
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 11.sp),
                 ),
               ],
             ),

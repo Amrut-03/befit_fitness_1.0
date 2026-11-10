@@ -39,7 +39,7 @@ class FoodTextField extends StatelessWidget {
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white38),
+            hintStyle: const TextStyle(color: AppColors.textMuted),
             prefixIcon: Icon(icon, color: Colors.white54),
             filled: true,
             fillColor: Colors.white.withValues(alpha: 0.05),
@@ -136,7 +136,7 @@ class MacroInputField extends StatelessWidget {
             ),
             decoration: InputDecoration(
               hintText: '0',
-              hintStyle: const TextStyle(color: Colors.white24),
+              hintStyle: const TextStyle(color: AppColors.textMuted),
               suffixText: suffix,
               suffixStyle: TextStyle(color: color, fontWeight: FontWeight.bold),
               border: InputBorder.none,

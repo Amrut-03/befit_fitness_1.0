@@ -1,4 +1,6 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/core/widgets/info_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fitness_app/features/home/presentation/widgets/concentric_arcs_painter.dart';
@@ -184,37 +186,46 @@ class _OverallHealthWidgetState extends State<OverallHealthWidget>
             children: [
               Align(
                 alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: widget.onTap,
-                  child: AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
-                      return Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CustomPaint(
-                            size: Size(arcSizeValue, arcSizeValue),
-                            painter: ConcentricArcsPainter(
-                              innerSweepAngle: _stepsAnimation.value,
-                              middleSweepAngle: _caloriesAnimation.value,
-                              outerSweepAngle: _moveMinAnimation.value,
-                              innerColor: widget.innerColor,
-                              middleColor: widget.middleColor,
-                              outerColor: widget.outerColor,
-                              strokeWidth: widget.strokeWidth,
+                child: Semantics(
+                  label: context.l10n.a11yOverallHealth(
+                    _calculateOverallPercentage().toStringAsFixed(0),
+                    widget.steps,
+                    widget.calories.round(),
+                    widget.moveMin ?? 0,
+                  ),
+                  excludeSemantics: true,
+                  child: GestureDetector(
+                    onTap: widget.onTap,
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CustomPaint(
+                              size: Size(arcSizeValue, arcSizeValue),
+                              painter: ConcentricArcsPainter(
+                                innerSweepAngle: _stepsAnimation.value,
+                                middleSweepAngle: _caloriesAnimation.value,
+                                outerSweepAngle: _moveMinAnimation.value,
+                                innerColor: widget.innerColor,
+                                middleColor: widget.middleColor,
+                                outerColor: widget.outerColor,
+                                strokeWidth: widget.strokeWidth,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '${_calculateOverallPercentage().toStringAsFixed(0)}%',
-                            style: TextStyle(
-                              fontSize: 28.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                            Text(
+                              '${_calculateOverallPercentage().toStringAsFixed(0)}%',
+                              style: TextStyle(
+                                fontSize: 28.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -222,25 +233,7 @@ class _OverallHealthWidgetState extends State<OverallHealthWidget>
                 Positioned(
                   top: 8.h,
                   right: 8.w,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: widget.onInfoTap,
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        padding: EdgeInsets.all(10.w),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.info_outline,
-                          color: Colors.white,
-                          size: 18.sp,
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: InfoButton(onPressed: widget.onInfoTap!),
                 ),
             ],
           ),

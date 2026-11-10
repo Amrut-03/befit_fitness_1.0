@@ -150,10 +150,7 @@ class _ProfileShareSectionState extends State<ProfileShareSection> {
                 debugPrint("IMAGE SAVED: ${imagePath.path}");
 
                 await SharePlus.instance.share(
-                  ShareParams(
-                    files: [XFile(imagePath.path)],
-                    text: shareText,
-                  ),
+                  ShareParams(files: [XFile(imagePath.path)], text: shareText),
                 );
               } catch (e) {
                 debugPrint("SHARE ERROR: $e");

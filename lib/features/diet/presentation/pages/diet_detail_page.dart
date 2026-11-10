@@ -80,6 +80,7 @@ class _DietDetailBottomSheet extends StatelessWidget {
                           ),
                         ),
                         IconButton(
+                          tooltip: context.l10n.commonClose,
                           onPressed: () => context.pop(),
                           icon: const Icon(Icons.close, color: Colors.white),
                         ),

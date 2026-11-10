@@ -358,6 +358,7 @@ class _DietListPageState extends State<DietListPage> {
                     borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: IconButton(
+                    tooltip: context.l10n.commonEdit,
                     onPressed: () {
                       context.push(Routes.planDiet, extra: plan);
                     },
@@ -374,6 +375,7 @@ class _DietListPageState extends State<DietListPage> {
                     borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: IconButton(
+                    tooltip: context.l10n.commonDelete,
                     onPressed: () => _confirmDeletePlan(context, plan),
                     icon: const Icon(
                       Icons.delete_outline,

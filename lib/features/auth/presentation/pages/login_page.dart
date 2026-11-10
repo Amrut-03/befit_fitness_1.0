@@ -126,7 +126,7 @@ class LoginPage extends StatelessWidget {
                               context.l10n.loginTerms,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.35),
+                                color: AppColors.textMuted,
                                 fontSize: 12.sp,
                               ),
                             ),

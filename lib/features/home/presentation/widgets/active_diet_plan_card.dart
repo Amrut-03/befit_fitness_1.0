@@ -166,19 +166,24 @@ class ActiveDietPlanCard extends StatelessWidget {
           ),
         ),
         SizedBox(height: 14.h),
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Text(
-              context.l10n.dietCardExplore,
-              style: const TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
+        Semantics(
+          button: true,
+          child: GestureDetector(
+            onTap: onTap,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 48),
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                context.l10n.dietCardExplore,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

@@ -825,5 +825,43 @@
   "coachEmpty": "I couldn't come up with an answer. Try rephrasing your question.",
   "coachStopped": "Stopped.",
   "coachEmergency": "This could be serious, so please don't rely on an app for it. Stop exercising and contact a doctor or your local emergency number (112 in India) right away. If you are thinking about harming yourself, please reach out to someone you trust or a helpline such as Tele-MANAS (14416) now.",
-  "coachProfessional": "That's a topic where advice needs to fit your health history, so I can't give guidance on it. Please talk to a doctor or a registered dietitian. I can still help with general training, steps, water and balanced eating."
+  "coachProfessional": "That's a topic where advice needs to fit your health history, so I can't give guidance on it. Please talk to a doctor or a registered dietitian. I can still help with general training, steps, water and balanced eating.",
+  "a11yProfile": "Profile",
+  "a11yLearnMore": "Learn more",
+  "bodyShowBack": "Show back view",
+  "bodyShowFront": "Show front view",
+  "bodyExcludeHint": "exclude from workout search",
+  "@bodyExcludeHint": {
+    "description": "Screen-reader hint for long press on a muscle"
+  },
+  "bodyExcluded": "Excluded",
+  "waterOfGoal": "of {goal}",
+  "@waterOfGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yTorch": "Flashlight",
+  "a11yClearSearch": "Clear search",
+  "metricWeek": "Week",
+  "metricMonth": "Month",
+  "a11yOverallHealth": "Overall health {percent}%: {steps} steps, {calories} kcal, {minutes} active minutes",
+  "@a11yOverallHealth": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "steps": {
+        "type": "int"
+      },
+      "calories": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

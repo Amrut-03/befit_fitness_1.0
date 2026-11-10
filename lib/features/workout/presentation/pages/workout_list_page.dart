@@ -150,16 +150,17 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                       ),
                       hintText: context.l10n.workoutSearch,
                       hintStyle: TextStyle(
-                        color: Colors.white38,
+                        color: AppColors.textMuted,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                       ),
                       suffixIcon: state.searchQuery.isNotEmpty
-                          ? GestureDetector(
-                              onTap: () => _onSearchChanged(''),
-                              child: Icon(
+                          ? IconButton(
+                              onPressed: () => _onSearchChanged(''),
+                              tooltip: context.l10n.a11yClearSearch,
+                              icon: Icon(
                                 Icons.close_rounded,
-                                color: Colors.white38,
+                                color: AppColors.textMuted,
                                 size: 20.sp,
                               ),
                             )

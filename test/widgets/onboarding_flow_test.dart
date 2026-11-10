@@ -19,6 +19,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _Save extends Mock implements SaveUserProfile {}
@@ -104,52 +105,60 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('new user goes goal → gender → metrics → activity → home', (
-    tester,
-  ) async {
-    startSession();
-    final save = _Save();
-    when(() => save(any())).thenAnswer((_) async {});
-    final bloc = OnboardingProfileBloc(
-      saveUserProfile: save,
-      getUserProfile: _Get(),
-      isProfileCompleted: _IsCompleted(),
-    );
-    addTearDown(bloc.close);
+  for (final large in [false, true]) {
+    testWidgets('new user goes goal → gender → metrics → activity → home'
+        '${large ? ' (largest text)' : ''}', (tester) async {
+      if (large) useLargestText(tester);
+      final semantics = tester.ensureSemantics();
+      startSession();
+      final save = _Save();
+      when(() => save(any())).thenAnswer((_) async {});
+      final bloc = OnboardingProfileBloc(
+        saveUserProfile: save,
+        getUserProfile: _Get(),
+        isProfileCompleted: _IsCompleted(),
+      );
+      addTearDown(bloc.close);
 
-    await tester.pumpRouterApp(
-      buildRouter(),
-      wrap: (child) => BlocProvider.value(value: bloc, child: child),
-    );
+      await tester.pumpRouterApp(
+        buildRouter(),
+        wrap: (child) => BlocProvider.value(value: bloc, child: child),
+      );
 
-    // Signed in without a profile → the session sends us to onboarding.
-    uid.add('u1');
-    await tester.pumpAndSettle();
-    expect(find.byType(GoalSelectionPage), findsOneWidget);
+      // Signed in without a profile → the session sends us to onboarding.
+      uid.add('u1');
+      await tester.pumpAndSettle();
+      expect(find.byType(GoalSelectionPage), findsOneWidget);
+      if (!large) {
+        await expectAccessible(tester, semantics);
+      } else {
+        semantics.dispose();
+      }
 
-    await tapAndSettle(tester, 'Build Muscle');
-    await tapAndSettle(tester, 'Continue');
-    expect(find.byType(GenderSelectionPage), findsOneWidget);
+      await tapAndSettle(tester, 'Build Muscle');
+      await tapAndSettle(tester, 'Continue');
+      expect(find.byType(GenderSelectionPage), findsOneWidget);
 
-    await tapAndSettle(tester, 'Female');
-    await tapAndSettle(tester, 'Continue');
-    expect(find.byType(BodyMetricsPage), findsOneWidget);
+      await tapAndSettle(tester, 'Female');
+      await tapAndSettle(tester, 'Continue');
+      expect(find.byType(BodyMetricsPage), findsOneWidget);
 
-    await tapAndSettle(tester, 'Continue');
-    expect(find.byType(ActivityLevelPage), findsOneWidget);
+      await tapAndSettle(tester, 'Continue');
+      expect(find.byType(ActivityLevelPage), findsOneWidget);
 
-    await tapAndSettle(tester, 'Active');
-    await tapAndSettle(tester, 'Continue');
+      await tapAndSettle(tester, 'Active');
+      await tapAndSettle(tester, 'Continue');
 
-    expect(find.text('HOME'), findsOneWidget);
-    expect(session.status, SessionStatus.ready);
+      expect(find.text('HOME'), findsOneWidget);
+      expect(session.status, SessionStatus.ready);
 
-    final saved =
-        verify(() => save(captureAny())).captured.single as UserProfileEntity;
-    expect(saved.goal, 'Build Muscle');
-    expect(saved.gender, 'Female');
-    expect(saved.activityLevel, 'Active');
-    expect(saved.profileCompleted, isTrue);
-    expect(saved.dailyCalorieGoal, greaterThan(0));
-  });
+      final saved =
+          verify(() => save(captureAny())).captured.single as UserProfileEntity;
+      expect(saved.goal, 'Build Muscle');
+      expect(saved.gender, 'Female');
+      expect(saved.activityLevel, 'Active');
+      expect(saved.profileCompleted, isTrue);
+      expect(saved.dailyCalorieGoal, greaterThan(0));
+    });
+  }
 }

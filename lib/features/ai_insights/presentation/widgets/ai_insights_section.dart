@@ -141,9 +141,7 @@ class _AIInsightsSectionState extends State<AIInsightsSection> {
           onPressed: () => context.push(Routes.coach),
           style: TextButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.padded,
-            visualDensity: VisualDensity.compact,
+            minimumSize: const Size(48, 48),
           ),
           icon: Icon(Icons.chat_bubble_outline, size: 15.sp, color: _accent),
           label: Text(

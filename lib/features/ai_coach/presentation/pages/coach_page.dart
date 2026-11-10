@@ -259,6 +259,7 @@ class _Composer extends StatelessWidget {
                 hintText: context.l10n.coachAskHint,
                 counterText: '',
                 isDense: true,
+                constraints: const BoxConstraints(minHeight: 48),
                 filled: true,
                 fillColor: AppColors.surface,
                 contentPadding: EdgeInsets.symmetric(

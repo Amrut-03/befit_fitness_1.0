@@ -3147,6 +3147,83 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That\'s a topic where advice needs to fit your health history, so I can\'t give guidance on it. Please talk to a doctor or a registered dietitian. I can still help with general training, steps, water and balanced eating.'**
   String get coachProfessional;
+
+  /// No description provided for @a11yProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get a11yProfile;
+
+  /// No description provided for @a11yLearnMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get a11yLearnMore;
+
+  /// No description provided for @bodyShowBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Show back view'**
+  String get bodyShowBack;
+
+  /// No description provided for @bodyShowFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Show front view'**
+  String get bodyShowFront;
+
+  /// Screen-reader hint for long press on a muscle
+  ///
+  /// In en, this message translates to:
+  /// **'exclude from workout search'**
+  String get bodyExcludeHint;
+
+  /// No description provided for @bodyExcluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Excluded'**
+  String get bodyExcluded;
+
+  /// No description provided for @waterOfGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'of {goal}'**
+  String waterOfGoal(String goal);
+
+  /// No description provided for @a11yTorch.
+  ///
+  /// In en, this message translates to:
+  /// **'Flashlight'**
+  String get a11yTorch;
+
+  /// No description provided for @a11yClearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get a11yClearSearch;
+
+  /// No description provided for @metricWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get metricWeek;
+
+  /// No description provided for @metricMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get metricMonth;
+
+  /// No description provided for @a11yOverallHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall health {percent}%: {steps} steps, {calories} kcal, {minutes} active minutes'**
+  String a11yOverallHealth(
+    String percent,
+    int steps,
+    int calories,
+    int minutes,
+  );
 }
 
 class _AppLocalizationsDelegate

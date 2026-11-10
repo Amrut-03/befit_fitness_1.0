@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
@@ -57,7 +58,7 @@ class FoodEntryList extends StatelessWidget {
 
               textAlign: TextAlign.center,
 
-              style: TextStyle(color: Colors.white38, fontSize: 13.sp),
+              style: TextStyle(color: AppColors.textMuted, fontSize: 13.sp),
             ),
           ],
         ),

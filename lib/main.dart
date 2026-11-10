@@ -3,6 +3,7 @@ import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fitness_app/core/accessibility/app_text_scaling.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/l10n/locale_cubit.dart';
@@ -122,7 +123,7 @@ class MyApp extends StatelessWidget {
                 Intl.defaultLocale = Localizations.localeOf(
                   context,
                 ).languageCode;
-                return UserScope(child: child!);
+                return AppTextScaling(child: UserScope(child: child!));
               },
             ),
           ),

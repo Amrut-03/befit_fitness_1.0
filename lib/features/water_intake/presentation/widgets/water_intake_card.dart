@@ -47,19 +47,27 @@ class _WaterIntakeCardState extends State<WaterIntakeCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            // Wraps the amount onto its own line at large text sizes.
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8.w,
               children: [
-                Icon(Icons.water_drop_rounded, color: color, size: 22.sp),
-                SizedBox(width: 8.w),
-                Text(
-                  context.l10n.waterTitle,
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.water_drop_rounded, color: color, size: 22.sp),
+                    SizedBox(width: 8.w),
+                    Text(
+                      context.l10n.waterTitle,
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-                const Spacer(),
                 Text(
                   '${formatWater(state.totalMl)} / ${formatWater(state.goalMl)}',
                   style: TextStyle(

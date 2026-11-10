@@ -88,6 +88,7 @@ class DietPlanHeaderSection extends StatelessWidget {
           ),
         ),
         GestureDetector(
+          // Expands or collapses the macro breakdown.
           onTap: onToggle,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),

@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../features/workout/session/fakes.dart';
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _Streak extends MockBloc<StreakEvent, StreakState>
@@ -106,5 +107,23 @@ void main() {
 
     expect(cubit.state.contains('9'), isTrue);
     expect(find.byTooltip('In your workout'), findsOneWidget);
+  });
+
+  testWidgets('active session meets accessibility guidelines', (t) async {
+    await t.runAsync(() => cubit.addExercise(exercise('1')));
+    final semantics = t.ensureSemantics();
+    await pump(t, const WorkoutSessionPage());
+    await t.pump();
+    await expectAccessible(t, semantics);
+  });
+
+  testWidgets('active session at the largest text size: no overflow', (
+    t,
+  ) async {
+    await t.runAsync(() => cubit.addExercise(exercise('1')));
+    useLargestText(t);
+    await pump(t, const WorkoutSessionPage());
+    await t.pump();
+    expectNoOverflow(t);
   });
 }

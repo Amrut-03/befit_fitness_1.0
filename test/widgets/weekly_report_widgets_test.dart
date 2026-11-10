@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'a11y.dart';
 import 'pump_app.dart';
 
 class _Report extends MockBloc<WeeklyReportEvent, WeeklyReportState>
@@ -147,6 +148,37 @@ void main() {
       expect(find.text('Mon'), findsOneWidget);
       expect(find.text('Wed'), findsOneWidget);
       expect(find.text('Thu'), findsNothing); // not logged
+    });
+  });
+
+  group('accessibility', () {
+    testWidgets('page meets accessibility guidelines', (t) async {
+      final semantics = t.ensureSemantics();
+      await pump(
+        t,
+        WeeklyReportState(status: ReportStatus.ready, report: full()),
+        WeeklyReportPage(clock: () => now),
+      );
+      await expectAccessible(t, semantics);
+    });
+
+    testWidgets('page and card at the largest text size: no overflow', (
+      t,
+    ) async {
+      useLargestText(t);
+      await pump(
+        t,
+        WeeklyReportState(status: ReportStatus.ready, report: full()),
+        WeeklyReportPage(clock: () => now),
+      );
+      expectNoOverflow(t);
+
+      await pump(
+        t,
+        WeeklyReportState(status: ReportStatus.ready, report: full()),
+        const SingleChildScrollView(child: WeeklyReportCard()),
+      );
+      expectNoOverflow(t);
     });
   });
 }

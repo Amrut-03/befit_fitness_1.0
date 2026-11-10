@@ -299,11 +299,7 @@ class ProfileShareCard extends StatelessWidget {
                 Text(
                   context.l10n.shareGeneratedWith,
 
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.4),
-
-                    fontSize: 12.sp,
-                  ),
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 12.sp),
                 ),
               ],
             ),

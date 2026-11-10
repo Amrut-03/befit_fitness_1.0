@@ -83,6 +83,7 @@ class FoodEntryCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
+                    tooltip: context.l10n.commonDelete,
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: onDelete,
                   ),
@@ -145,18 +146,23 @@ class FoodEntryCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 12.h),
-              GestureDetector(
-                onTap: onQuantityTap,
-                child: Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.cyanAccent),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Text(
-                    "${entry.quantity.toStringAsFixed(0)} "
-                    "${foodUnitLabel(context.l10n, entry.unit)}",
-                    style: const TextStyle(color: Colors.cyanAccent),
+              Semantics(
+                button: true,
+                child: GestureDetector(
+                  onTap: onQuantityTap,
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.cyanAccent),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      "${entry.quantity.toStringAsFixed(0)} "
+                      "${foodUnitLabel(context.l10n, entry.unit)}",
+                      style: const TextStyle(color: Colors.cyanAccent),
+                    ),
                   ),
                 ),
               ),
