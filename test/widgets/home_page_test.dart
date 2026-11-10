@@ -17,6 +17,8 @@ import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_state.dart';
+import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
+import 'package:fitness_app/features/water_intake/presentation/widgets/water_intake_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,6 +45,9 @@ class _Insights extends MockBloc<AIInsightsEvent, AIInsightsState>
 
 class _Metrics extends MockBloc<HealthMetricEvent, HealthMetricState>
     implements HealthMetricsBloc {}
+
+class _Water extends MockBloc<WaterIntakeEvent, WaterIntakeState>
+    implements WaterIntakeBloc {}
 
 void main() {
   late _Home home;
@@ -73,6 +78,8 @@ void main() {
     when(() => streak.state).thenReturn(StreakState.initial());
     final insights = _Insights();
     when(() => insights.state).thenReturn(AIInsightsInitial());
+    final water = _Water();
+    when(() => water.state).thenReturn(const WaterIntakeState());
 
     await tester.pumpApp(
       MultiBlocProvider(
@@ -83,6 +90,7 @@ void main() {
           BlocProvider<HealthBloc>.value(value: health),
           BlocProvider<StreakBloc>.value(value: streak),
           BlocProvider<AIInsightsBloc>.value(value: insights),
+          BlocProvider<WaterIntakeBloc>.value(value: water),
         ],
         child: const HomePage(),
       ),
@@ -110,5 +118,6 @@ void main() {
 
     expect(find.textContaining('Amrut'), findsOneWidget);
     expect(find.byType(RefreshIndicator), findsOneWidget);
+    expect(find.byType(WaterIntakeCard), findsOneWidget);
   });
 }

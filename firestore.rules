@@ -9,6 +9,7 @@ rules_version = '2';
 //   users/{uid}/dietHistory/{id}
 //   users/{uid}/workoutHistory/{id}
 //   users/{uid}/health_metrics/{id}
+//   users/{uid}/waterIntake/{yyyy-MM-dd}
 //
 // A signed-in user (Google or anonymous guest) can only access their own
 // tree. Everything else is denied by default.

@@ -13,6 +13,7 @@ abstract interface class AppAnalytics {
   Future<void> logMealCompleted();
   Future<void> logDietPlanCompleted();
   Future<void> logFoodScanned({required bool found});
+  Future<void> logWaterLogged({required int ml});
 }
 
 class NoopAnalytics implements AppAnalytics {
@@ -33,6 +34,8 @@ class NoopAnalytics implements AppAnalytics {
   Future<void> logDietPlanCompleted() async {}
   @override
   Future<void> logFoodScanned({required bool found}) async {}
+  @override
+  Future<void> logWaterLogged({required int ml}) async {}
 }
 
 /// Firebase Analytics. Logging never throws: a failed analytics call must
@@ -83,5 +86,10 @@ class FirebaseAppAnalytics implements AppAnalytics {
       name: 'food_scanned',
       parameters: {'found': found ? 1 : 0},
     ),
+  );
+
+  @override
+  Future<void> logWaterLogged({required int ml}) => _safe(
+    () => _analytics.logEvent(name: 'water_logged', parameters: {'ml': ml}),
   );
 }

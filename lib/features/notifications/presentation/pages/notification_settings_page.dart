@@ -71,7 +71,8 @@ class _NotificationSettingsView extends StatelessWidget {
             _notificationTile(
               title: "Water Reminder",
 
-              subtitle: "Stay hydrated daily",
+              subtitle:
+                  "Every 2 hours, 10 AM–6 PM. Paused once you hit your goal",
 
               value: settings.waterReminder,
 

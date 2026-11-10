@@ -24,6 +24,8 @@ import 'package:fitness_app/features/home/presentation/widgets/calculator_readin
 import 'package:fitness_app/features/home/presentation/widgets/overall_health_card.dart';
 import 'package:fitness_app/features/home/presentation/widgets/quick_action_section.dart';
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
+import 'package:fitness_app/features/water_intake/presentation/widgets/water_intake_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,6 +45,8 @@ class _HomePageState extends State<HomePage> {
     context.read<HomeBloc>().add(RefreshHomeDashboard());
 
     context.read<HealthBloc>().add(RefreshHealthData());
+
+    context.read<WaterIntakeBloc>().add(const WaterIntakeRefreshed());
   }
 
   /// Re-reads steps (and the Health Connect status, e.g. after installing it
@@ -60,7 +64,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _lifecycle = AppLifecycleListener(
-      onResume: () => context.read<HealthBloc>().add(RefreshHealthData()),
+      onResume: () {
+        context.read<HealthBloc>().add(RefreshHealthData());
+        // Moves the water log to the new day after midnight.
+        context.read<WaterIntakeBloc>().add(const WaterIntakeRefreshed());
+      },
     );
 
     context.read<ProfileBloc>().add(LoadProfileEvent());
@@ -284,6 +292,8 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
+                      SizedBox(height: 16.h),
+                      const WaterIntakeCard(),
                       SizedBox(height: 16.h),
                       SingleChildScrollView(
                         // Rebuild the self-loading cards once the health

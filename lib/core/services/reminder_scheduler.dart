@@ -89,16 +89,46 @@ class ReminderScheduler {
       }
     }
     if (s.waterReminder) {
-      for (var i = 0; i < waterIds.length; i++) {
-        await _daily(
-          waterIds[i],
-          _waterTimes[i].hour,
-          _waterTimes[i].minute,
-          now,
-          '💧 Hydration check',
-          'Time for a glass of water.',
-        );
-      }
+      await _scheduleWater(now);
+    }
+  }
+
+  /// Called when today's water goal is met: the remaining hydration
+  /// reminders aren't needed today, so they restart from tomorrow.
+  Future<void> skipWaterRemindersToday(NotificationSettings s) async {
+    if (!s.waterReminder) return;
+    await _cancelWater();
+    await _scheduleWater(tz.TZDateTime.now(tz.local), skipToday: true);
+  }
+
+  /// Called when today's total drops back under the goal (an entry was
+  /// undone): today's remaining reminders come back.
+  Future<void> restoreWaterReminders(NotificationSettings s) async {
+    if (!s.waterReminder) return;
+    await _cancelWater();
+    await _scheduleWater(tz.TZDateTime.now(tz.local));
+  }
+
+  Future<void> _cancelWater() async {
+    for (final id in waterIds) {
+      await _plugin.cancel(id: id);
+    }
+  }
+
+  Future<void> _scheduleWater(
+    tz.TZDateTime now, {
+    bool skipToday = false,
+  }) async {
+    for (var i = 0; i < waterIds.length; i++) {
+      await _daily(
+        waterIds[i],
+        _waterTimes[i].hour,
+        _waterTimes[i].minute,
+        now,
+        '💧 Hydration check',
+        'Time for a glass of water. Tap to log it in BeFit.',
+        skipToday: skipToday,
+      );
     }
   }
 

@@ -37,6 +37,9 @@ abstract final class Routes {
     queryParameters: {'type': type},
   ).toString();
 
+  // Water
+  static const water = '/water';
+
   // Notifications
   static const notifications = '/notification-page';
   static const notificationSettings = '/notification-setting-page';

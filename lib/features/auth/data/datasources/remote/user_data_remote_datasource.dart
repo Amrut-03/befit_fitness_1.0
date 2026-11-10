@@ -13,6 +13,7 @@ class UserDataRemoteDataSource {
     'dietHistory',
     'workoutHistory',
     'health_metrics',
+    'waterIntake',
   ];
 
   final FirebaseFirestore firestore;

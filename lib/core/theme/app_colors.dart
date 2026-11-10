@@ -8,6 +8,7 @@ abstract final class AppColors {
   static const Color accentPink = Color(0xFFFF006E);
   static const Color accentOrange = Color(0xFFFF6B35);
   static const Color warning = Color(0xFFFFB703);
+  static const Color water = Color(0xFF4D96FF);
 
   // Surfaces, darkest first
   static const Color background = Color(0xFF050505);

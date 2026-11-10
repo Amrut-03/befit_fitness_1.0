@@ -24,6 +24,7 @@ import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_blo
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
+import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
 import 'package:fitness_app/firebase_options.dart';
@@ -130,6 +131,8 @@ class UserScope extends StatelessWidget {
             create: (_) => sl<FoodItemsBloc>()..add(const LoadFoodItems()),
           ),
           BlocProvider(create: (_) => sl<StreakBloc>()..add(LoadStreakEvent())),
+          // Lazy: starts when Home's water card or the Water page reads it.
+          BlocProvider(create: (_) => sl<WaterIntakeBloc>()),
           BlocProvider(
             create: (_) => sl<WorkoutBloc>()..add(const LoadExercisesEvent()),
           ),

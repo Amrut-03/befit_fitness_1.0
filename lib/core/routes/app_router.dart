@@ -2,6 +2,7 @@ import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/routes/session_redirect.dart';
 import 'package:fitness_app/core/session/session_notifier.dart';
+import 'package:fitness_app/features/water_intake/presentation/pages/water_intake_page.dart';
 import 'package:fitness_app/features/auth/presentation/pages/login_page.dart';
 import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
@@ -58,6 +59,11 @@ class AppRouter {
       ),
 
       GoRoute(path: Routes.home, builder: (context, state) => const HomePage()),
+
+      GoRoute(
+        path: Routes.water,
+        builder: (context, state) => const WaterIntakePage(),
+      ),
 
       GoRoute(
         path: Routes.profile,
