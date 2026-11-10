@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/error/failures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/usecases/get_health_data.dart';
@@ -27,7 +28,7 @@ class HealthBloc extends Bloc<HealthEvent, HealthState> {
 
       emit(HealthLoaded(data: result));
     } catch (e) {
-      emit(HealthError(message: e.toString()));
+      emit(HealthError(message: Failure.fromException(e).message));
     }
   }
 
@@ -41,7 +42,7 @@ class HealthBloc extends Bloc<HealthEvent, HealthState> {
 
       emit(HealthLoaded(data: result));
     } catch (e) {
-      emit(HealthError(message: e.toString()));
+      emit(HealthError(message: Failure.fromException(e).message));
     }
   }
 }

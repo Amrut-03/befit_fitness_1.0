@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:fitness_app/features/diet/domain/entities/diet_history_entity.dart';
-import 'package:fitness_app/features/diet/domain/usecases/get_diet_history.dart';
-import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:fitness_app/features/diet/domain/usecases/delete_diet_plan.dart';
+import 'package:fitness_app/features/diet/domain/usecases/get_diet_history.dart';
 import 'package:fitness_app/features/diet/domain/usecases/get_diet_plans.dart';
+import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart';
 import 'package:fitness_app/features/diet/domain/usecases/save_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/set_active_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/update_meal_status.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'diet_event.dart';
 import 'diet_state.dart';
@@ -48,6 +47,11 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
     required this.saveDietHistory,
   }) : super(DietState.initial()) {
+    on<DietStreamFailed>(
+      (event, emit) =>
+          emit(state.copyWith(isLoading: false, error: event.message)),
+    );
+
     on<LoadDietPlans>(_onLoadDietPlans);
 
     on<SaveDietPlanEvent>(_onSavePlan);
@@ -81,14 +85,8 @@ class DietBloc extends Bloc<DietEvent, DietState> {
           add(DietPlansUpdated(plans));
         },
 
-        onError: (e) {
-          emit(
-            state.copyWith(
-              isLoading: false,
-              error: 'Failed to load diet plans',
-            ),
-          );
-        },
+        onError: (_) =>
+            add(const DietStreamFailed('Failed to load diet plans')),
       );
     } catch (e) {
       emit(
@@ -108,11 +106,8 @@ class DietBloc extends Bloc<DietEvent, DietState> {
       (history) {
         add(DietHistoryUpdated(history));
       },
-      onError: (e) {
-        emit(
-          state.copyWith(isLoading: false, error: 'Failed to load diet history'),
-        );
-      },
+      onError: (_) =>
+          add(const DietStreamFailed('Failed to load diet history')),
     );
   }
 
@@ -126,14 +121,6 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
   /// STREAM UPDATE
   void _onDietPlansUpdated(DietPlansUpdated event, Emitter<DietState> emit) {
-    for (final plan in event.plans) {
-      print(
-        "BLOC PLAN ${plan.name}"
-        " activeDate=${plan.activeDate}"
-        " activeToday=${plan.isActiveToday}",
-      );
-    }
-
     emit(
       state.copyWith(
         isLoading: false,
@@ -215,10 +202,6 @@ class DietBloc extends Bloc<DietEvent, DietState> {
         });
 
         if (!alreadySaved) {
-          print(
-            "SAVING HISTORY MEALS = ${updatedPlan.meals.map((e) => e.name).toList()}",
-          );
-
           await saveDietHistory(
             DietHistoryEntity(
               id: DateTime.now().millisecondsSinceEpoch.toString(),

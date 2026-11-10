@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -25,7 +26,7 @@ class HomeHeader extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            context.push('/profile');
+            context.push(Routes.profile);
           },
           child: CircleAvatar(
             radius: 24.r,
@@ -58,7 +59,7 @@ class HomeHeader extends StatelessWidget {
           icon: Icon(Icons.notifications_none, size: 28.sp),
           color: Colors.white,
           onPressed: () {
-            context.push('/notification-page');
+            context.push(Routes.notifications);
           },
         ),
       ],

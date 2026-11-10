@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,9 +24,9 @@ Future<void> showEditQuantityBottomSheet({
 
   final double baseFat = meal.fat;
 
-  showModalBottomSheet(
+  await showModalBottomSheet<void>(
     context: context,
-    backgroundColor: const Color(0xFF111111),
+    backgroundColor: AppColors.surface,
     isScrollControlled: true,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
@@ -119,7 +120,7 @@ Future<void> showEditQuantityBottomSheet({
                             decoration: InputDecoration(
                               filled: true,
 
-                              fillColor: Colors.white.withOpacity(0.05),
+                              fillColor: Colors.white.withValues(alpha: 0.05),
 
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18.r),
@@ -131,7 +132,7 @@ Future<void> showEditQuantityBottomSheet({
                                 borderRadius: BorderRadius.circular(18.r),
 
                                 borderSide: const BorderSide(
-                                  color: Color(0xFF00E5FF),
+                                  color: AppColors.primary,
                                 ),
                               ),
                             ),
@@ -161,7 +162,7 @@ Future<void> showEditQuantityBottomSheet({
                             padding: EdgeInsets.symmetric(horizontal: 14.w),
 
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.05),
+                              color: Colors.white.withValues(alpha: 0.05),
 
                               borderRadius: BorderRadius.circular(18.r),
                             ),
@@ -206,7 +207,7 @@ Future<void> showEditQuantityBottomSheet({
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(22.r),
 
-                    color: Colors.white.withOpacity(0.04),
+                    color: Colors.white.withValues(alpha: 0.04),
 
                     border: Border.all(color: Colors.white10),
                   ),
@@ -273,7 +274,7 @@ Future<void> showEditQuantityBottomSheet({
                     },
 
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E5FF),
+                      backgroundColor: AppColors.primary,
 
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.r),

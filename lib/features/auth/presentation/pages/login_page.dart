@@ -1,10 +1,10 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fitness_app/features/auth/presentation/widgets/google_signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatelessWidget {
@@ -13,21 +13,20 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: AppColors.background,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF050505), Color(0xFF09111F), Color(0xFF050505)],
+            colors: [AppColors.background, AppColors.surfaceNavy, AppColors.background],
           ),
         ),
         child: SafeArea(
           child: BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (state is AuthAuthenticated) {
-                context.go('/goal-selection');
-              }
+              // Navigation after sign-in is handled by the router's
+              // SessionNotifier redirect.
               if (state is AuthError) {
                 ScaffoldMessenger.of(
                   context,
@@ -49,7 +48,7 @@ class LoginPage extends StatelessWidget {
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              const Color(0xFF00E5FF).withOpacity(0.18),
+                              AppColors.primary.withValues(alpha: 0.18),
                               Colors.transparent,
                             ],
                           ),
@@ -74,7 +73,7 @@ class LoginPage extends StatelessWidget {
                         'Track workouts, build healthy habits,\nand transform your fitness journey.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.65),
+                          color: Colors.white.withValues(alpha: 0.65),
                           fontSize: 15.sp,
                           height: 1.6,
                         ),
@@ -89,7 +88,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         onTap: () {
                           context.read<AuthBloc>().add(
-                            AuthGoogleSignInRequested(),
+                            const AuthGoogleSignInRequested(),
                           );
                         },
                       ),
@@ -105,7 +104,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         onTap: () {
                           context.read<AuthBloc>().add(
-                            AuthGuestSignInRequested(),
+                            const AuthGuestSignInRequested(),
                           );
                         },
                       ),
@@ -114,7 +113,7 @@ class LoginPage extends StatelessWidget {
                         "By continuing you agree to our\nTerms & Privacy Policy",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.35),
+                          color: Colors.white.withValues(alpha: 0.35),
                           fontSize: 12.sp,
                         ),
                       ),

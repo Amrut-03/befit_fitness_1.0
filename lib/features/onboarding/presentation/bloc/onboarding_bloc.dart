@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app/core/error/failures.dart';
 import 'package:fitness_app/features/onboarding/domain/entities/onboarding_entity.dart';
 import 'package:fitness_app/features/onboarding/domain/usecases/get_user_profile.dart';
 import 'package:fitness_app/features/onboarding/domain/usecases/is_profile_completed.dart';
@@ -53,11 +53,9 @@ class OnboardingProfileBloc
     on<SaveProfileEvent>((event, emit) async {
       emit(state.copyWith(isLoading: true, error: null));
 
-      final user = FirebaseAuth.instance.currentUser;
-
       try {
         final profile = UserProfileEntity(
-          email: user?.email ?? '',
+          email: '', // filled in by the data source from the signed-in user
           goal: event.goal,
           gender: event.gender,
           weight: event.weight,
@@ -76,7 +74,12 @@ class OnboardingProfileBloc
 
         emit(state.copyWith(isLoading: false, saveSuccess: true));
       } catch (e) {
-        emit(state.copyWith(isLoading: false, error: e.toString()));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: Failure.fromException(e).message,
+          ),
+        );
       }
     });
 
@@ -102,7 +105,12 @@ class OnboardingProfileBloc
           emit(state.copyWith(isLoading: false, error: "Profile not found"));
         }
       } catch (e) {
-        emit(state.copyWith(isLoading: false, error: e.toString()));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: Failure.fromException(e).message,
+          ),
+        );
       }
     });
 
@@ -114,7 +122,12 @@ class OnboardingProfileBloc
 
         emit(state.copyWith(isLoading: false, profileSaved: completed));
       } catch (e) {
-        emit(state.copyWith(isLoading: false, error: e.toString()));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: Failure.fromException(e).message,
+          ),
+        );
       }
     });
   }

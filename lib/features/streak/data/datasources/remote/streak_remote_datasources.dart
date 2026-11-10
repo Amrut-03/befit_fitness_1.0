@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:fitness_app/core/error/exceptions.dart';
 import 'package:fitness_app/features/streak/data/models/streak_model.dart';
+import 'package:fitness_app/features/streak/domain/utils/streak_calculator.dart';
 
 class StreakRemoteDatasource {
   final FirebaseFirestore firestore;
@@ -11,63 +13,44 @@ class StreakRemoteDatasource {
 
   StreakRemoteDatasource({required this.firestore, required this.auth});
 
-  Future<void> updateStreak() async {
+  /// Records activity for today. Runs in a transaction so two quick actions
+  /// (e.g. saving a workout and ticking a meal) can't double-increment.
+  Future<void> updateStreak({DateTime? now}) async {
     final uid = auth.currentUser?.uid;
+    if (uid == null) throw const UnauthenticatedException();
 
-    if (uid == null) {
-      throw Exception('User not logged in');
-    }
+    final ref = firestore.collection('users').doc(uid);
+    final at = now ?? DateTime.now();
 
-    final doc = await firestore.collection('users').doc(uid).get();
+    await firestore.runTransaction((tx) async {
+      final snapshot = await tx.get(ref);
+      final data = snapshot.data() ?? const <String, dynamic>{};
+      final lastActive = data['lastActiveDate'] as Timestamp?;
 
-    final data = doc.data();
+      final updated = StreakCalculator.next(
+        current: (data['streak'] as num?)?.toInt() ?? 0,
+        lastActive: lastActive?.toDate(),
+        now: at,
+      );
+      if (updated == null) return;
 
-    final currentStreak = data?['streak'] ?? 0;
-
-    final lastActive = data?['lastActiveDate'];
-
-    final now = DateTime.now();
-
-    DateTime? lastDate;
-
-    if (lastActive != null) {
-      lastDate = (lastActive as Timestamp).toDate();
-    }
-
-    int updatedStreak = 1;
-
-    if (lastDate != null) {
-      /// Normalize both dates to UTC day boundaries for consistent comparison
-      final nowUtc = DateTime.now().toUtc();
-
-      final lastDateUtc = lastDate.toUtc();
-
-      final difference = nowUtc.difference(lastDateUtc).inDays;
-
-      /// SAME DAY (UTC)
-      if (difference == 0) {
-        return;
+      final fields = {
+        'streak': updated,
+        'lastActiveDate': Timestamp.fromDate(at),
+      };
+      // update() alone throws if users/{uid} doesn't exist yet.
+      if (snapshot.exists) {
+        tx.update(ref, fields);
+      } else {
+        tx.set(ref, fields);
       }
-
-      /// CONTINUE STREAK
-      if (difference == 1) {
-        updatedStreak = currentStreak + 1;
-      }
-    }
-
-    await firestore.collection('users').doc(uid).update({
-      'streak': updatedStreak,
-
-      'lastActiveDate': Timestamp.fromDate(now),
     });
   }
 
   Future<StreakModel> getStreak() async {
     final uid = auth.currentUser?.uid;
 
-    if (uid == null) {
-      throw Exception('User not logged in');
-    }
+    if (uid == null) throw const UnauthenticatedException();
 
     final doc = await firestore.collection('users').doc(uid).get();
 

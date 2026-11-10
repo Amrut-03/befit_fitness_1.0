@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/health_metrics/domain/entities/health_metrics_entity.dart';
 import 'package:fitness_app/features/health_metrics/presentation/bloc/health_metric_bloc.dart';
 import 'package:fitness_app/features/health_metrics/presentation/bloc/health_metric_event.dart';
@@ -61,10 +62,10 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
   Color get color {
     switch (widget.type) {
       case MetricType.weight:
-        return const Color(0xFF00E5FF);
+        return AppColors.primary;
 
       case MetricType.heartRate:
-        return const Color(0xFFFF006E);
+        return AppColors.accentPink;
 
       case MetricType.sleep:
         return const Color(0xFF5B8CFF);
@@ -77,7 +78,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
       padding: EdgeInsets.all(20.w),
 
       decoration: BoxDecoration(
-        color: const Color(0xFF111111),
+        color: AppColors.surface,
 
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
@@ -97,7 +98,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
               height: 4.h,
 
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
 
                 borderRadius: BorderRadius.circular(100.r),
               ),
@@ -111,7 +112,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
                   padding: EdgeInsets.all(12.w),
 
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
 
                     shape: BoxShape.circle,
                   ),
@@ -147,7 +148,9 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
               decoration: InputDecoration(
                 hintText: "Enter $unit",
 
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.4),
+                ),
 
                 suffixText: unit,
 
@@ -155,7 +158,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
 
                 filled: true,
 
-                fillColor: Colors.white.withOpacity(0.05),
+                fillColor: Colors.white.withValues(alpha: 0.05),
 
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.r),
@@ -190,7 +193,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
 
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
 
                   borderRadius: BorderRadius.circular(16.r),
                 ),

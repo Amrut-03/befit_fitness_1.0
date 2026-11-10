@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitness_app/core/utils/json_read.dart';
 
 import '../../domain/entities/diet_history_entity.dart';
 
@@ -49,13 +50,13 @@ class DietHistoryModel {
 
       planName: json['planName'] ?? '',
 
-      calories: (json['calories'] ?? 0).toDouble(),
+      calories: asDouble(json['calories']),
 
-      protein: (json['protein'] ?? 0).toDouble(),
+      protein: asDouble(json['protein']),
 
-      carbs: (json['carbs'] ?? 0).toDouble(),
+      carbs: asDouble(json['carbs']),
 
-      fat: (json['fat'] ?? 0).toDouble(),
+      fat: asDouble(json['fat']),
 
       completedAt: json['completedAt'] != null
           ? (json['completedAt'] as Timestamp).toDate()

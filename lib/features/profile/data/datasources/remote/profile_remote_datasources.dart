@@ -25,6 +25,14 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
 
   @override
   Future<void> updateProfile(String uid, ProfileModel profile) async {
-    await firestore.collection('users').doc(uid).set(profile.toJson());
+    // merge: keep fields this model doesn't know about (profileCompleted,
+    // lastActiveDate). A plain set() wiped them, sending the user back to
+    // onboarding after editing their profile. The streak is owned by the
+    // streak feature (transactional updates), so never overwrite it here.
+    final json = profile.toJson()..remove('streak');
+    await firestore
+        .collection('users')
+        .doc(uid)
+        .set(json, SetOptions(merge: true));
   }
 }

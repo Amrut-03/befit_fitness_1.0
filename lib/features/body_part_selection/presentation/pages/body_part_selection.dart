@@ -1,4 +1,6 @@
 import 'package:fitness_app/core/constants/education_data.dart';
+import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/education_bottom_sheet.dart';
 import 'package:fitness_app/features/body_part_selection/presentation/bloc/body_part_selection_bloc.dart';
 import 'package:fitness_app/features/body_part_selection/presentation/bloc/body_part_selection_event.dart';
@@ -10,9 +12,23 @@ import 'package:flutter_body_part_selector/feature/flutter_body_part_selector/pr
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyChartWidget extends StatelessWidget {
-  final Function(String bodyPart)? onSearchWorkout;
+  final void Function(String bodyPart)? onSearchWorkout;
 
   const BodyChartWidget({super.key, this.onSearchWorkout});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<BodySelectionBloc>(),
+      child: _BodyChart(onSearchWorkout: onSearchWorkout),
+    );
+  }
+}
+
+class _BodyChart extends StatelessWidget {
+  final void Function(String bodyPart)? onSearchWorkout;
+
+  const _BodyChart({this.onSearchWorkout});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +39,7 @@ class BodyChartWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: Colors.white.withOpacity(0.08)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +66,7 @@ class BodyChartWidget extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
+                        color: Colors.white.withValues(alpha: 0.08),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -105,7 +121,7 @@ class BodyChartWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 12.h),
 
         decoration: BoxDecoration(
-          color: const Color(0xFF00E5FF),
+          color: AppColors.primary,
 
           borderRadius: BorderRadius.circular(8.r),
         ),
@@ -152,7 +168,7 @@ class BodyChartWidget extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                context.read<BodySelectionBloc>().add(ToggleView());
+                context.read<BodySelectionBloc>().add(const ToggleView());
               },
               icon: Icon(Icons.flip, color: Colors.white, size: 20.sp),
             ),
@@ -165,7 +181,7 @@ class BodyChartWidget extends StatelessWidget {
             isFront: state.isFront,
             selectedMuscles: state.selectedMuscles,
             disabledMuscles: state.disabledMuscles,
-            highlightColor: const Color(0xFF00E5FF),
+            highlightColor: AppColors.primary,
             disabledColor: Colors.grey,
             selectedStrokeWidth: 2.5,
             unselectedStrokeWidth: 1.0,
@@ -189,9 +205,9 @@ class BodyChartWidget extends StatelessWidget {
   Widget _buildPickerSection(BuildContext context, BodySelectionState state) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.25),
+        color: Colors.black.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Column(
         children: [
@@ -213,7 +229,7 @@ class BodyChartWidget extends StatelessWidget {
   }
 
   Widget _buildMusclePicker(BuildContext context, BodySelectionState state) {
-    final all = Muscle.values;
+    const all = Muscle.values;
 
     final frontMuscles = all
         .where(
@@ -286,16 +302,16 @@ class BodyChartWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
               decoration: BoxDecoration(
                 color: disabled
-                    ? Colors.grey.withOpacity(0.15)
+                    ? Colors.grey.withValues(alpha: 0.15)
                     : selected
-                    ? const Color(0xFF00E5FF).withOpacity(0.3)
-                    : Colors.white.withOpacity(0.05),
+                    ? AppColors.primary.withValues(alpha: 0.3)
+                    : Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(6.r),
                 border: Border.all(
                   color: disabled
                       ? Colors.grey
                       : selected
-                      ? const Color(0xFF00E5FF)
+                      ? AppColors.primary
                       : Colors.white10,
                 ),
               ),
@@ -308,7 +324,7 @@ class BodyChartWidget extends StatelessWidget {
                         color: disabled
                             ? Colors.grey
                             : selected
-                            ? const Color(0xFF00E5FF)
+                            ? AppColors.primary
                             : Colors.white,
                         fontSize: 11.sp,
                         fontWeight: selected
@@ -320,7 +336,7 @@ class BodyChartWidget extends StatelessWidget {
                   if (selected)
                     Icon(
                       Icons.check_circle,
-                      color: const Color(0xFF00E5FF),
+                      color: AppColors.primary,
                       size: 16.sp,
                     ),
                   if (disabled)
@@ -367,9 +383,12 @@ class BodyChartWidget extends StatelessWidget {
       case Muscle.bicepsRight:
       case Muscle.tricepsLeft:
       case Muscle.tricepsRight:
+        return 'upper arms';
+
+      // Values must match ExerciseDB's body parts (GET /bodyparts).
       case Muscle.forearmsLeft:
       case Muscle.forearmsRight:
-        return 'upper arms';
+        return 'lower arms';
 
       case Muscle.latsBackLeft:
       case Muscle.latsBackRight:
@@ -384,11 +403,13 @@ class BodyChartWidget extends StatelessWidget {
       case Muscle.quadsRight:
       case Muscle.hamstringsLeft:
       case Muscle.hamstringsRight:
-      case Muscle.calvesLeft:
-      case Muscle.calvesRight:
       case Muscle.glutesLeft:
       case Muscle.glutesRight:
         return 'upper legs';
+
+      case Muscle.calvesLeft:
+      case Muscle.calvesRight:
+        return 'lower legs';
     }
   }
 }

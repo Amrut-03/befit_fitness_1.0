@@ -2,7 +2,7 @@ import 'package:fitness_app/features/notifications/data/datasources/local/notifi
 import 'package:fitness_app/features/notifications/data/models/notification_model.dart';
 
 import 'package:fitness_app/features/notifications/domain/entities/notification_entity.dart';
-import 'package:fitness_app/features/notifications/domain/repositories/notifation_repository.dart';
+import 'package:fitness_app/features/notifications/domain/repositories/notification_repository.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationLocalDatasource localDatasource;

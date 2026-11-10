@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -42,7 +43,7 @@ class DietPlanHeaderSection extends StatelessWidget {
             color: Colors.black,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -65,16 +66,18 @@ class DietPlanHeaderSection extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 16.sp),
                 decoration: InputDecoration(
                   hintText: 'Enter diet plan name',
-                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                  hintStyle: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.5),
+                  ),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.1),
+                  fillColor: Colors.white.withValues(alpha: 0.1),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                     borderSide: const BorderSide(
-                      color: Color(0xFF00E5FF),
+                      color: AppColors.primary,
                       width: 2,
                     ),
                   ),
@@ -90,7 +93,10 @@ class DietPlanHeaderSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.black,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                ),
               ],
             ),
             child: Column(
@@ -172,7 +178,7 @@ class DietPlanHeaderSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
             children: [
-              Text(label, style: TextStyle(color: Colors.white)),
+              Text(label, style: const TextStyle(color: Colors.white)),
 
               Text(
                 "${consumed.toStringAsFixed(1)} / ${goal.toStringAsFixed(1)} $unit",

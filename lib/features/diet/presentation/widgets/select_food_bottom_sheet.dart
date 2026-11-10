@@ -40,7 +40,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
   void initState() {
     super.initState();
 
-    context.read<FoodItemsBloc>().add(LoadFoodItems());
+    context.read<FoodItemsBloc>().add(const LoadFoodItems());
   }
 
   void toggle(MealEntity meal) {
@@ -165,8 +165,8 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
 
                       decoration: BoxDecoration(
                         color: selected
-                            ? Colors.teal.withOpacity(0.2)
-                            : Colors.white.withOpacity(0.05),
+                            ? Colors.teal.withValues(alpha: 0.2)
+                            : Colors.white.withValues(alpha: 0.05),
 
                         borderRadius: BorderRadius.circular(12),
 

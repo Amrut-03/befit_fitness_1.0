@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
@@ -49,7 +50,7 @@ class UserModel extends UserEntity {
   }
 
   /// FirebaseAuth User → Model
-  factory UserModel.fromFirebaseUser(dynamic user, {required bool isGuest}) {
+  factory UserModel.fromFirebaseUser(User user, {required bool isGuest}) {
     return UserModel(
       uid: user.uid,
       name: user.displayName,

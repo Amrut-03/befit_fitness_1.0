@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +13,7 @@ class QuickActionsSection extends StatelessWidget {
       'title': 'Diet Plan',
       'subtitle': 'Track your macros',
       'key': 'diet',
-      'color': Color(0xFF00E5FF),
+      'color': AppColors.primary,
     },
 
     {
@@ -20,7 +21,7 @@ class QuickActionsSection extends StatelessWidget {
       'title': 'Workout',
       'subtitle': 'Training plans',
       'key': 'workout',
-      'color': Color(0xFFFF6B35),
+      'color': AppColors.accentOrange,
     },
 
     {
@@ -28,7 +29,7 @@ class QuickActionsSection extends StatelessWidget {
       'title': 'Health Calculator',
       'subtitle': 'BMI & nutrition',
       'key': 'calculator',
-      'color': Color(0xFF00E5FF),
+      'color': AppColors.primary,
     },
 
     {
@@ -52,7 +53,7 @@ class QuickActionsSection extends StatelessWidget {
       'title': 'History',
       'subtitle': 'Diet & workouts',
       'key': 'history',
-      'color': Color(0xFF06D6A0),
+      'color': AppColors.success,
     },
   ];
 
@@ -132,7 +133,7 @@ class _ActionCard extends StatelessWidget {
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
               ),
               child: Icon(icon, color: color, size: 20.sp),
             ),
@@ -150,7 +151,7 @@ class _ActionCard extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 11.sp,
-                color: Colors.white.withOpacity(0.6),
+                color: Colors.white.withValues(alpha: 0.6),
               ),
             ),
           ],

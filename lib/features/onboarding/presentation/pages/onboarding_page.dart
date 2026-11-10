@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
 import 'package:flutter/material.dart';
@@ -65,11 +67,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 end: Alignment.bottomRight,
 
                 colors: [
-                  Color(0xFF050505),
+                  AppColors.background,
 
-                  Color(0xFF09111F),
+                  AppColors.surfaceNavy,
 
-                  Color(0xFF050505),
+                  AppColors.background,
                 ],
               ),
             ),
@@ -105,8 +107,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                               decoration: BoxDecoration(
                                 color: isActive
-                                    ? const Color(0xFF00E5FF)
-                                    : Colors.white.withOpacity(0.15),
+                                    ? AppColors.primary
+                                    : Colors.white.withValues(alpha: 0.15),
 
                                 borderRadius: BorderRadius.circular(30.r),
                               ),
@@ -117,7 +119,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         /// SKIP
                         TextButton(
                           onPressed: () {
-                            context.go('/login');
+                            context.go(Routes.login);
                           },
 
                           child: Text(
@@ -171,9 +173,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   decoration: BoxDecoration(
                                     gradient: RadialGradient(
                                       colors: [
-                                        const Color(
-                                          0xFF00E5FF,
-                                        ).withOpacity(0.15),
+                                        AppColors.primary.withValues(alpha: 0.15),
 
                                         Colors.transparent,
                                       ],
@@ -215,7 +215,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   textAlign: TextAlign.center,
 
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.65),
+                                    color: Colors.white.withValues(alpha: 0.65),
 
                                     fontSize: 15.sp,
 
@@ -241,11 +241,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00E5FF),
+                          backgroundColor: AppColors.primary,
 
                           elevation: 12,
 
-                          shadowColor: const Color(0xFF00E5FF).withOpacity(0.4),
+                          shadowColor: AppColors.primary.withValues(alpha: 0.4),
 
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(22.r),
@@ -255,7 +255,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onPressed: () {
                           /// LAST PAGE
                           if (currentPage == items.length - 1) {
-                            context.go("/login");
+                            context.go(Routes.login);
 
                             return;
                           }

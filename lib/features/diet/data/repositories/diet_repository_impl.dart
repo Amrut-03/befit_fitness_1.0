@@ -15,32 +15,10 @@ class DietRepositoryImpl implements DietRepository {
   DietRepositoryImpl(this.remoteDataSource);
 
   @override
-  Stream<List<DietPlanEntity>> getDietPlans() async* {
-    print("REPOSITORY CALLED");
-
-    await for (final models in remoteDataSource.getDietPlans()) {
-      print("MODELS COUNT: ${models.length}");
-
-      for (final model in models) {
-        print(
-          "REPO MODEL ${model.name}"
-          " ACTIVE=${model.activeDate}",
-        );
-      }
-
-      final entities = models.map((e) {
-        final entity = e.toEntity();
-
-        print(
-          "ENTITY ${entity.name}"
-          " ACTIVE=${entity.activeDate}",
-        );
-
-        return entity;
-      }).toList();
-
-      yield entities;
-    }
+  Stream<List<DietPlanEntity>> getDietPlans() {
+    return remoteDataSource.getDietPlans().map(
+      (models) => models.map((m) => m.toEntity()).toList(),
+    );
   }
 
   @override

@@ -7,10 +7,6 @@ abstract class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class AuthStarted extends AuthEvent {
-  const AuthStarted();
-}
-
 class AuthGoogleSignInRequested extends AuthEvent {
   const AuthGoogleSignInRequested();
 }
@@ -25,13 +21,4 @@ class AuthLogoutRequested extends AuthEvent {
 
 class AuthDeleteRequested extends AuthEvent {
   const AuthDeleteRequested();
-}
-
-class _AuthUserChanged extends AuthEvent {
-  final UserEntity? user;
-
-  const _AuthUserChanged(this.user);
-
-  @override
-  List<Object?> get props => [user];
 }

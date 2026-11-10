@@ -45,8 +45,6 @@ dependencies:
   flutter_animate: ^4.5.2
   flutter_svg: ^2.3.0
   firebase_messaging: ^16.2.2
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.13
   intl: ^0.20.2
   timezone: ^0.11.0
   flutter_timezone: ^5.1.0
@@ -60,6 +58,8 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   fake_cloud_firestore: ^4.4.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.13
 
 flutter_launcher_icons:
   android: true

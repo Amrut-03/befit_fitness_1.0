@@ -1,4 +1,4 @@
-import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_reposittory.dart';
+import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_repository.dart';
 
 import '../entities/calculator_result_entity.dart';
 

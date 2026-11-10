@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/error/failures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/profile_entity.dart';
@@ -33,7 +34,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       emit(ProfileLoaded(profile));
     } catch (e) {
-      emit(ProfileError(e.toString()));
+      emit(ProfileError(Failure.fromException(e).message));
     }
   }
 
@@ -42,25 +43,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     try {
-      print(
-        "UPDATING PROFILE: "
-        "${event.profile.weight}",
-      );
-
       await updateProfile(event.profile);
 
       final updatedProfile = await getProfile();
 
-      print(
-        "RELOADED PROFILE: "
-        "${updatedProfile.weight}",
-      );
-
       emit(ProfileLoaded(updatedProfile));
     } catch (e) {
-      print(e);
-
-      emit(ProfileError(e.toString()));
+      emit(ProfileError(Failure.fromException(e).message));
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +12,7 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0B0B0B),
+      backgroundColor: AppColors.surfaceDim,
 
       appBar: const AppHeader(title: "History"),
 
@@ -23,9 +25,9 @@ class HistoryPage extends StatelessWidget {
               icon: Icons.restaurant_menu,
               title: "Diet History",
               subtitle: "View completed diet plans",
-              color: const Color(0xFF00E5FF),
+              color: AppColors.primary,
               onTap: () {
-                context.push('/diet-history');
+                context.push(Routes.dietHistory);
               },
             ),
 
@@ -35,9 +37,9 @@ class HistoryPage extends StatelessWidget {
               icon: Icons.fitness_center,
               title: "Workout History",
               subtitle: "View completed workouts",
-              color: const Color(0xFFFF6B35),
+              color: AppColors.accentOrange,
               onTap: () {
-                context.push('/workout-history');
+                context.push(Routes.workoutHistory);
               },
             ),
           ],
@@ -98,7 +100,7 @@ class _HistoryCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
 
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
               ),
 
               child: Icon(icon, color: color, size: 26.sp),

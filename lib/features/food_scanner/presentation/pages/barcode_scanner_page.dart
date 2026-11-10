@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_bloc.dart';
 import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_event.dart';
@@ -98,11 +99,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                   child: Icon(
                     Icons.camera_alt_rounded,
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.primary,
                     size: 60.sp,
                   ),
                 ),
@@ -133,7 +134,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   child: ElevatedButton(
                     onPressed: _requestCameraPermission,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E5FF),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.r),
                       ),
@@ -200,7 +201,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               MobileScanner(controller: _controller, onDetect: _onDetect),
               ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.45),
+                  Colors.black.withValues(alpha: 0.45),
                   BlendMode.srcOut,
                 ),
                 child: Stack(
@@ -234,12 +235,12 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24.r),
                     border: Border.all(
-                      color: const Color(0xFF00E5FF),
+                      color: AppColors.primary,
                       width: 3,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF00E5FF).withOpacity(0.5),
+                        color: AppColors.primary.withValues(alpha: 0.5),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -299,7 +300,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               ),
               if (state.isLoading)
                 Container(
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                   child: const Center(child: AppLoader()),
                 ),
             ],
@@ -316,7 +317,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
         width: 48.w,
         height: 48.w,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.45),
+          color: Colors.black.withValues(alpha: 0.45),
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white24),
         ),

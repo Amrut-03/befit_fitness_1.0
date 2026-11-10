@@ -1,110 +1,175 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-import 'package:fitness_app/core/di/injection_container.dart';
-
 import 'package:fitness_app/features/notifications/domain/entities/notification_entity.dart';
-
-import 'package:fitness_app/features/notifications/domain/usecases/save_notification.dart';
-
+import 'package:fitness_app/firebase_options.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+/// Handles FCM messages while the app is in the background or terminated.
+///
+/// It runs in a separate isolate, so it can't share the main isolate's Hive
+/// boxes. It appends to a small "pending" box, which the main isolate drains
+/// into the in-app notification list on startup and resume.
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Hive.initFlutter();
+  final box = await Hive.openBox(NotificationService.pendingBoxName);
+  await box.add(NotificationService.encodeMessage(message));
+  await box.close();
+}
 
 class NotificationService {
-  static final NotificationService instance = NotificationService._();
-
   NotificationService._();
 
-  /// LIVE UPDATE STREAM
+  static final NotificationService instance = NotificationService._();
+
+  static const pendingBoxName = 'notifications_pending';
+
+  static const channel = AndroidNotificationChannel(
+    'befit_channel',
+    'BeFit Notifications',
+    description: 'Reminders and updates from BeFit',
+    importance: Importance.high,
+  );
+
+  static const details = NotificationDetails(
+    android: AndroidNotificationDetails(
+      'befit_channel',
+      'BeFit Notifications',
+      channelDescription: 'Reminders and updates from BeFit',
+      importance: Importance.high,
+      priority: Priority.high,
+    ),
+    iOS: DarwinNotificationDetails(),
+  );
+
+  /// Fires whenever the in-app notification list changes.
   final StreamController<bool> notificationStreamController =
       StreamController<bool>.broadcast();
-
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   final FlutterLocalNotificationsPlugin localNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  /// INITIALIZE
-  Future<void> initialize() async {
-    /// REQUEST PERMISSION
-    await _firebaseMessaging.requestPermission(
+  bool _initialized = false;
+  late Future<void> Function(NotificationEntity) _saveNotification;
+
+  /// Call once from `main()` after Firebase, Hive and DI are ready.
+  /// [saveNotification] stores a received message in the in-app list.
+  Future<void> initialize({
+    required Future<void> Function(NotificationEntity) saveNotification,
+  }) async {
+    if (_initialized) return;
+    _initialized = true;
+    _saveNotification = saveNotification;
+
+    await _initTimeZone();
+
+    await localNotificationsPlugin.initialize(
+      settings: const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        // Permission is requested later, after sign-in, not on first launch.
+        iOS: DarwinInitializationSettings(
+          requestAlertPermission: false,
+          requestBadgePermission: false,
+          requestSoundPermission: false,
+        ),
+      ),
+    );
+
+    await localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
+
+    FirebaseMessaging.onMessage.listen(_onForegroundMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen((_) => drainPending());
+
+    await drainPending();
+  }
+
+  /// `zonedSchedule` needs the device's real time zone.
+  Future<void> _initTimeZone() async {
+    tz.initializeTimeZones();
+    try {
+      final info = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(info.identifier));
+    } catch (_) {
+      tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
+    }
+  }
+
+  /// Requests notification permission: iOS, and Android 13+
+  /// (POST_NOTIFICATIONS). Returns whether notifications are allowed.
+  Future<bool> requestPermission() async {
+    final settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
-
       badge: true,
-
       sound: true,
     );
-
-    /// LOCAL NOTIFICATION INIT
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-
-    const initSettings = InitializationSettings(android: androidSettings);
-
-    await localNotificationsPlugin.initialize(settings: initSettings);
-
-    /// FOREGROUND MESSAGE
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      final title = message.notification?.title ?? '';
-
-      final body = message.notification?.body ?? '';
-
-      /// SHOW LOCAL NOTIFICATION
-      await _showNotification(title: title, body: body);
-
-      /// SAVE TO HIVE
-      await _saveNotification(title: title, body: body);
-
-      /// UPDATE UI
-      notificationStreamController.add(true);
-    });
+    return settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional;
   }
 
-  /// SHOW LOCAL NOTIFICATION
-  Future<void> _showNotification({
-    required String title,
+  /// A notification id that fits Android's 32-bit int. The raw
+  /// `millisecondsSinceEpoch` overflows it and crashes.
+  static int nextId([DateTime? now]) =>
+      (now ?? DateTime.now()).millisecondsSinceEpoch.remainder(0x7fffffff);
 
-    required String body,
-  }) async {
-    const androidDetails = AndroidNotificationDetails(
-      'befit_channel',
+  static Map<String, dynamic> encodeMessage(RemoteMessage m) => {
+    'title': m.notification?.title ?? m.data['title'] ?? '',
+    'body': m.notification?.body ?? m.data['body'] ?? '',
+    'createdAt': (m.sentTime ?? DateTime.now()).millisecondsSinceEpoch,
+  };
 
-      'BeFit Notifications',
+  Future<void> _onForegroundMessage(RemoteMessage message) async {
+    final data = encodeMessage(message);
+    final title = data['title'] as String;
+    final body = data['body'] as String;
+    if (title.isEmpty && body.isEmpty) return;
 
-      importance: Importance.max,
-
-      priority: Priority.high,
-    );
-
-    const details = NotificationDetails(android: androidDetails);
-
+    // FCM doesn't display notifications while the app is in the foreground.
     await localNotificationsPlugin.show(
-      id: DateTime.now().millisecondsSinceEpoch,
-
+      id: nextId(),
       title: title,
-
       body: body,
-
       notificationDetails: details,
     );
+    await _save(title, body, DateTime.now());
+    notificationStreamController.add(true);
   }
 
-  /// SAVE NOTIFICATION
-  Future<void> _saveNotification({
-    required String title,
+  /// Moves messages received in the background into the in-app list.
+  Future<void> drainPending() async {
+    try {
+      final box = await Hive.openBox(pendingBoxName);
+      final items = box.values.whereType<Map>().toList();
+      await box.clear();
+      await box.close();
 
-    required String body,
-  }) async {
-    final saveNotification = sl<SaveNotification>();
+      for (final item in items) {
+        await _save(
+          item['title']?.toString() ?? '',
+          item['body']?.toString() ?? '',
+          DateTime.fromMillisecondsSinceEpoch(item['createdAt'] as int),
+        );
+      }
+      if (items.isNotEmpty) notificationStreamController.add(true);
+    } catch (e) {
+      debugPrint('drainPending failed: $e');
+    }
+  }
 
-    await saveNotification(
-      NotificationEntity(title: title, body: body, createdAt: DateTime.now()),
+  Future<void> _save(String title, String body, DateTime at) {
+    return _saveNotification(
+      NotificationEntity(title: title, body: body, createdAt: at),
     );
-  }
-
-  /// DISPOSE
-  void dispose() {
-    notificationStreamController.close();
   }
 }

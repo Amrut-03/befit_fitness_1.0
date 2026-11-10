@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -49,14 +50,14 @@ class ProfileShareCard extends StatelessWidget {
 
           end: Alignment.bottomRight,
 
-          colors: [Color(0xFF0D0D0D), Color(0xFF111111), Color(0xFF1A1A1A)],
+          colors: [Color(0xFF0D0D0D), AppColors.surface, AppColors.surfaceHigh],
         ),
 
-        border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.15)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
 
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF00E5FF).withOpacity(0.08),
+            color: AppColors.primary.withValues(alpha: 0.08),
 
             blurRadius: 30,
 
@@ -77,10 +78,10 @@ class ProfileShareCard extends StatelessWidget {
 
                 height: 72.w,
 
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
 
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.primary,
                 ),
 
                 child: Center(
@@ -123,7 +124,7 @@ class ProfileShareCard extends StatelessWidget {
                       goal,
 
                       style: TextStyle(
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.primary,
 
                         fontSize: 14.sp,
 
@@ -149,7 +150,7 @@ class ProfileShareCard extends StatelessWidget {
 
                   icon: Icons.monitor_weight,
 
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.primary,
                 ),
               ),
 
@@ -163,7 +164,7 @@ class ProfileShareCard extends StatelessWidget {
 
                   icon: Icons.favorite,
 
-                  color: const Color(0xFFFF006E),
+                  color: AppColors.accentPink,
                 ),
               ),
             ],
@@ -181,7 +182,7 @@ class ProfileShareCard extends StatelessWidget {
 
                   icon: Icons.local_fire_department,
 
-                  color: const Color(0xFFFFB703),
+                  color: AppColors.warning,
                 ),
               ),
 
@@ -195,7 +196,7 @@ class ProfileShareCard extends StatelessWidget {
 
                   icon: Icons.directions_walk,
 
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.primary,
                 ),
               ),
             ],
@@ -210,7 +211,7 @@ class ProfileShareCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 18.h),
 
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.04),
+              color: Colors.white.withValues(alpha: 0.04),
 
               borderRadius: BorderRadius.circular(24.r),
             ),
@@ -223,7 +224,7 @@ class ProfileShareCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
 
-                    color: Colors.orange.withOpacity(0.15),
+                    color: Colors.orange.withValues(alpha: 0.15),
                   ),
 
                   child: Icon(
@@ -260,7 +261,7 @@ class ProfileShareCard extends StatelessWidget {
                         "Consistency creates results",
 
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
 
                           fontSize: 12.sp,
                         ),
@@ -298,7 +299,7 @@ class ProfileShareCard extends StatelessWidget {
                   "Generated with BeFit",
 
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
 
                     fontSize: 12.sp,
                   ),
@@ -324,7 +325,7 @@ class ProfileShareCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
 
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withValues(alpha: 0.04),
 
         borderRadius: BorderRadius.circular(24.r),
       ),
@@ -339,7 +340,7 @@ class ProfileShareCard extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
 
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
             ),
 
             child: Icon(icon, color: color, size: 20.sp),
@@ -365,7 +366,7 @@ class ProfileShareCard extends StatelessWidget {
             title,
 
             style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
 
               fontSize: 12.sp,
             ),

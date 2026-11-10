@@ -73,7 +73,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
 
-            color: widget.color.withOpacity(0.15),
+            color: widget.color.withValues(alpha: 0.15),
           ),
 
           child: Icon(_getIcon(), color: widget.color, size: 18.sp),
@@ -92,7 +92,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                 style: TextStyle(
                   fontSize: 11.sp,
 
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
 
@@ -142,7 +142,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
 
-            color: widget.color.withOpacity(0.15),
+            color: widget.color.withValues(alpha: 0.15),
           ),
 
           child: Icon(Icons.add, color: widget.color),
@@ -152,7 +152,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
 
         borderRadius: BorderRadius.circular(20.r),
       ),
@@ -176,7 +176,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
 
         decoration: BoxDecoration(
           color: isSelected
-              ? widget.color.withOpacity(0.2)
+              ? widget.color.withValues(alpha: 0.2)
               : Colors.transparent,
 
           borderRadius: BorderRadius.circular(20.r),
@@ -190,7 +190,9 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
 
             fontWeight: FontWeight.bold,
 
-            color: isSelected ? widget.color : Colors.white.withOpacity(0.5),
+            color: isSelected
+                ? widget.color
+                : Colors.white.withValues(alpha: 0.5),
           ),
         ),
       ),
@@ -223,8 +225,10 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
           gridData: FlGridData(
             drawVerticalLine: false,
 
-            getDrawingHorizontalLine: (value) =>
-                FlLine(color: widget.color.withOpacity(0.1), strokeWidth: 1),
+            getDrawingHorizontalLine: (value) => FlLine(
+              color: widget.color.withValues(alpha: 0.1),
+              strokeWidth: 1,
+            ),
           ),
 
           titlesData: FlTitlesData(
@@ -241,7 +245,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                     style: TextStyle(
                       fontSize: 10.sp,
 
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                     ),
                   );
                 },
@@ -264,7 +268,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                       style: TextStyle(
                         fontSize: 10.sp,
 
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                     );
                   }
@@ -284,7 +288,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
           ),
 
           borderData: FlBorderData(
-            border: Border.all(color: widget.color.withOpacity(0.15)),
+            border: Border.all(color: widget.color.withValues(alpha: 0.15)),
           ),
 
           lineBarsData: [
@@ -302,7 +306,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
               belowBarData: BarAreaData(
                 show: true,
 
-                color: widget.color.withOpacity(0.1),
+                color: widget.color.withValues(alpha: 0.1),
               ),
             ),
           ],
@@ -322,7 +326,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
 
         borderRadius: BorderRadius.circular(20.r),
 
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
 
       child: Column(
@@ -338,7 +342,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
 
-                  color: widget.color.withOpacity(0.15),
+                  color: widget.color.withValues(alpha: 0.15),
                 ),
 
                 child: Icon(_getIcon(), color: widget.color, size: 18.sp),
@@ -357,7 +361,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                       style: TextStyle(
                         fontSize: 11.sp,
 
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                     ),
 
@@ -390,7 +394,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                 Icon(
                   _getIcon(),
 
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
 
                   size: 40.sp,
                 ),
@@ -411,7 +415,7 @@ class _HealthMetricsChartState extends State<HealthMetricsChart> {
                   textAlign: TextAlign.center,
 
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withValues(alpha: 0.6),
 
                     fontSize: 11.sp,
                   ),

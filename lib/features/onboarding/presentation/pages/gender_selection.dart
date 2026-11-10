@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_event.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
@@ -22,7 +24,7 @@ class GenderSelectionPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: AppColors.background,
 
       body: Container(
         decoration: const BoxDecoration(
@@ -31,7 +33,7 @@ class GenderSelectionPage extends StatelessWidget {
 
             end: Alignment.bottomRight,
 
-            colors: [Color(0xFF050505), Color(0xFF09111F), Color(0xFF050505)],
+            colors: [AppColors.background, AppColors.surfaceNavy, AppColors.background],
           ),
         ),
 
@@ -45,10 +47,10 @@ class GenderSelectionPage extends StatelessWidget {
               child: BlocBuilder<OnboardingProfileBloc, OnboardingProfileState>(
                 builder: (context, state) {
                   if (state.selectedGoal == null) {
-                    return OnboardingStepGuard(
+                    return const OnboardingStepGuard(
                       canProceed: false,
-                      fallbackRoute: '/goal-selection',
-                      child: const SizedBox.shrink(),
+                      fallbackRoute: Routes.goalSelection,
+                      child: SizedBox.shrink(),
                     );
                   }
 
@@ -84,7 +86,7 @@ class GenderSelectionPage extends StatelessWidget {
                         textAlign: TextAlign.center,
 
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
 
                           fontSize: 15.sp,
                         ),
@@ -125,20 +127,18 @@ class GenderSelectionPage extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: state.selectedGender != null
-                                ? const Color(0xFF00E5FF)
-                                : Colors.grey.withOpacity(0.25),
+                                ? AppColors.primary
+                                : Colors.grey.withValues(alpha: 0.25),
 
-                            disabledBackgroundColor: Colors.grey.withOpacity(
-                              0.25,
+                            disabledBackgroundColor: Colors.grey.withValues(
+                              alpha: 0.25,
                             ),
 
                             disabledForegroundColor: Colors.white,
 
                             elevation: 12,
 
-                            shadowColor: const Color(
-                              0xFF00E5FF,
-                            ).withOpacity(0.4),
+                            shadowColor: AppColors.primary.withValues(alpha: 0.4),
 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(22.r),
@@ -148,7 +148,7 @@ class GenderSelectionPage extends StatelessWidget {
                           onPressed: state.selectedGender == null
                               ? null
                               : () {
-                                  context.push("/body-metrics");
+                                  context.push(Routes.bodyMetrics);
                                 },
 
                           child: Text(

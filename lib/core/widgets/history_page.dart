@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/models/history_item.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -28,7 +29,7 @@ class HistoryListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0B0B0B),
+      backgroundColor: AppColors.surfaceDim,
 
       appBar: AppHeader(title: title),
 
@@ -39,7 +40,7 @@ class HistoryListPage extends StatelessWidget {
 
               itemCount: items.length,
 
-              separatorBuilder: (_, __) => SizedBox(height: 12.h),
+              separatorBuilder: (_, _) => SizedBox(height: 12.h),
 
               itemBuilder: (context, index) {
                 final item = items[index];
@@ -93,8 +94,8 @@ class _HistoryCard extends StatelessWidget {
                 shape: BoxShape.circle,
 
                 color: item.completed
-                    ? Colors.green.withOpacity(0.15)
-                    : Colors.orange.withOpacity(0.15),
+                    ? Colors.green.withValues(alpha: 0.15)
+                    : Colors.orange.withValues(alpha: 0.15),
               ),
 
               child: Icon(
@@ -196,7 +197,7 @@ class _EmptyState extends StatelessWidget {
 
           SizedBox(height: 6.h),
 
-          Text(
+          const Text(
             "Complete workouts or diets to see history",
 
             style: TextStyle(color: Colors.white54),

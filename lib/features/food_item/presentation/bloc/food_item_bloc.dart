@@ -20,12 +20,19 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     this.saveFoodItem,
     this.deleteFoodItem,
     this.updateFoodItem,
-  ) : super(FoodItemsState()) {
+  ) : super(const FoodItemsState()) {
     on<LoadFoodItems>(_onLoad);
     on<SaveFoodItems>(_onSaveFoodItem);
     on<FoodItemsUpdated>(_onFoodItemsUpdated);
     on<DeleteFoodItem>(_onDeleteFoodItem);
     on<UpdateFoodItem>(_onUpdateFoodItem);
+    on<FoodItemsStreamFailed>((event, emit) async {
+      await _foodItemsSubscription?.cancel();
+      _foodItemsSubscription = null;
+      emit(
+        state.copyWith(isLoading: false, error: 'Failed to load food items'),
+      );
+    });
   }
 
   Future<void> _onDeleteFoodItem(
@@ -56,20 +63,9 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
 
     emit(state.copyWith(isLoading: true));
 
-    _foodItemsSubscription = getFoodItems().listen(
-      (items) {
-        add(FoodItemsUpdated(items));
-      },
-
-      onError: (_) {
-        _foodItemsSubscription?.cancel();
-        _foodItemsSubscription = null;
-
-        emit(
-          state.copyWith(isLoading: false, error: 'Failed to load food items'),
-        );
-      },
-    );
+    _foodItemsSubscription = getFoodItems().listen((items) {
+      add(FoodItemsUpdated(items));
+    }, onError: (_) => add(const FoodItemsStreamFailed()));
   }
 
   Future<void> _onSaveFoodItem(

@@ -1,11 +1,9 @@
+import 'package:fitness_app/core/error/failures.dart';
+import 'package:fitness_app/features/streak/domain/usecases/get_streak.dart';
+import 'package:fitness_app/features/streak/domain/usecases/update_streak.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fitness_app/features/streak/domain/usecases/get_streak.dart';
-
-import 'package:fitness_app/features/streak/domain/usecases/update_streak.dart';
-
 import 'streak_event.dart';
-
 import 'streak_state.dart';
 
 class StreakBloc extends Bloc<StreakEvent, StreakState> {
@@ -13,8 +11,15 @@ class StreakBloc extends Bloc<StreakEvent, StreakState> {
 
   final UpdateStreak updateStreak;
 
-  StreakBloc({required this.getStreak, required this.updateStreak})
-    : super(StreakState.initial()) {
+  /// Called after today's activity is recorded (e.g. to skip today's
+  /// "streak at risk" reminder).
+  final Future<void> Function()? onActivityRecorded;
+
+  StreakBloc({
+    required this.getStreak,
+    required this.updateStreak,
+    this.onActivityRecorded,
+  }) : super(StreakState.initial()) {
     on<LoadStreakEvent>(_onLoadStreak);
 
     on<UpdateStreakEvent>(_onUpdateStreak);
@@ -31,8 +36,6 @@ class StreakBloc extends Bloc<StreakEvent, StreakState> {
 
       final streak = await getStreak();
 
-      print("LOADED STREAK = ${state.currentStreak}");
-
       emit(
         state.copyWith(
           isLoading: false,
@@ -43,7 +46,12 @@ class StreakBloc extends Bloc<StreakEvent, StreakState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: Failure.fromException(e).message,
+        ),
+      );
     }
   }
 
@@ -56,6 +64,10 @@ class StreakBloc extends Bloc<StreakEvent, StreakState> {
     try {
       await updateStreak();
 
+      try {
+        await onActivityRecorded?.call();
+      } catch (_) {}
+
       final updated = await getStreak();
 
       emit(
@@ -66,7 +78,7 @@ class StreakBloc extends Bloc<StreakEvent, StreakState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(state.copyWith(error: Failure.fromException(e).message));
     }
   }
 }

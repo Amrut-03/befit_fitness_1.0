@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +28,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: centerTitle,
       iconTheme: const IconThemeData(color: Colors.white),
-      backgroundColor: const Color(0xFF00E5FF),
+      backgroundColor: AppColors.primary,
       title: Text(
         title,
         style: TextStyle(

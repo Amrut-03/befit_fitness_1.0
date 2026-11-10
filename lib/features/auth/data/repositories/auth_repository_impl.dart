@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/features/auth/data/datasources/local/auth_local_datasource.dart';
 import 'package:fitness_app/features/auth/data/datasources/local/user_data_local_datasource.dart';
-import 'package:fitness_app/features/auth/data/datasources/remote/user_data_remote_datasource.dart';
-import 'package:fitness_app/features/auth/domain/exceptions/account_deletion_exception.dart';
-import 'package:flutter/services.dart';
 import 'package:fitness_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
+import 'package:fitness_app/features/auth/data/datasources/remote/user_data_remote_datasource.dart';
 import 'package:fitness_app/features/auth/domain/entities/user_entity.dart';
+import 'package:fitness_app/features/auth/domain/exceptions/account_deletion_exception.dart';
 import 'package:fitness_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter/services.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -49,10 +49,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
     if (remoteUser != null) {
       await localDataSource.cacheUser(remoteUser);
-      return remoteUser;
     }
 
-    return await localDataSource.getCachedUser();
+    // No fallback to the cached user: without a Firebase session the app
+    // must treat the user as signed out.
+    return remoteUser;
   }
 
   @override
@@ -63,6 +64,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signOut() async {
     await remoteDataSource.signOut();
+    // Hive boxes aren't keyed by uid, so clear them or the next user on this
+    // device would see this user's diet, food, profile, etc.
+    await userDataLocalDataSource.clearAll();
     await localDataSource.clearCache();
   }
 

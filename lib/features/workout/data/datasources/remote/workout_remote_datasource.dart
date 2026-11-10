@@ -1,25 +1,22 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/core/config/app_config.dart';
+import 'package:fitness_app/core/error/exceptions.dart';
+import 'package:fitness_app/core/network/api_client.dart';
 import 'package:fitness_app/features/workout/data/models/exercise_model.dart';
 import 'package:fitness_app/features/workout/data/models/workout_history_model.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_page_entity.dart';
-import 'package:http/http.dart' as http;
 
 class WorkoutRemoteDatasource {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
-  final http.Client client;
+  final ApiClient api;
 
   WorkoutRemoteDatasource({
     required this.firestore,
     required this.auth,
-    http.Client? client,
-  }) : client = client ?? http.Client();
-
-  static const Duration _timeout = Duration(seconds: 15);
+    ApiClient? api,
+  }) : api = api ?? ApiClient();
 
   /// Fetches a page of exercises from the open-source ExerciseDB API.
   ///
@@ -35,17 +32,11 @@ class WorkoutRemoteDatasource {
         'limit': '$limit',
         if (bodyPart != null && bodyPart.trim().isNotEmpty)
           'bodyParts': bodyPart.trim().toLowerCase(),
-        if (cursor != null) 'after': cursor,
+        'after': ?cursor,
       },
     );
 
-    final response = await client.get(uri).timeout(_timeout);
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load exercises (${response.statusCode})');
-    }
-
-    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final body = await api.getJson(uri);
     final data = body['data'] as List<dynamic>? ?? const [];
     final meta = body['meta'] as Map<String, dynamic>? ?? const {};
 
@@ -62,24 +53,36 @@ class WorkoutRemoteDatasource {
     );
   }
 
+  String get _uid {
+    final uid = auth.currentUser?.uid;
+    if (uid == null) throw const UnauthenticatedException();
+    return uid;
+  }
+
+  /// Builds the query when the stream is listened to, so a missing user
+  /// surfaces as a stream error instead of a synchronous throw.
+  Stream<T> _userStream<T>(Stream<T> Function() build) =>
+      Stream<void>.value(null).asyncExpand((_) => build());
+
   Stream<List<WorkoutHistoryModel>> getWorkoutHistory() {
-    return firestore
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .collection('workoutHistory')
-        .orderBy('completedAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => WorkoutHistoryModel.fromJson(doc.data()))
-              .toList();
-        });
+    return _userStream(
+      () => firestore
+          .collection('users')
+          .doc(_uid)
+          .collection('workoutHistory')
+          .orderBy('completedAt', descending: true)
+          .snapshots(),
+    ).map((snapshot) {
+      return snapshot.docs
+          .map((doc) => WorkoutHistoryModel.fromJson(doc.data()))
+          .toList();
+    });
   }
 
   Future<void> saveWorkoutHistory(WorkoutHistoryModel workout) async {
     await firestore
         .collection('users')
-        .doc(auth.currentUser!.uid)
+        .doc(_uid)
         .collection('workoutHistory')
         .add(workout.toJson());
   }

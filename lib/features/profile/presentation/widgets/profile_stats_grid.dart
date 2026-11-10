@@ -1,0 +1,65 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/features/profile/domain/entities/profile_entity.dart';
+import 'package:fitness_app/features/profile/presentation/widgets/profile_stat_card.dart';
+import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
+import 'package:fitness_app/features/streak/presentation/bloc/streak_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class ProfileStatsGrid extends StatelessWidget {
+  const ProfileStatsGrid({super.key, required this.profile});
+
+  final ProfileEntity profile;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 14.w,
+      mainAxisSpacing: 14.h,
+      childAspectRatio: 1.2,
+      children: [
+        ProfileStatCard(
+          title: "Weight",
+          value: "${profile.weight.round()} kg",
+          icon: Icons.monitor_weight,
+          color: AppColors.primary,
+        ),
+        ProfileStatCard(
+          title: "Height",
+          value: "${profile.height.round()} cm",
+          icon: Icons.height,
+          color: AppColors.warning,
+        ),
+        ProfileStatCard(
+          title: "Age",
+          value: "${profile.age.round()}",
+          icon: Icons.cake,
+          color: AppColors.accentPink,
+        ),
+        BlocBuilder<StreakBloc, StreakState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const ProfileStatCard(
+                title: "Streak",
+                value: "...",
+                icon: Icons.local_fire_department,
+                color: AppColors.primary,
+              );
+            }
+
+            return ProfileStatCard(
+              title: "Streak",
+              value: "${state.currentStreak} Days",
+              icon: Icons.local_fire_department,
+              color: AppColors.primary,
+            );
+          },
+        ),
+      ],
+    );
+  }
+}

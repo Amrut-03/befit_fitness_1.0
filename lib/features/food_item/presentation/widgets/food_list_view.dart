@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_bloc.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_event.dart';
@@ -23,14 +25,14 @@ class FoodListView extends StatelessWidget {
         return FoodItemCard(
           item: item,
           onTap: () {
-            context.push('/manual-food-entry', extra: item);
+            context.push(Routes.manualFoodEntry, extra: item);
           },
           onDelete: () async {
             final confirmed = await showDialog<bool>(
               context: context,
               builder: (dialogContext) {
                 return AlertDialog(
-                  backgroundColor: const Color(0xFF171717),
+                  backgroundColor: AppColors.surfaceElevated,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -62,7 +64,7 @@ class FoodListView extends StatelessWidget {
               },
             );
 
-            if (confirmed == true) {
+            if (confirmed == true && context.mounted) {
               context.read<FoodItemsBloc>().add(DeleteFoodItem(item.id));
             }
           },

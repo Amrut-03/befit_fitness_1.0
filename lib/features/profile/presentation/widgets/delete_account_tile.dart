@@ -1,16 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 /// Settings tile that permanently deletes the user's account and all their
 /// data. It's the in-app deletion flow required by Google Play.
 class DeleteAccountTile extends StatelessWidget {
   const DeleteAccountTile({super.key});
 
-  static const _danger = Color(0xFFFF5252);
+  static const _danger = AppColors.error;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +20,10 @@ class DeleteAccountTile extends StatelessWidget {
           prev is AuthDeleting || curr is AuthAccountDeleted,
       listener: (context, state) {
         if (state is AuthAccountDeleted) {
+          // The router redirects to /login when the session signs out.
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Your account has been deleted.')),
           );
-          context.go('/login');
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,
@@ -81,7 +82,8 @@ class DeleteAccountTile extends StatelessWidget {
   }
 
   Future<void> _confirmAndDelete(BuildContext context) async {
-    final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? true;
+    final isGuest = (await sl<GetCurrentUser>()())?.isGuest ?? true;
+    if (!context.mounted) return;
 
     final confirmed = await showDialog<bool>(
       context: context,

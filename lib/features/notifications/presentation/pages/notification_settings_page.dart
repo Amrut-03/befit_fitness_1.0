@@ -1,32 +1,41 @@
+import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
+import 'package:fitness_app/features/notifications/presentation/cubit/notification_settings_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class NotificationSettingPage extends StatefulWidget {
-  const NotificationSettingPage({super.key});
-
-  @override
-  State<NotificationSettingPage> createState() =>
-      _NotificationSettingPageState();
-}
-
-class _NotificationSettingPageState extends State<NotificationSettingPage> {
-  bool workoutReminder = true;
-
-  bool waterReminder = true;
-
-  bool mealReminder = false;
-
-  bool streakReminder = true;
-
-  TimeOfDay workoutTime = const TimeOfDay(hour: 7, minute: 0);
+/// Reminder settings. Changes are saved and reminders rescheduled
+/// immediately.
+class NotificationSettingsPage extends StatelessWidget {
+  const NotificationSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+    return BlocProvider(
+      create: (_) => sl<NotificationSettingsCubit>(),
+      child: const _NotificationSettingsView(),
+    );
+  }
+}
 
-      appBar: AppHeader(title: "Notification Settings"),
+class _NotificationSettingsView extends StatelessWidget {
+  const _NotificationSettingsView();
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<NotificationSettingsCubit>();
+    final settings = cubit.state.settings;
+    final workoutTime = TimeOfDay(
+      hour: settings.workoutHour,
+      minute: settings.workoutMinute,
+    );
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+
+      appBar: const AppHeader(title: "Notification Settings"),
 
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.w),
@@ -35,6 +44,15 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
+            if (cubit.state.permissionDenied) ...[
+              Text(
+                'Notifications are turned off for BeFit. Enable them in your '
+                'device settings to receive reminders.',
+                style: TextStyle(color: Colors.orangeAccent, fontSize: 13.sp),
+              ),
+              SizedBox(height: 16.h),
+            ],
+
             _sectionTitle("Reminders"),
 
             SizedBox(height: 16.h),
@@ -44,13 +62,10 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
 
               subtitle: "Daily workout motivation",
 
-              value: workoutReminder,
+              value: settings.workoutReminder,
 
-              onChanged: (v) {
-                setState(() {
-                  workoutReminder = v;
-                });
-              },
+              onChanged: (v) =>
+                  cubit.update(settings.copyWith(workoutReminder: v)),
             ),
 
             _notificationTile(
@@ -58,13 +73,10 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
 
               subtitle: "Stay hydrated daily",
 
-              value: waterReminder,
+              value: settings.waterReminder,
 
-              onChanged: (v) {
-                setState(() {
-                  waterReminder = v;
-                });
-              },
+              onChanged: (v) =>
+                  cubit.update(settings.copyWith(waterReminder: v)),
             ),
 
             _notificationTile(
@@ -72,13 +84,10 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
 
               subtitle: "Track your daily meals",
 
-              value: mealReminder,
+              value: settings.mealReminder,
 
-              onChanged: (v) {
-                setState(() {
-                  mealReminder = v;
-                });
-              },
+              onChanged: (v) =>
+                  cubit.update(settings.copyWith(mealReminder: v)),
             ),
 
             _notificationTile(
@@ -86,13 +95,10 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
 
               subtitle: "Keep your streak alive",
 
-              value: streakReminder,
+              value: settings.streakReminder,
 
-              onChanged: (v) {
-                setState(() {
-                  streakReminder = v;
-                });
-              },
+              onChanged: (v) =>
+                  cubit.update(settings.copyWith(streakReminder: v)),
             ),
 
             SizedBox(height: 30.h),
@@ -110,9 +116,12 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                 );
 
                 if (picked != null) {
-                  setState(() {
-                    workoutTime = picked;
-                  });
+                  await cubit.update(
+                    settings.copyWith(
+                      workoutHour: picked.hour,
+                      workoutMinute: picked.minute,
+                    ),
+                  );
                 }
               },
 
@@ -120,14 +129,14 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                 padding: EdgeInsets.all(18.w),
 
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
 
                   borderRadius: BorderRadius.circular(20.r),
                 ),
 
                 child: Row(
                   children: [
-                    Icon(Icons.access_time, color: const Color(0xFF00E5FF)),
+                    const Icon(Icons.access_time, color: AppColors.primary),
 
                     SizedBox(width: 14.w),
 
@@ -154,7 +163,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                             workoutTime.format(context),
 
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.6),
+                              color: Colors.white.withValues(alpha: 0.6),
 
                               fontSize: 12.sp,
                             ),
@@ -166,7 +175,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                     Icon(
                       Icons.arrow_forward_ios,
 
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: 0.4),
 
                       size: 16.sp,
                     ),
@@ -209,7 +218,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
       padding: EdgeInsets.all(18.w),
 
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
 
         borderRadius: BorderRadius.circular(20.r),
       ),
@@ -239,7 +248,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
                   subtitle,
 
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
 
                     fontSize: 12.sp,
                   ),
@@ -251,7 +260,7 @@ class _NotificationSettingPageState extends State<NotificationSettingPage> {
           Switch(
             value: value,
 
-            activeColor: const Color(0xFF00E5FF),
+            activeThumbColor: AppColors.primary,
 
             onChanged: onChanged,
           ),

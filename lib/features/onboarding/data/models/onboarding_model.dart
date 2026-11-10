@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/utils/json_read.dart';
 import 'package:fitness_app/features/onboarding/domain/entities/onboarding_entity.dart';
 
 class UserProfileModel extends UserProfileEntity {
@@ -21,9 +22,9 @@ class UserProfileModel extends UserProfileEntity {
     return UserProfileModel(
       goal: json['goal'] ?? '',
       gender: json['gender'] ?? '',
-      weight: (json['weight'] ?? 0).toDouble(),
-      height: (json['height'] ?? 0).toDouble(),
-      age: (json['age'] ?? 0).toDouble(),
+      weight: asDouble(json['weight']),
+      height: asDouble(json['height']),
+      age: asDouble(json['age']),
       activityLevel: json['activityLevel'] ?? '',
       profileCompleted: json['profileCompleted'] ?? false,
       dailyStepGoal: json['dailyStepGoal'] ?? 0,

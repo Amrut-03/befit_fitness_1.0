@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -55,11 +56,11 @@ class ActiveDietPlanCard extends StatelessWidget {
           height: 72.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF00E5FF).withOpacity(0.12),
+            color: AppColors.primary.withValues(alpha: 0.12),
           ),
           child: Icon(
             Icons.check_circle,
-            color: const Color(0xFF00E5FF),
+            color: AppColors.primary,
             size: 42.sp,
           ),
         ),
@@ -81,7 +82,7 @@ class ActiveDietPlanCard extends StatelessWidget {
           "Awesome work! You completed all your meals for today.",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
             fontSize: 13.sp,
             height: 1.5,
           ),
@@ -96,18 +97,18 @@ class ActiveDietPlanCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             gradient: LinearGradient(
               colors: [
-                const Color(0xFF00E5FF).withOpacity(0.25),
-                const Color(0xFF00E5FF).withOpacity(0.08),
+                AppColors.primary.withValues(alpha: 0.25),
+                AppColors.primary.withValues(alpha: 0.08),
               ],
             ),
-            border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.4)),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
           ),
           child: Column(
             children: [
               Text(
                 "Daily Goal Achieved",
                 style: TextStyle(
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.primary,
                   fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -118,7 +119,7 @@ class ActiveDietPlanCard extends StatelessWidget {
               Text(
                 "Your tracking will reset tomorrow",
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha: 0.6),
                   fontSize: 11.sp,
                 ),
               ),
@@ -137,11 +138,11 @@ class ActiveDietPlanCard extends StatelessWidget {
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
           ),
           child: Icon(
             Icons.restaurant_outlined,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             size: 24.sp,
           ),
         ),
@@ -159,7 +160,7 @@ class ActiveDietPlanCard extends StatelessWidget {
           "Start a diet plan to track your progress",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withValues(alpha: 0.5),
             fontSize: 12.sp,
           ),
         ),
@@ -169,13 +170,13 @@ class ActiveDietPlanCard extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: const Color(0xFF00E5FF).withOpacity(0.15),
+              color: AppColors.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Text(
+            child: const Text(
               "Explore Plans",
               style: TextStyle(
-                color: const Color(0xFF00E5FF),
+                color: AppColors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -195,11 +196,11 @@ class ActiveDietPlanCard extends StatelessWidget {
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF00E5FF).withOpacity(0.15),
+                color: AppColors.primary.withValues(alpha: 0.15),
               ),
               child: Icon(
                 Icons.restaurant_menu,
-                color: const Color(0xFF00E5FF),
+                color: AppColors.primary,
                 size: 18.sp,
               ),
             ),
@@ -211,7 +212,7 @@ class ActiveDietPlanCard extends StatelessWidget {
                   Text(
                     "Active Plan",
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       fontSize: 11.sp,
                     ),
                   ),
@@ -232,13 +233,13 @@ class ActiveDietPlanCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               decoration: BoxDecoration(
-                color: const Color(0xFF00E5FF).withOpacity(0.15),
+                color: AppColors.primary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Text(
                 "ACTIVE",
                 style: TextStyle(
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.primary,
                   fontSize: 10.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -252,8 +253,8 @@ class ActiveDietPlanCard extends StatelessWidget {
           child: LinearProgressIndicator(
             value: progress ?? 0,
             minHeight: 8.h,
-            backgroundColor: Colors.white.withOpacity(0.05),
-            valueColor: const AlwaysStoppedAnimation(Color(0xFF00E5FF)),
+            backgroundColor: Colors.white.withValues(alpha: 0.05),
+            valueColor: const AlwaysStoppedAnimation(AppColors.primary),
           ),
         ),
         SizedBox(height: 6.h),
@@ -262,7 +263,7 @@ class ActiveDietPlanCard extends StatelessWidget {
           child: Text(
             "${((progress ?? 0) * 100).toStringAsFixed(0)}%",
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontSize: 11.sp,
             ),
           ),
@@ -283,7 +284,7 @@ class ActiveDietPlanCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
@@ -292,7 +293,7 @@ class ActiveDietPlanCard extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: const Color(0xFF00E5FF),
+              color: AppColors.primary,
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -301,7 +302,7 @@ class ActiveDietPlanCard extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               fontSize: 10.sp,
             ),
           ),

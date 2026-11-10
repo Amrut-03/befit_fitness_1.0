@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/models/history_detail_data.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -28,12 +29,12 @@ class _HistoryDetailBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
 
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B0B0B),
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceDim,
 
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
 
       child: SafeArea(

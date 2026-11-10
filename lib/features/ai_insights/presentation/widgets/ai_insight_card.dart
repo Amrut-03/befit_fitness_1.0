@@ -1,4 +1,5 @@
-import 'package:fitness_app/features/ai_insights/domain/entites/ai_insights_entity.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/features/ai_insights/domain/entities/ai_insights_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,13 +24,15 @@ class AIInsightCard extends StatelessWidget {
           end: Alignment.bottomRight,
 
           colors: [
-            Colors.white.withOpacity(0.06),
+            Colors.white.withValues(alpha: 0.06),
 
-            Colors.white.withOpacity(0.03),
+            Colors.white.withValues(alpha: 0.03),
           ],
         ),
 
-        border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.12)),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.12),
+        ),
       ),
 
       child: Row(
@@ -61,7 +64,7 @@ class AIInsightCard extends StatelessWidget {
                   insight.message,
 
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
 
                     fontSize: 13.sp,
                   ),

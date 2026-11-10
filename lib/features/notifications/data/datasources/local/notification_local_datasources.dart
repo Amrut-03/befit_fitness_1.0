@@ -1,6 +1,5 @@
-import 'package:hive/hive.dart';
-
 import 'package:fitness_app/features/notifications/data/models/notification_model.dart';
+import 'package:hive/hive.dart';
 
 class NotificationLocalDatasource {
   final Box<NotificationModel> notificationBox;

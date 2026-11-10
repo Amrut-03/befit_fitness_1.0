@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,24 +44,24 @@ class OnboardingOptionCard extends StatelessWidget {
 
             gradient: LinearGradient(
               colors: isSelected
-                  ? [const Color(0xFF00E5FF), const Color(0xFF00B8D4)]
+                  ? [AppColors.primary, const Color(0xFF00B8D4)]
                   : [
-                      Colors.white.withOpacity(0.05),
+                      Colors.white.withValues(alpha: 0.05),
 
-                      Colors.white.withOpacity(0.02),
+                      Colors.white.withValues(alpha: 0.02),
                     ],
             ),
 
             border: Border.all(
               color: isSelected
-                  ? const Color(0xFF00E5FF)
-                  : Colors.white.withOpacity(0.08),
+                  ? AppColors.primary
+                  : Colors.white.withValues(alpha: 0.08),
             ),
 
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: const Color(0xFF00E5FF).withOpacity(0.35),
+                      color: AppColors.primary.withValues(alpha: 0.35),
 
                       blurRadius: 24,
 
@@ -108,7 +109,7 @@ class OnboardingOptionCard extends StatelessWidget {
                   border: Border.all(
                     color: isSelected
                         ? Colors.black
-                        : Colors.white.withOpacity(0.3),
+                        : Colors.white.withValues(alpha: 0.3),
                   ),
                 ),
 
@@ -116,7 +117,7 @@ class OnboardingOptionCard extends StatelessWidget {
                     ? Icon(
                         Icons.check,
 
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.primary,
 
                         size: 18.sp,
                       )

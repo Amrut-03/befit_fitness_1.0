@@ -25,6 +25,8 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
+      case TargetPlatform.iOS:
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -53,5 +55,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '475383477382',
     projectId: 'fitness-app-9dac8',
     storageBucket: 'fitness-app-9dac8.appspot.com',
+  );
+
+  // From ios/Runner/GoogleService-Info.plist (Firebase iOS app registered
+  // for bundle ID com.example.fitnessApp). Regenerate with
+  // `flutterfire configure --platforms=ios` if the bundle ID changes.
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDMDD5RkhnMjxOyNtpc03OY4w4qJBQPfB4',
+    appId: '1:475383477382:ios:c0436844b8d6b8e9c44d07',
+    messagingSenderId: '475383477382',
+    projectId: 'fitness-app-9dac8',
+    storageBucket: 'fitness-app-9dac8.appspot.com',
+    iosClientId:
+        '475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f.apps.googleusercontent.com',
+    iosBundleId: 'com.example.fitnessApp',
   );
 }

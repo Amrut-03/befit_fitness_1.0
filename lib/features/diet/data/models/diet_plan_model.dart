@@ -40,8 +40,6 @@ class DietPlanModel {
           .toList(),
     );
 
-    print("MODEL CREATED ${model.name} ACTIVE=${model.activeDate}");
-
     return model;
   }
 
@@ -58,8 +56,6 @@ class DietPlanModel {
   }
 
   DietPlanEntity toEntity() {
-    print("MODEL FIELD BEFORE ENTITY = $activeDate");
-
     final entity = DietPlanEntity(
       id: id,
 
@@ -69,8 +65,6 @@ class DietPlanModel {
 
       meals: meals.map((e) => e.toEntity()).toList(),
     );
-
-    print("ENTITY FIELD AFTER ENTITY = ${entity.activeDate}");
 
     return entity;
   }

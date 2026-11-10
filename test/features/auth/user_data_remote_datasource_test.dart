@@ -16,26 +16,32 @@ void main() {
 
   setUp(() => firestore = FakeFirebaseFirestore());
 
-  test("deletes the user doc and every subcollection, leaving others' data", () async {
-    await seed('alice');
-    await seed('bob');
+  test(
+    "deletes the user doc and every subcollection, leaving others' data",
+    () async {
+      await seed('alice');
+      await seed('bob');
 
-    // A small batch size exercises the multi-batch loop.
-    await UserDataRemoteDataSource(firestore: firestore, batchSize: 2)
-        .deleteAllUserData('alice');
+      // A small batch size exercises the multi-batch loop.
+      await UserDataRemoteDataSource(
+        firestore: firestore,
+        batchSize: 2,
+      ).deleteAllUserData('alice');
 
-    expect((await firestore.doc('users/alice').get()).exists, isFalse);
-    for (final sub in UserDataRemoteDataSource.userSubcollections) {
-      final alice = await firestore.collection('users/alice/$sub').get();
-      final bob = await firestore.collection('users/bob/$sub').get();
-      expect(alice.docs, isEmpty, reason: sub);
-      expect(bob.docs, hasLength(3), reason: sub);
-    }
-    expect((await firestore.doc('users/bob').get()).exists, isTrue);
-  });
+      expect((await firestore.doc('users/alice').get()).exists, isFalse);
+      for (final sub in UserDataRemoteDataSource.userSubcollections) {
+        final alice = await firestore.collection('users/alice/$sub').get();
+        final bob = await firestore.collection('users/bob/$sub').get();
+        expect(alice.docs, isEmpty, reason: sub);
+        expect(bob.docs, hasLength(3), reason: sub);
+      }
+      expect((await firestore.doc('users/bob').get()).exists, isTrue);
+    },
+  );
 
   test('succeeds when the user has no data', () async {
-    await UserDataRemoteDataSource(firestore: firestore)
-        .deleteAllUserData('nobody');
+    await UserDataRemoteDataSource(
+      firestore: firestore,
+    ).deleteAllUserData('nobody');
   });
 }

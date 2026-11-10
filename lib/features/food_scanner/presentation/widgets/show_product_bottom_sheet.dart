@@ -1,8 +1,9 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_bloc.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_event.dart';
 import 'package:fitness_app/features/food_scanner/domain/entities/scanned_food_entity.dart'
     as scanned;
-import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +15,7 @@ Future<void> showProductBottomSheet(
 ) {
   return showModalBottomSheet(
     context: context,
-    backgroundColor: const Color(0xFF111111),
+    backgroundColor: AppColors.surface,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
     ),
@@ -107,7 +108,7 @@ Future<void> showProductBottomSheet(
                   context.pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00E5FF),
+                  backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.r),
                   ),

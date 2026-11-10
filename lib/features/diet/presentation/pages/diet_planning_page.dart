@@ -1,12 +1,13 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_event.dart';
-import 'package:fitness_app/features/diet/presentation/widgets/edit_quantity_bottom_sheet.dart';
-import 'package:fitness_app/features/diet/presentation/widgets/select_food_bottom_sheet.dart';
 import 'package:fitness_app/features/diet/presentation/widgets/diet_plan_header_section.dart';
+import 'package:fitness_app/features/diet/presentation/widgets/edit_quantity_bottom_sheet.dart';
 import 'package:fitness_app/features/diet/presentation/widgets/food_entry_list.dart';
+import 'package:fitness_app/features/diet/presentation/widgets/select_food_bottom_sheet.dart';
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +45,7 @@ class _PlanDietPageState extends State<PlanDietPage> {
   void initState() {
     super.initState();
 
-    context.read<DietBloc>()..add(LoadDietPlans());
+    context.read<DietBloc>().add(LoadDietPlans());
 
     if (widget.existingPlan != null) {
       _nameController.text = widget.existingPlan!.name;
@@ -61,7 +62,7 @@ class _PlanDietPageState extends State<PlanDietPage> {
         title: "Plan Your Diet",
         actions: [
           IconButton(
-            icon: Icon(Icons.save, color: Color(0xFF00E5FF)),
+            icon: const Icon(Icons.save, color: AppColors.primary),
             onPressed: () {
               if (_nameController.text.trim().isEmpty) {
                 return;
@@ -75,9 +76,7 @@ class _PlanDietPageState extends State<PlanDietPage> {
                     : DateTime.now().millisecondsSinceEpoch.toString(),
                 name: _nameController.text.trim(),
                 meals: meals,
-                activeDate: isEditing
-                    ? widget.existingPlan!.activeDate
-                    : null,
+                activeDate: isEditing ? widget.existingPlan!.activeDate : null,
               );
 
               context.read<DietBloc>().add(SaveDietPlanEvent(plan));
@@ -185,9 +184,9 @@ class _PlanDietPageState extends State<PlanDietPage> {
             });
           });
         },
-        backgroundColor: Color(0xFF00E5FF),
-        icon: Icon(Icons.add, color: Colors.black),
-        label: Text(
+        backgroundColor: AppColors.primary,
+        icon: const Icon(Icons.add, color: Colors.black),
+        label: const Text(
           'Add Food',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),

@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
@@ -62,7 +64,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppHeader(title: "Workouts"),
+      appBar: const AppHeader(title: "Workouts"),
       body: BlocBuilder<WorkoutBloc, WorkoutState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -104,12 +106,14 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                 child: Container(
                   height: 58.h,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF111111),
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(color: Colors.white.withOpacity(0.06)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.06),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
+                        color: Colors.black.withValues(alpha: 0.25),
                         blurRadius: 18.r,
                         offset: const Offset(0, 8),
                       ),
@@ -122,19 +126,19 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w500,
                     ),
-                    cursorColor: const Color(0xFF00E5FF),
+                    cursorColor: AppColors.primary,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(vertical: 18.h),
                       prefixIcon: Container(
                         margin: EdgeInsets.all(10.w),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00E5FF).withOpacity(0.12),
+                          color: AppColors.primary.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.search_rounded,
-                          color: const Color(0xFF00E5FF),
+                          color: AppColors.primary,
                           size: 22.sp,
                         ),
                       ),
@@ -210,8 +214,8 @@ class _ExerciseCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.r),
-          color: const Color(0xFF111111),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          color: AppColors.surface,
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +228,7 @@ class _ExerciseCard extends StatelessWidget {
                       height: 200.h,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) {
+                      errorBuilder: (_, _, _) {
                         return _placeholder();
                       },
                     )
@@ -267,7 +271,7 @@ class _ExerciseCard extends StatelessWidget {
   Widget _placeholder() {
     return Container(
       height: 200.h,
-      color: Colors.white.withOpacity(0.05),
+      color: Colors.white.withValues(alpha: 0.05),
       child: Center(
         child: Icon(Icons.fitness_center, color: Colors.white24, size: 60.sp),
       ),
@@ -278,7 +282,7 @@ class _ExerciseCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
+        color: Colors.white.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Text(

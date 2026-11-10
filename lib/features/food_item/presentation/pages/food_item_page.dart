@@ -21,14 +21,14 @@ class _FoodItemsPageState extends State<FoodItemsPage> {
   void initState() {
     super.initState();
 
-    context.read<FoodItemsBloc>().add(LoadFoodItems());
+    context.read<FoodItemsBloc>().add(const LoadFoodItems());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppHeader(title: "My Food Items"),
+      appBar: const AppHeader(title: "My Food Items"),
       body: BlocBuilder<FoodItemsBloc, FoodItemsState>(
         builder: (context, state) {
           if (state.isLoading) {

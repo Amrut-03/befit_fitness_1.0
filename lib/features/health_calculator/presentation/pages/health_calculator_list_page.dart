@@ -1,8 +1,8 @@
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:go_router/go_router.dart';
 
 class HealthCalculatorListPage extends StatelessWidget {
@@ -18,7 +18,7 @@ class HealthCalculatorListPage extends StatelessWidget {
 
       'icon': Icons.monitor_weight,
 
-      'color': const Color(0xFF00E5FF),
+      'color': AppColors.primary,
     },
 
     {
@@ -42,7 +42,7 @@ class HealthCalculatorListPage extends StatelessWidget {
 
       'icon': Icons.egg_alt,
 
-      'color': Color(0xFFFF006E),
+      'color': AppColors.accentPink,
     },
 
     {
@@ -54,23 +54,23 @@ class HealthCalculatorListPage extends StatelessWidget {
 
       'icon': Icons.local_fire_department,
 
-      'color': Color(0xFFFFB703),
+      'color': AppColors.warning,
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: AppColors.background,
 
-      appBar: AppHeader(title: "Health Calculators"),
+      appBar: const AppHeader(title: "Health Calculators"),
 
       body: ListView.separated(
         padding: EdgeInsets.all(20.w),
 
         itemCount: calculators.length,
 
-        separatorBuilder: (_, __) => SizedBox(height: 16.h),
+        separatorBuilder: (_, _) => SizedBox(height: 16.h),
 
         itemBuilder: (context, index) {
           final item = calculators[index];
@@ -79,7 +79,7 @@ class HealthCalculatorListPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(22.r),
 
             onTap: () {
-              context.push('/health-calculator', extra: item['type']);
+              context.push(Routes.healthCalculator(item['type']! as String));
             },
 
             child: Container(
@@ -99,7 +99,7 @@ class HealthCalculatorListPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
 
-                      color: (item['color'] as Color).withOpacity(0.15),
+                      color: (item['color'] as Color).withValues(alpha: 0.15),
                     ),
 
                     child: Icon(
@@ -136,7 +136,7 @@ class HealthCalculatorListPage extends StatelessWidget {
                           item['subtitle'] as String,
 
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
 
                             fontSize: 12.sp,
                           ),
@@ -148,7 +148,7 @@ class HealthCalculatorListPage extends StatelessWidget {
                   Icon(
                     Icons.arrow_forward_ios,
 
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
 
                     size: 16.sp,
                   ),

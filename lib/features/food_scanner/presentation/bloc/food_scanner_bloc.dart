@@ -1,5 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fitness_app/core/error/failures.dart';
 import 'package:fitness_app/features/food_scanner/domain/usecases/scan_barcode.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'food_scanner_event.dart';
 import 'food_scanner_state.dart';
 
@@ -17,18 +19,28 @@ class FoodScannerBloc extends Bloc<FoodScannerEvent, FoodScannerState> {
   ) async {
     emit(state.copyWith(isLoading: true, error: null));
 
-    try {
-      final product = await scanBarcode(event.barcode);
+    final result = await scanBarcode(event.barcode);
 
-      if (product == null) {
-        emit(state.copyWith(isLoading: false, error: 'Product not found'));
-        return;
-      }
-
-      emit(state.copyWith(isLoading: false, product: product));
-    } catch (e) {
-      emit(state.copyWith(isLoading: false, error: 'Failed to scan product'));
-    }
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          isLoading: false,
+          error: failure is NetworkFailure
+              ? 'No internet connection. Check your connection and scan again.'
+              : failure.message,
+        ),
+      ),
+      (product) => emit(
+        product == null
+            ? state.copyWith(
+                isLoading: false,
+                error:
+                    "We couldn't find this product. Try again or add it "
+                    'manually.',
+              )
+            : state.copyWith(isLoading: false, product: product),
+      ),
+    );
   }
 
   void _onResetScanner(

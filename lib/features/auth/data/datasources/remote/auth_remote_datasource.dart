@@ -47,8 +47,6 @@ class AuthRemoteDataSource {
   Future<UserModel?> getCurrentUser() async {
     final user = firebaseAuth.currentUser;
 
-    print(user);
-
     if (user == null) return null;
 
     return UserModel.fromFirebaseUser(user, isGuest: user.isAnonymous);

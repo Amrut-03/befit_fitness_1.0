@@ -30,6 +30,11 @@ class SaveFoodItems extends FoodItemsEvent {
   List<Object?> get props => [item];
 }
 
+/// The Firestore stream failed (e.g. permission denied after logout).
+class FoodItemsStreamFailed extends FoodItemsEvent {
+  const FoodItemsStreamFailed();
+}
+
 class FoodItemsUpdated extends FoodItemsEvent {
   final List<FoodItemEntity> items;
 

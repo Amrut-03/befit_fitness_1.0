@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,23 +31,23 @@ class AuthButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(24.r),
           gradient: isPrimary
               ? const LinearGradient(
-                  colors: [Color(0xFF00E5FF), Color(0xFF00B8D4)],
+                  colors: [AppColors.primary, Color(0xFF00B8D4)],
                 )
               : LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.08),
-                    Colors.white.withOpacity(0.03),
+                    Colors.white.withValues(alpha: 0.08),
+                    Colors.white.withValues(alpha: 0.03),
                   ],
                 ),
           border: Border.all(
             color: isPrimary
                 ? Colors.transparent
-                : Colors.white.withOpacity(0.08),
+                : Colors.white.withValues(alpha: 0.08),
           ),
           boxShadow: isPrimary
               ? [
                   BoxShadow(
-                    color: const Color(0xFF00E5FF).withOpacity(0.35),
+                    color: AppColors.primary.withValues(alpha: 0.35),
                     blurRadius: 20.r,
                     spreadRadius: 1.r,
                   ),
@@ -59,7 +60,7 @@ class AuthButton extends StatelessWidget {
             icon,
             SizedBox(width: 14.w),
             isLoading
-                ? AppLoader()
+                ? const AppLoader()
                 : Text(
                     title,
                     style: TextStyle(

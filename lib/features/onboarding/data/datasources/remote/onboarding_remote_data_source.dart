@@ -15,10 +15,15 @@ class OnboardingRemoteDatasource {
       throw Exception("User not logged in");
     }
 
+    final json = profile.toJson();
+    if ((json['email'] as String?)?.isEmpty ?? true) {
+      json['email'] = auth.currentUser?.email ?? '';
+    }
+
     await firestore
         .collection('users')
         .doc(uid)
-        .set(profile.toJson(), SetOptions(merge: true));
+        .set(json, SetOptions(merge: true));
   }
 
   Future<UserProfileModel?> getUserProfile() async {

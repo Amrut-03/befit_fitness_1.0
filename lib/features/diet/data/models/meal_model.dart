@@ -16,7 +16,6 @@ class MealModel extends MealEntity {
   });
 
   factory MealModel.fromJson(Map<String, dynamic> json) {
-    print("MEAL ${json['name']} CONSUMED = ${json['consumedAt']}");
     return MealModel(
       id: json['id']?.toString() ?? '',
       name: json['name'] ?? '',

@@ -55,7 +55,7 @@ class FoodEntryCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +64,10 @@ class FoodEntryCard extends StatelessWidget {
                 children: [
                   ReorderableDragStartListener(
                     index: index,
-                    child: Icon(Icons.drag_handle, color: Colors.cyanAccent),
+                    child: const Icon(
+                      Icons.drag_handle,
+                      color: Colors.cyanAccent,
+                    ),
                   ),
                   SizedBox(width: 10.w),
                   Expanded(
@@ -147,7 +150,7 @@ class FoodEntryCard extends StatelessWidget {
                   ),
                   child: Text(
                     "${entry.quantity.toStringAsFixed(0)} ${entry.unit}",
-                    style: TextStyle(color: Colors.cyanAccent),
+                    style: const TextStyle(color: Colors.cyanAccent),
                   ),
                 ),
               ),
@@ -162,7 +165,7 @@ class FoodEntryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
@@ -182,7 +185,10 @@ class FoodEntryCard extends StatelessWidget {
           ),
           Text(
             "$value",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

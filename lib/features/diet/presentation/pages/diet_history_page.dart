@@ -1,10 +1,9 @@
 import 'package:fitness_app/core/models/history_detail_data.dart';
 import 'package:fitness_app/core/models/history_item.dart';
-import 'package:fitness_app/core/widgets/showHistoryDetailBottomSheet.dart';
+import 'package:fitness_app/core/widgets/history_page.dart';
+import 'package:fitness_app/core/widgets/show_history_detail_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:fitness_app/core/widgets/history_page.dart';
 
 import '../bloc/diet_bloc.dart';
 import '../bloc/diet_event.dart';

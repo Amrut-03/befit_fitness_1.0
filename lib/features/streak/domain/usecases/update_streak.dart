@@ -1,4 +1,4 @@
-import 'package:fitness_app/features/streak/domain/repository/streak_repository.dart';
+import 'package:fitness_app/features/streak/domain/repositories/streak_repository.dart';
 
 class UpdateStreak {
   final StreakRepository repository;

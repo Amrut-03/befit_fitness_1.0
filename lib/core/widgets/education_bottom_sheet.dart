@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,7 +11,7 @@ class EducationBottomSheet {
 
       isScrollControlled: true,
 
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: AppColors.surface,
 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),

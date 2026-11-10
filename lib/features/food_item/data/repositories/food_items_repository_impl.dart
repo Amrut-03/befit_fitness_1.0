@@ -11,19 +11,20 @@ class FoodItemsRepositoryImpl implements FoodItemsRepository {
 
   FoodItemsRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
+  /// Emits the Hive cache first (instant start, even offline), then live
+  /// Firestore updates, refreshing the cache on each. Firestore serves its own
+  /// offline cache, so a stream error here is real (e.g. permission denied
+  /// after logout). It's passed on to the bloc instead of silently ending the
+  /// stream, which the old try/catch around `await for` did.
   @override
   Stream<List<FoodItemEntity>> getFoodItems() async* {
-    try {
-      await for (final models in remoteDataSource.getFoodItems()) {
-        await localDataSource.cacheFoodItems(models);
+    final cached = await localDataSource.getCachedFoodItems();
+    if (cached.isNotEmpty) yield cached.map((e) => e.toEntity()).toList();
 
-        yield models.map((e) => e.toEntity()).toList();
-      }
-    } catch (_) {
-      final cachedFoods = await localDataSource.getCachedFoodItems();
-
-      yield cachedFoods.map((e) => e.toEntity()).toList();
-    }
+    yield* remoteDataSource.getFoodItems().asyncMap((models) async {
+      await localDataSource.cacheFoodItems(models);
+      return models.map((e) => e.toEntity()).toList();
+    });
   }
 
   @override
