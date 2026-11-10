@@ -273,7 +273,9 @@ Future<void> init() async {
 
   /// AI INSIGHTS
 
-  sl.registerLazySingleton(() => AIInsightsRemoteDatasource());
+  sl.registerLazySingleton(
+    () => AIInsightsRemoteDatasource(AIInsightsRemoteDatasource.createModel()),
+  );
 
   sl.registerLazySingleton<AIInsightsRepository>(
     () => AIInsightsRepositoryImpl(sl()),

@@ -1,55 +1,65 @@
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/core/config/app_config.dart';
-import 'package:fitness_app/core/config/secrets.dart';
 import 'package:fitness_app/features/workout/data/models/exercise_model.dart';
 import 'package:fitness_app/features/workout/data/models/workout_history_model.dart';
+import 'package:fitness_app/features/workout/domain/entities/exercise_page_entity.dart';
 import 'package:http/http.dart' as http;
 
 class WorkoutRemoteDatasource {
   final FirebaseFirestore firestore;
   final FirebaseAuth auth;
+  final http.Client client;
 
-  WorkoutRemoteDatasource({required this.firestore, required this.auth});
+  WorkoutRemoteDatasource({
+    required this.firestore,
+    required this.auth,
+    http.Client? client,
+  }) : client = client ?? http.Client();
 
-  final Map<String, String> _headers = {
-    'X-RapidAPI-Key': Secrets.exerciseDbApiKey,
-    'X-RapidAPI-Host': AppConfig.exerciseDbHost,
-  };
+  static const Duration _timeout = Duration(seconds: 15);
 
-  Future<List<ExerciseModel>> getExercises({
+  /// Fetches a page of exercises from the open-source ExerciseDB API.
+  ///
+  /// [bodyPart] is filtered server-side (e.g. `chest`, `upper arms`), and
+  /// [cursor] is the `nextCursor` returned by the previous page.
+  Future<ExercisePageEntity> getExercises({
     int limit = 20,
-    int offset = 0,
+    String? cursor,
     String? bodyPart,
   }) async {
-    final response = await http.get(
-      Uri.parse(
-        '${AppConfig.exerciseDbBaseUrl}/exercises?limit=$limit&offset=$offset',
-      ),
-      headers: _headers,
+    final uri = Uri.parse('${AppConfig.exerciseDbBaseUrl}/exercises').replace(
+      queryParameters: {
+        'limit': '$limit',
+        if (bodyPart != null && bodyPart.trim().isNotEmpty)
+          'bodyParts': bodyPart.trim().toLowerCase(),
+        if (cursor != null) 'after': cursor,
+      },
     );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+    final response = await client.get(uri).timeout(_timeout);
 
-      List<ExerciseModel> exercises = List<ExerciseModel>.from(
-        data.map((e) => ExerciseModel.fromJson(e)),
-      );
-
-      if (bodyPart != null && bodyPart.isNotEmpty) {
-        final normalized = bodyPart.toLowerCase().trim();
-
-        exercises = exercises.where((exercise) {
-          final apiBodyPart = exercise.bodyPart.toLowerCase().trim();
-          return apiBodyPart.contains(normalized);
-        }).toList();
-      }
-
-      return exercises;
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load exercises (${response.statusCode})');
     }
 
-    throw Exception('Failed to load exercises');
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = body['data'] as List<dynamic>? ?? const [];
+    final meta = body['meta'] as Map<String, dynamic>? ?? const {};
+
+    final exercises = data
+        .whereType<Map<String, dynamic>>()
+        .map(ExerciseModel.fromJson)
+        .toList();
+
+    final hasNext = meta['hasNextPage'] == true;
+
+    return ExercisePageEntity(
+      exercises: exercises,
+      nextCursor: hasNext ? meta['nextCursor'] as String? : null,
+    );
   }
 
   Stream<List<WorkoutHistoryModel>> getWorkoutHistory() {

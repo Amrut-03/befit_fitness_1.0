@@ -11,33 +11,39 @@ class ExerciseModel extends ExerciseEntity {
     required super.instructions,
   });
 
+  /// Parses an exercise from the open-source ExerciseDB v1 API
+  /// (`exerciseId`, `bodyParts[]`, `targetMuscles[]`, `equipments[]`).
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseModel(
-      id: json['id'].toString(),
-
-      name: json['name'] ?? '',
-
-      bodyPart: json['bodyPart'] ?? '',
-
-      target: json['target'] ?? '',
-
-      equipment: json['equipment'] ?? '',
-
-      gifUrl: json['gifUrl'],
-
-      instructions: json['instructions'] != null
-          ? List<String>.from(json['instructions'])
-          : [],
+      id: (json['exerciseId'] ?? json['id'] ?? '').toString(),
+      name: json['name'] as String? ?? '',
+      bodyPart: _first(json['bodyParts']),
+      target: _first(json['targetMuscles']),
+      equipment: _first(json['equipments']),
+      gifUrl: json['gifUrl'] as String?,
+      instructions: (json['instructions'] as List<dynamic>? ?? const [])
+          .map((step) => step.toString().replaceFirst(_stepPrefix, '').trim())
+          .where((step) => step.isNotEmpty)
+          .toList(),
     );
+  }
+
+  /// Matches the "Step:1 " prefix the API puts on each instruction; the UI
+  /// renders its own step numbers.
+  static final RegExp _stepPrefix = RegExp(r'^Step\s*:?\s*\d+\s*[:.-]?\s*');
+
+  static String _first(dynamic value) {
+    if (value is List && value.isNotEmpty) return value.first.toString();
+    return '';
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'exerciseId': id,
       'name': name,
-      'bodyPart': bodyPart,
-      'target': target,
-      'equipment': equipment,
+      'bodyParts': [bodyPart],
+      'targetMuscles': [target],
+      'equipments': [equipment],
       'gifUrl': gifUrl,
       'instructions': instructions,
     };

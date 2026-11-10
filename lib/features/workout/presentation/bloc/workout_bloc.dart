@@ -101,49 +101,68 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
   ) {
     emit(state.copyWith(history: event.history));
   }
-/// LOAD EXERCISES
+
+  /// LOAD EXERCISES
+  ///
+  /// A fresh load (`loadMore == false`) resets the list for [event.bodyPart].
+  /// `loadMore` fetches the next page using the stored cursor and body part.
   Future<void> _onLoadExercises(
     LoadExercisesEvent event,
-
     Emitter<WorkoutState> emit,
   ) async {
-    if (state.hasReachedMax && !event.loadMore) {
-      return;
+    if (event.loadMore) {
+      if (state.hasReachedMax ||
+          state.isLoading ||
+          state.isLoadingMore ||
+          state.nextCursor == null) {
+        return;
+      }
+      emit(state.copyWith(isLoadingMore: true, error: null));
+    } else {
+      emit(
+        state.copyWith(
+          isLoading: true,
+          isLoadingMore: false,
+          exercises: const [],
+          allExercises: const [],
+          hasReachedMax: false,
+          nextCursor: null,
+          bodyPart: event.bodyPart,
+          searchQuery: '',
+          error: null,
+        ),
+      );
     }
 
     try {
-      if (!event.loadMore) {
-        emit(state.copyWith(isLoading: true, offset: 0, hasReachedMax: false));
-      }
-
-      final exercises = await getExercises(
+      final page = await getExercises(
         limit: 20,
-
-        offset: event.loadMore ? state.offset : 0,
-
-        bodyPart: event.bodyPart,
+        cursor: event.loadMore ? state.nextCursor : null,
+        bodyPart: state.bodyPart,
       );
 
-      final updatedExercises = event.loadMore
-          ? [...state.allExercises, ...exercises]
-
-          : exercises;
+      final updated = event.loadMore
+          ? [...state.allExercises, ...page.exercises]
+          : page.exercises;
 
       emit(
         state.copyWith(
           isLoading: false,
-
-          exercises: updatedExercises,
-
-          allExercises: updatedExercises,
-
-          offset: updatedExercises.length,
-
-          hasReachedMax: exercises.isEmpty,
+          isLoadingMore: false,
+          exercises: updated,
+          allExercises: updated,
+          nextCursor: page.nextCursor,
+          hasReachedMax: !page.hasMore,
         ),
       );
     } catch (e) {
-      emit(state.copyWith(isLoading: false, error: 'Failed to load exercises'));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          isLoadingMore: false,
+          error: 'Failed to load exercises',
+        ),
+      );
     }
   }
 

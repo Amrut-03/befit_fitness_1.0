@@ -1,5 +1,4 @@
-import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
-
+import 'package:fitness_app/features/workout/domain/entities/exercise_page_entity.dart';
 import 'package:fitness_app/features/workout/domain/repositories/workout_repository.dart';
 
 class GetExercises {
@@ -7,18 +6,14 @@ class GetExercises {
 
   GetExercises(this.repository);
 
-  Future<List<ExerciseEntity>> call({
+  Future<ExercisePageEntity> call({
     int limit = 20,
-
-    int offset = 0,
-
+    String? cursor,
     String? bodyPart,
-  }) async {
-    return await repository.getExercises(
+  }) {
+    return repository.getExercises(
       limit: limit,
-
-      offset: offset,
-
+      cursor: cursor,
       bodyPart: bodyPart,
     );
   }

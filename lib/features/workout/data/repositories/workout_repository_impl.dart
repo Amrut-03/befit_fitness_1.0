@@ -1,11 +1,7 @@
 import 'package:fitness_app/features/workout/data/datasources/remote/workout_remote_datasource.dart';
-
 import 'package:fitness_app/features/workout/data/models/workout_history_model.dart';
-
-import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
-
+import 'package:fitness_app/features/workout/domain/entities/exercise_page_entity.dart';
 import 'package:fitness_app/features/workout/domain/entities/workout_history_entity.dart';
-
 import 'package:fitness_app/features/workout/domain/repositories/workout_repository.dart';
 
 class WorkoutRepositoryImpl implements WorkoutRepository {
@@ -14,27 +10,21 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   WorkoutRepositoryImpl(this.remoteDatasource);
 
   @override
-  Future<List<ExerciseEntity>> getExercises({
+  Future<ExercisePageEntity> getExercises({
     int limit = 20,
-
-    int offset = 0,
-
+    String? cursor,
     String? bodyPart,
-  }) async {
-    return await remoteDatasource.getExercises(
+  }) {
+    return remoteDatasource.getExercises(
       limit: limit,
-
-      offset: offset,
-
+      cursor: cursor,
       bodyPart: bodyPart,
     );
   }
 
   @override
   Stream<List<WorkoutHistoryEntity>> getWorkoutHistory() {
-    return remoteDatasource.getWorkoutHistory().map(
-      (models) => models.map((e) => e).toList(),
-    );
+    return remoteDatasource.getWorkoutHistory();
   }
 
   @override

@@ -23,7 +23,7 @@ A cross-platform Flutter fitness app for tracking workouts, planning meals, moni
 - Pull-to-refresh data sync
 
 ### Workouts
-- Browse exercises from the [ExerciseDB API](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb)
+- Browse 1,500+ exercises from the open-source [ExerciseDB API](https://docs.exercisedb.dev) (no API key)
 - Filter workouts by body part with an interactive body selector
 - Exercise details and workout history stored in Firestore
 
@@ -56,7 +56,7 @@ A cross-platform Flutter fitness app for tracking workouts, planning meals, moni
 | **Local Storage** | Hive, flutter_secure_storage |
 | **DI** | get_it |
 | **UI** | flutter_screenutil, lottie, flutter_animate, fl_chart, flutter_svg |
-| **APIs** | ExerciseDB (RapidAPI), Open Food Facts |
+| **APIs** | ExerciseDB (open source), Open Food Facts, Gemini via Firebase AI Logic |
 
 ---
 
@@ -100,9 +100,7 @@ Each feature is organized into:
 - [Dart SDK](https://dart.dev/get-sdk) `^3.11.3`
 - Android Studio / VS Code with Flutter extensions
 - A [Firebase](https://console.firebase.google.com/) project
-- API keys for:
-  - [RapidAPI ExerciseDB](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb)
-  - [Google Gemini API](https://aistudio.google.com/app/apikey)
+- No third-party API keys are needed. AI insights go through Firebase AI Logic, and exercises come from the free ExerciseDB API.
 
 ---
 
@@ -121,29 +119,13 @@ cd befit_fitness_1.0
 flutter pub get
 ```
 
-### 3. Configure API keys
-
-`lib/core/config/secrets.dart` is gitignored. Create it from the example template:
-
-```bash
-cp lib/core/config/secrets.example.dart lib/core/config/secrets.dart
-```
-
-Then add your keys:
-
-```dart
-class Secrets {
-  static String exerciseDbApiKey = 'YOUR_RAPIDAPI_KEY';
-  static String googleGeminiApiKey = 'YOUR_GEMINI_API_KEY';
-}
-```
-
-### 4. Set up Firebase
+### 3. Set up Firebase
 
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
 2. Enable **Authentication** (Google Sign-In provider)
 3. Create a **Cloud Firestore** database
-4. Install the [FlutterFire CLI](https://firebase.flutter.dev/docs/cli/):
+4. Enable **AI Logic**: Firebase Console → AI Logic → Get started → choose **Gemini Developer API** (works on the free Spark plan)
+5. Install the [FlutterFire CLI](https://firebase.flutter.dev/docs/cli/):
 
 ```bash
 dart pub global activate flutterfire_cli
@@ -152,13 +134,13 @@ flutterfire configure
 
 This generates `lib/firebase_options.dart` and platform config files (`google-services.json`, etc.).
 
-### 5. Generate Hive adapters (if needed)
+### 4. Generate Hive adapters (if needed)
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-### 6. Run the app
+### 5. Run the app
 
 ```bash
 flutter run
@@ -219,7 +201,7 @@ flutter run
 
 ## Acknowledgements
 
-- [ExerciseDB API](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb) for workout data
+- [ExerciseDB](https://docs.exercisedb.dev) (open source) for workout data
 - [Open Food Facts](https://world.openfoodfacts.org) for nutrition data
 
 ## App Screenshots
