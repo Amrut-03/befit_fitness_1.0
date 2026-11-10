@@ -1,5 +1,6 @@
 import 'package:fitness_app/core/di/core_module.dart';
 import 'package:fitness_app/core/di/storage_module.dart';
+import 'package:fitness_app/features/ai_coach/ai_coach_injection.dart';
 import 'package:fitness_app/features/ai_insights/ai_insights_injection.dart';
 import 'package:fitness_app/features/auth/auth_injection.dart';
 import 'package:fitness_app/features/body_part_selection/body_part_selection_injection.dart';
@@ -35,6 +36,7 @@ Future<void> init() async {
   registerHealthMetricsDependencies(sl);
   registerHealthCalculatorDependencies(sl);
   registerAiInsightsDependencies(sl);
+  registerAiCoachDependencies(sl);
   registerStreakDependencies(sl);
   registerDietDependencies(sl);
   registerFoodItemDependencies(sl);

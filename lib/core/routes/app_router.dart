@@ -1,3 +1,4 @@
+import 'package:fitness_app/features/ai_coach/presentation/pages/coach_page.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
 import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/routes/session_redirect.dart';
@@ -70,6 +71,11 @@ class AppRouter {
               sl<WeeklyReportBloc>()..add(const WeeklyReportRequested()),
           child: const WeeklyReportPage(),
         ),
+      ),
+
+      GoRoute(
+        path: Routes.coach,
+        builder: (context, state) => const CoachPage(),
       ),
 
       GoRoute(

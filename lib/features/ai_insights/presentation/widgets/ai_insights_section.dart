@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/ai_insights/presentation/bloc/ai_insights_bloc.dart';
 import 'package:fitness_app/features/ai_insights/presentation/widgets/ai_insight_card.dart';
@@ -9,6 +10,7 @@ import 'package:fitness_app/features/streak/presentation/bloc/streak_state.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 /// Home-screen AI insights, fed by real health, streak and profile data.
 ///
@@ -105,12 +107,16 @@ class _AIInsightsSectionState extends State<AIInsightsSection> {
   Widget _header() {
     return Row(
       children: [
-        Text(
-          'AI Insights',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
+        Flexible(
+          child: Text(
+            'AI Insights',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         SizedBox(width: 8.w),
@@ -127,6 +133,21 @@ class _AIInsightsSectionState extends State<AIInsightsSection> {
               fontSize: 11.sp,
               fontWeight: FontWeight.bold,
             ),
+          ),
+        ),
+        const Spacer(),
+        TextButton.icon(
+          onPressed: () => context.push(Routes.coach),
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.padded,
+            visualDensity: VisualDensity.compact,
+          ),
+          icon: Icon(Icons.chat_bubble_outline, size: 15.sp, color: _accent),
+          label: Text(
+            'Ask coach',
+            style: TextStyle(color: _accent, fontSize: 12.sp),
           ),
         ),
       ],

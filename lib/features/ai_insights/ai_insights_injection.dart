@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/core/di/storage_module.dart';
 import 'package:fitness_app/features/ai_insights/data/datasources/local/ai_insights_local_datasource.dart';
+import 'package:fitness_app/features/ai_insights/data/datasources/on_device/ai_insights_on_device_datasource.dart';
 import 'package:fitness_app/features/ai_insights/data/datasources/remote/ai_insights_remote_datasource.dart';
 import 'package:fitness_app/features/ai_insights/data/repositories/ai_insights_repository_impl.dart';
 import 'package:fitness_app/features/ai_insights/domain/repositories/ai_insights_repository.dart';
@@ -18,6 +19,7 @@ void registerAiInsightsDependencies(GetIt sl) {
   sl.registerLazySingleton<AIInsightsRepository>(
     () => AIInsightsRepositoryImpl(
       remoteDatasource: sl(),
+      onDeviceDatasource: AIInsightsOnDeviceDatasource(sl()),
       localDatasource: AIInsightsLocalDatasource(
         sl<Box>(instanceName: StorageModule.aiInsights),
       ),

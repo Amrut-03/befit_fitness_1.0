@@ -38,6 +38,9 @@ abstract final class Routes {
     queryParameters: {'type': type},
   ).toString();
 
+  // AI coach
+  static const coach = '/coach';
+
   // Progress
   static const weeklyReport = '/weekly-report';
 

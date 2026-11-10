@@ -39,12 +39,12 @@ class AIInsightsBloc extends Bloc<AIInsightsEvent, AIInsightsState> {
       if (isOfflineError(e)) {
         emit(
           AIInsightsError(
-            "You're offline. Insights will load when you're back online.",
+            'You\'re offline. Insights will load when you\'re back online, or download the on-device model in AI Coach to get them offline.',
             offline: true,
           ),
         );
       } else {
-        emit(AIInsightsError("Couldn't load AI insights right now."));
+        emit(AIInsightsError('Couldn\'t load AI insights right now.'));
       }
     }
   }

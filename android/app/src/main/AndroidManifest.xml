@@ -86,6 +86,12 @@
             </intent-filter>
         </receiver>
 
+        <!-- On-device AI coach: lets MediaPipe run Gemma on the GPU via OpenCL
+             (Android 12+ hides vendor libraries unless declared). Optional:
+             without them the model runs on the CPU. -->
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-car.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-pixel.so" android:required="false" />
     </application>
 
     <queries>

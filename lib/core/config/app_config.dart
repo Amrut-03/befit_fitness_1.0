@@ -18,4 +18,16 @@ class AppConfig {
   /// Gemini model used via Firebase AI Logic for home-screen insights.
   /// Change here if Google retires the model.
   static const String aiInsightsModel = 'gemini-3.1-flash-lite';
+
+  /// Download URL of the on-device Gemma model (a MediaPipe `.task` file,
+  /// e.g. Gemma 3 1B int4 from litert-community/Gemma3-1B-IT), self-hosted
+  /// because Hugging Face gates Gemma behind a login. Passed at build time:
+  /// `--dart-define=GEMMA_MODEL_URL=https://...`. Empty disables on-device AI
+  /// and the app uses Gemini in the cloud only.
+  static const String onDeviceModelUrl = String.fromEnvironment(
+    'GEMMA_MODEL_URL',
+  );
+
+  /// Shown before the user starts the model download.
+  static const String onDeviceModelSize = 'about 550 MB';
 }

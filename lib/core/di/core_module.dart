@@ -2,6 +2,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app/core/ai/gemma_on_device_llm.dart';
+import 'package:fitness_app/core/ai/on_device_llm.dart';
+import 'package:fitness_app/core/config/app_config.dart';
 import 'package:fitness_app/core/di/storage_module.dart';
 import 'package:fitness_app/core/health/health_platform_service.dart';
 import 'package:fitness_app/core/health/health_plugin_service.dart';
@@ -34,6 +37,12 @@ void registerCoreDependencies(GetIt sl) {
     () => HealthPluginService(
       sl<Box>(instanceName: StorageModule.healthPlatform),
     ),
+  );
+
+  // On-device Gemma, shared by AI insights and the coach. Device-level: the
+  // model survives logout.
+  sl.registerLazySingleton<OnDeviceLlm>(
+    () => GemmaOnDeviceLlm(modelUrl: AppConfig.onDeviceModelUrl),
   );
 
   // Session (auth + profile state for the router and user scope)

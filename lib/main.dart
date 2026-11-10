@@ -9,6 +9,8 @@ import 'package:fitness_app/core/services/notification_service.dart';
 import 'package:fitness_app/core/services/reminder_sync.dart';
 import 'package:fitness_app/core/session/session_notifier.dart';
 import 'package:fitness_app/core/theme/app_theme.dart';
+import 'package:fitness_app/features/ai_coach/presentation/bloc/coach_bloc.dart';
+import 'package:fitness_app/features/ai_coach/presentation/cubit/on_device_model_cubit.dart';
 import 'package:fitness_app/features/ai_insights/presentation/bloc/ai_insights_bloc.dart';
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
@@ -81,8 +83,12 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (context, child) {
-        return BlocProvider(
-          create: (_) => sl<AuthBloc>(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => sl<AuthBloc>()),
+            // Device-level: a model download survives logout and navigation.
+            BlocProvider(create: (_) => sl<OnDeviceModelCubit>()..check()),
+          ],
           child: MaterialApp.router(
             debugShowCheckedModeBanner: false,
             theme: AppTheme.dark,
@@ -123,6 +129,7 @@ class UserScope extends StatelessWidget {
         providers: [
           BlocProvider(create: (_) => sl<OnboardingProfileBloc>()),
           BlocProvider(create: (_) => sl<AIInsightsBloc>()),
+          BlocProvider(create: (_) => sl<CoachBloc>()),
           BlocProvider(create: (_) => sl<HomeBloc>()..add(LoadHomeDashboard())),
           BlocProvider(
             create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),
