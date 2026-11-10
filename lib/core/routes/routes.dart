@@ -25,6 +25,7 @@ abstract final class Routes {
   // Workouts
   static const workout = '/workout';
   static const workoutHistory = '/workout-history';
+  static const workoutSession = '/workout-session';
 
   // Health calculators
   static const healthCalculators = '/health-calculators';

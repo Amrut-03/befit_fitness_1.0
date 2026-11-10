@@ -14,6 +14,7 @@ abstract final class StorageModule {
   static const calculator = 'calculator_box';
   static const profile = 'profile_box';
   static const aiInsights = 'ai_insights_box';
+  static const workoutSession = 'workout_session_box';
   static const notificationSettings = 'notification_settings';
   static const notifications = 'notifications';
 
@@ -29,6 +30,7 @@ abstract final class StorageModule {
     calculator,
     profile,
     aiInsights,
+    workoutSession,
   ];
 
   static const _all = [...userScoped, notificationSettings, healthPlatform];

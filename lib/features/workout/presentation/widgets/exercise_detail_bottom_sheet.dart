@@ -1,12 +1,15 @@
+import 'package:fitness_app/core/routes/routes.dart';
 import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
+import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
   showModalBottomSheet(
@@ -139,6 +142,10 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                 }),
                 SizedBox(height: 30.h),
 
+                _AddToSessionAction(exercise: exercise),
+
+                SizedBox(height: 12.h),
+
                 SizedBox(
                   width: double.infinity,
 
@@ -213,7 +220,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                         SizedBox(width: 10.w),
 
                         Text(
-                          "Complete Workout",
+                          "Log as done",
 
                           style: TextStyle(
                             color: Colors.black,
@@ -261,4 +268,43 @@ Widget _infoChip(String text, IconData icon) {
       ],
     ),
   );
+}
+
+/// Adds the exercise to the workout session and opens it.
+class _AddToSessionAction extends StatelessWidget {
+  const _AddToSessionAction({required this.exercise});
+
+  final ExerciseEntity exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final added = context.select(
+      (WorkoutSessionCubit c) => c.state.contains(exercise.id),
+    );
+    return SizedBox(
+      width: double.infinity,
+      height: 52.h,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          side: const BorderSide(color: AppColors.primary),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+        ),
+        onPressed: () async {
+          if (!added) {
+            await context.read<WorkoutSessionCubit>().addExercise(exercise);
+          }
+          if (!context.mounted) return;
+          // The sheet's context is gone once it closes.
+          final router = GoRouter.of(context);
+          Navigator.pop(context);
+          await router.push(Routes.workoutSession);
+        },
+        icon: Icon(added ? Icons.play_arrow_rounded : Icons.add),
+        label: Text(added ? 'Open workout' : 'Add to workout & start'),
+      ),
+    );
+  }
 }

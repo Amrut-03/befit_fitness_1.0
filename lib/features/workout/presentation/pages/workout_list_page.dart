@@ -7,7 +7,9 @@ import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dar
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_state.dart';
+import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
 import 'package:fitness_app/features/workout/presentation/widgets/exercise_detail_bottom_sheet.dart';
+import 'package:fitness_app/features/workout/presentation/widgets/session/session_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,6 +67,9 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: const AppHeader(title: "Workouts"),
+      bottomNavigationBar: SafeArea(
+        child: SessionBar(margin: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h)),
+      ),
       body: BlocBuilder<WorkoutBloc, WorkoutState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -239,15 +244,22 @@ class _ExerciseCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    exercise.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          exercise.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      AddToSessionButton(exercise: exercise),
+                    ],
                   ),
                   SizedBox(height: 10.h),
                   Wrap(
@@ -288,6 +300,31 @@ class _ExerciseCard extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(color: Colors.white70, fontSize: 11.sp),
+      ),
+    );
+  }
+}
+
+/// Adds the exercise to the workout session (starting one if needed), or
+/// shows that it's already in it.
+class AddToSessionButton extends StatelessWidget {
+  const AddToSessionButton({super.key, required this.exercise});
+
+  final ExerciseEntity exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final added = context.select(
+      (WorkoutSessionCubit c) => c.state.contains(exercise.id),
+    );
+    return IconButton(
+      tooltip: added ? 'In your workout' : 'Add to workout',
+      onPressed: added
+          ? null
+          : () => context.read<WorkoutSessionCubit>().addExercise(exercise),
+      icon: Icon(
+        added ? Icons.check_circle_rounded : Icons.add_circle_outline,
+        color: added ? AppColors.success : AppColors.primary,
       ),
     );
   }

@@ -25,6 +25,7 @@ import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart
 import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
 import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
 import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
+import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
 import 'package:fitness_app/firebase_options.dart';
@@ -136,6 +137,8 @@ class UserScope extends StatelessWidget {
           BlocProvider(
             create: (_) => sl<WorkoutBloc>()..add(const LoadExercisesEvent()),
           ),
+          // Shared by Home (resume bar), the exercise list and the session.
+          BlocProvider(create: (_) => sl<WorkoutSessionCubit>()),
         ],
         child: child,
       ),

@@ -6,6 +6,7 @@ import 'package:fitness_app/core/widgets/show_history_detail_bottom_sheet.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_state.dart';
+import 'package:fitness_app/features/workout/presentation/widgets/session/ticker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +36,10 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
 
             title: history.workoutName,
 
-            subtitle: history.bodyPart,
+            subtitle: history.exerciseLogs.isEmpty
+                ? history.bodyPart
+                : '${history.exerciseLogs.length} exercises · '
+                      '${history.totalSets} sets',
 
             value: "Completed",
 
@@ -60,8 +64,22 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
               HistoryDetailData(
                 title: history.workoutName,
                 completedAt: history.completedAt,
-                items: history.exercises,
-                stats: {"Target": history.bodyPart},
+                items: history.exerciseLogs.isEmpty
+                    ? history.exercises
+                    : [
+                        for (final log in history.exerciseLogs)
+                          '${log.name} — ${log.summary}',
+                      ],
+                stats: {
+                  "Target": history.bodyPart,
+                  if (history.durationSeconds != null)
+                    "Duration": formatDuration(
+                      Duration(seconds: history.durationSeconds!),
+                    ),
+                  if (history.totalSets > 0) "Sets": '${history.totalSets}',
+                  if (history.volumeKg > 0)
+                    "Volume": '${history.volumeKg.round()} kg',
+                },
               ),
             );
           },

@@ -30,6 +30,7 @@ import 'package:fitness_app/features/profile/presentation/pages/history_screen.d
 import 'package:fitness_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:fitness_app/features/startup/presentation/pages/startup_page.dart';
 import 'package:fitness_app/features/workout/presentation/pages/workout_history_page.dart';
+import 'package:fitness_app/features/workout/presentation/pages/workout_session_page.dart';
 import 'package:fitness_app/features/workout/presentation/pages/workout_list_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -139,6 +140,11 @@ class AppRouter {
           create: (_) => sl<FoodScannerBloc>(),
           child: const BarcodeScannerPage(),
         ),
+      ),
+
+      GoRoute(
+        path: Routes.workoutSession,
+        builder: (context, state) => const WorkoutSessionPage(),
       ),
 
       GoRoute(

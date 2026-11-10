@@ -26,6 +26,7 @@ import 'package:fitness_app/features/home/presentation/widgets/quick_action_sect
 import 'package:fitness_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:fitness_app/features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'package:fitness_app/features/water_intake/presentation/widgets/water_intake_card.dart';
+import 'package:fitness_app/features/workout/presentation/widgets/session/session_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -102,6 +103,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       HomeHeader(userName: state.userName),
                       SizedBox(height: 20.h),
+                      SessionBar(margin: EdgeInsets.only(bottom: 16.h)),
                       BlocBuilder<ProfileBloc, ProfileState>(
                         builder: (context, profileState) {
                           if (profileState is! ProfileLoaded) {
