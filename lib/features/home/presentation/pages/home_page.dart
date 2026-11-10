@@ -13,6 +13,8 @@ import 'package:fitness_app/features/diet/presentation/pages/diet_detail_page.da
 import 'package:fitness_app/features/health/presentation/bloc/health_bloc.dart';
 import 'package:fitness_app/features/health/presentation/bloc/health_event.dart';
 import 'package:fitness_app/features/health/presentation/bloc/health_state.dart';
+import 'package:fitness_app/features/health/presentation/widgets/health_platform_prompt.dart';
+import 'package:fitness_app/core/health/health_platform_service.dart';
 import 'package:fitness_app/features/health_metrics/domain/entities/health_metrics_entity.dart';
 import 'package:fitness_app/features/home/presentation/widgets/active_diet_plan_card.dart';
 import 'package:fitness_app/features/health_metrics/presentation/widgets/health_metric_card.dart';
@@ -43,9 +45,23 @@ class _HomePageState extends State<HomePage> {
     context.read<HealthBloc>().add(RefreshHealthData());
   }
 
+  /// Re-reads steps (and the Health Connect status, e.g. after installing it
+  /// from the Play Store) when the user returns to the app.
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _lifecycle = AppLifecycleListener(
+      onResume: () => context.read<HealthBloc>().add(RefreshHealthData()),
+    );
 
     context.read<ProfileBloc>().add(LoadProfileEvent());
 
@@ -117,6 +133,8 @@ class _HomePageState extends State<HomePage> {
 
                                 return Column(
                                   children: [
+                                    const HealthPlatformPrompt(),
+
                                     /// HEALTH SECTION
                                     Row(
                                       crossAxisAlignment:
@@ -268,6 +286,16 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 16.h),
                       SingleChildScrollView(
+                        // Rebuild the self-loading cards once the health
+                        // store is connected so they pick up its readings.
+                        key: ValueKey(
+                          context.select<HealthBloc, bool>(
+                            (b) =>
+                                b.state is HealthLoaded &&
+                                (b.state as HealthLoaded).platformStatus ==
+                                    HealthPlatformStatus.connected,
+                          ),
+                        ),
                         scrollDirection: Axis.horizontal,
 
                         child: Row(

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app/core/health/health_platform_service.dart';
 import 'package:fitness_app/features/health_metrics/data/datasources/remote/health_metrics_remote_datasource.dart';
 
 import '../../domain/entities/health_metrics_entity.dart';
@@ -16,13 +17,24 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
 
   final HealthMetricsRemoteDataSource remoteDataSource;
 
+  /// Health Connect / HealthKit. Its readings are shown read-only alongside
+  /// the user's own entries and are never written to Hive or Firestore.
+  final HealthPlatformService? healthPlatform;
+
+  /// How far back platform readings are fetched (the chart's monthly view).
+  static const platformWindow = Duration(days: 30);
+
   HealthMetricRepositoryImpl(
     this.localDataSource,
 
     this.remoteDataSource,
 
-    this.auth,
-  );
+    this.auth, {
+    this.healthPlatform,
+    DateTime Function()? clock,
+  }) : _now = clock ?? DateTime.now;
+
+  final DateTime Function() _now;
 
   @override
   Future<List<HealthMetricEntity>> getHealthMetrics(MetricType type) async {
@@ -52,13 +64,53 @@ class HealthMetricRepositoryImpl implements HealthMetricsRepository {
     final finalMetrics = unique.values.toList();
 
     /// FILTER BY TYPE
-    final filtered = finalMetrics.where((e) => e.type == type).toList();
+    final filtered = <HealthMetricEntity>[
+      ...finalMetrics.where((e) => e.type == type),
+    ];
+
+    /// ADD HEALTH CONNECT / HEALTHKIT DAYS (manual entries win per day)
+    final enteredDays = {for (final m in filtered) _day(m.date)};
+    for (final reading in await _platformReadings(type)) {
+      if (enteredDays.contains(reading.day)) continue;
+      filtered.add(
+        HealthMetricEntity(
+          type: type,
+          date: reading.day,
+          value: reading.value,
+          isManual: false,
+          id: 'platform_${type.name}_${reading.day.millisecondsSinceEpoch}',
+        ),
+      );
+    }
 
     /// SORT BY DATE
     filtered.sort((a, b) => a.date.compareTo(b.date));
 
     /// RETURN ENTITY LIST
     return filtered;
+  }
+
+  Future<List<DailyReading>> _platformReadings(MetricType type) async {
+    final platform = healthPlatform;
+    if (platform == null) return const [];
+    if (await platform.status() != HealthPlatformStatus.connected) {
+      return const [];
+    }
+    final now = _now();
+    return platform.dailyReadings(
+      switch (type) {
+        MetricType.heartRate => PlatformMetric.heartRate,
+        MetricType.weight => PlatformMetric.weight,
+        MetricType.sleep => PlatformMetric.sleep,
+      },
+      from: now.subtract(platformWindow),
+      to: now,
+    );
+  }
+
+  static DateTime _day(DateTime t) {
+    final l = t.toLocal();
+    return DateTime(l.year, l.month, l.day);
   }
 
   @override

@@ -55,3 +55,6 @@ firestore_tests/node_modules/
 
 # Gradle output when building from inside android/
 /android/build/
+
+# Firebase Hosting deploy cache
+.firebase/

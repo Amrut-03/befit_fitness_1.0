@@ -17,6 +17,10 @@ abstract final class StorageModule {
   static const notificationSettings = 'notification_settings';
   static const notifications = 'notifications';
 
+  /// Device-level health-store flags (Health Connect / HealthKit). Not
+  /// user-scoped: store access belongs to the device.
+  static const healthPlatform = 'health_platform_box';
+
   /// Boxes that hold per-user data, cleared on logout and account deletion.
   static const userScoped = [
     diet,
@@ -27,7 +31,7 @@ abstract final class StorageModule {
     aiInsights,
   ];
 
-  static const _all = [...userScoped, notificationSettings];
+  static const _all = [...userScoped, notificationSettings, healthPlatform];
 
   static Future<void> register(GetIt sl) async {
     for (final name in _all) {

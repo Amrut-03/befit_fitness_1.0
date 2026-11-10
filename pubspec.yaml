@@ -53,6 +53,7 @@ dependencies:
   firebase_app_check: ^0.4.9
   firebase_crashlytics: ^5.4.1
   firebase_analytics: ^12.6.1
+  health: ^13.3.2
 
 dev_dependencies:
   flutter_test:

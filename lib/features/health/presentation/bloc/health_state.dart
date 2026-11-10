@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:fitness_app/core/health/health_platform_service.dart';
 
 import '../../domain/entities/health_data_entity.dart';
 
@@ -16,10 +17,16 @@ class HealthLoading extends HealthState {}
 class HealthLoaded extends HealthState {
   final HealthDataEntity data;
 
-  const HealthLoaded({required this.data});
+  /// Drives the "Connect Health Connect / Apple Health" prompt on Home.
+  final HealthPlatformStatus platformStatus;
+
+  const HealthLoaded({
+    required this.data,
+    this.platformStatus = HealthPlatformStatus.unsupported,
+  });
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [data, platformStatus];
 }
 
 class HealthError extends HealthState {

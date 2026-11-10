@@ -34,14 +34,16 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<!-- REVERSED_CLIENT_ID from GoogleService-Info.plist (Google Sign-In) -->
-				<string>com.googleusercontent.apps.475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f</string>
+				<string>com.googleusercontent.apps.475383477382-ueali1i7rui0akne1ntsda6ln6vnajtl</string>
 			</array>
 		</dict>
 	</array>
 	<key>GIDClientID</key>
-	<string>475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f.apps.googleusercontent.com</string>
+	<string>475383477382-ueali1i7rui0akne1ntsda6ln6vnajtl.apps.googleusercontent.com</string>
 	<key>NSCameraUsageDescription</key>
 	<string>BeFit uses the camera to scan food barcodes.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>BeFit reads your steps, active calories, heart rate, sleep and weight from Apple Health to show your daily activity and progress charts.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>BeFit tracks your steps to display your daily activity.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

@@ -4,6 +4,14 @@
     <!-- Reminders use inexact alarms, so SCHEDULE_EXACT_ALARM isn't needed. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+
+    <!-- Health Connect: read-only access. Keep in sync with
+         lib/core/health/health_plugin_service.dart (_readTypes). -->
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED"/>
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.READ_SLEEP"/>
+    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
     <application
         android:label="BeFit"
         android:name="${applicationName}"
@@ -34,6 +42,29 @@
 
         </activity>
 
+        <!-- Health Connect privacy policy link (Android 13 and below). -->
+        <activity
+            android:name=".HealthPrivacyPolicyActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Health Connect privacy policy link (Android 14+). -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".HealthPrivacyPolicyActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE"/>
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS"/>
+            </intent-filter>
+        </activity-alias>
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2"/>
@@ -58,6 +89,13 @@
     </application>
 
     <queries>
+
+        <!-- Detect whether Health Connect is installed. -->
+        <package android:name="com.google.android.apps.healthdata"/>
+
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE"/>
+        </intent>
 
         <intent>
 

@@ -1,4 +1,5 @@
 import 'package:fitness_app/core/di/storage_module.dart';
+import 'package:fitness_app/core/health/health_platform_service.dart';
 import 'package:fitness_app/features/health_metrics/data/datasources/local/health_metrics_local_datasource.dart';
 import 'package:fitness_app/features/health_metrics/data/datasources/remote/health_metrics_remote_datasource.dart';
 import 'package:fitness_app/features/health_metrics/data/repositories/health_metric_repository_impl.dart';
@@ -23,7 +24,12 @@ void registerHealthMetricsDependencies(GetIt sl) {
   );
 
   sl.registerLazySingleton<HealthMetricsRepository>(
-    () => HealthMetricRepositoryImpl(sl(), sl(), sl()),
+    () => HealthMetricRepositoryImpl(
+      sl(),
+      sl(),
+      sl(),
+      healthPlatform: sl<HealthPlatformService>(),
+    ),
   );
 
   sl.registerLazySingleton(() => GetHealthMetrics(sl()));

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shown from Health Connect's permission screen. Must disclose how
+         BeFit uses health data (Play Health Connect policy). -->
+    <string name="health_privacy_policy_url" translatable="false">https://fitness-app-9dac8.web.app/privacy</string>
+</resources>

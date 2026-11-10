@@ -328,7 +328,8 @@ _Original plan:_
 
 ## P4: Feature ideas (after the above)
 
-- [ ] **Health Connect / HealthKit** (the `health` package) instead of only the raw pedometer, to get accurate steps, calories, sleep, and heart rate.
+- [x] **Health Connect / HealthKit** (the `health` package) instead of only the raw pedometer, to get accurate steps, calories, sleep, and heart rate.
+  > **Done (2026-11-10):** `core/health/HealthPlatformService` (plugin-backed `HealthPluginService`, registered in `core_module`) offers read-only access to steps, active calories, heart rate, sleep and weight. `HealthRepositoryImpl` uses platform steps and active calories when connected, and falls back to the pedometer + `ActivityEstimator` when not connected, when the store has no steps, or when a read fails. `HealthMetricRepositoryImpl` merges 30 days of platform readings into the charts. A manual entry wins on the same day, and platform readings are never persisted. Daily aggregation is pure and tested: HR daily mean, last weight of the day, and sleep credited to the wake day with overlaps merged. Home has a "Connect Health Connect / Apple Health" card (Install when Health Connect is missing) and refreshes on app resume. Android: `FlutterFragmentActivity`, READ_* permissions, and `HealthPrivacyPolicyActivity` + `ViewPermissionUsageActivity` alias open the policy URL. iOS: `Runner.entitlements` (HealthKit) and `NSHealthShareUsageDescription`. 28 tests. ⏳ Real privacy URL in `strings.xml`. ⏳ iOS bundle ID is still `com.example.fitnessApp`, which can't get the HealthKit capability. ⏳ Verify on devices (Android 14+, Android 13 with the HC app, iPhone).
 - [ ] **Water intake tracker** with reminders (ties into task 9).
 - [ ] **Workout session mode**: sets, reps, rest timer, and the saved session feeding the streak.
 - [ ] **Weekly progress report** charts (weight trend, macros adherence) on Home.
