@@ -66,8 +66,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '475383477382',
     projectId: 'fitness-app-9dac8',
     storageBucket: 'fitness-app-9dac8.appspot.com',
-    androidClientId: '475383477382-b8mh63e8tfffmlm82lrb7k9t4dnp6qpa.apps.googleusercontent.com',
-    iosClientId: '475383477382-ueali1i7rui0akne1ntsda6ln6vnajtl.apps.googleusercontent.com',
+    androidClientId:
+        '475383477382-b8mh63e8tfffmlm82lrb7k9t4dnp6qpa.apps.googleusercontent.com',
+    iosClientId:
+        '475383477382-ueali1i7rui0akne1ntsda6ln6vnajtl.apps.googleusercontent.com',
     iosBundleId: 'com.befitfitness.app',
   );
 }
