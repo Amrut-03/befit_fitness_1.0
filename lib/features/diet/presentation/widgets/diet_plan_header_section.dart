@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -42,7 +44,7 @@ class DietPlanHeaderSection extends StatelessWidget {
             color: Colors.black,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -52,7 +54,7 @@ class DietPlanHeaderSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Diet Plan Name',
+                context.l10n.dietPlanName,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.sp,
@@ -64,17 +66,19 @@ class DietPlanHeaderSection extends StatelessWidget {
                 controller: controller,
                 style: TextStyle(color: Colors.white, fontSize: 16.sp),
                 decoration: InputDecoration(
-                  hintText: 'Enter diet plan name',
-                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                  hintText: context.l10n.dietEnterPlanName,
+                  hintStyle: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.5),
+                  ),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.1),
+                  fillColor: Colors.white.withValues(alpha: 0.1),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                     borderSide: const BorderSide(
-                      color: Color(0xFF00E5FF),
+                      color: AppColors.primary,
                       width: 2,
                     ),
                   ),
@@ -84,13 +88,17 @@ class DietPlanHeaderSection extends StatelessWidget {
           ),
         ),
         GestureDetector(
+          // Expands or collapses the macro breakdown.
           onTap: onToggle,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
             decoration: BoxDecoration(
               color: Colors.black,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                ),
               ],
             ),
             child: Column(
@@ -99,7 +107,7 @@ class DietPlanHeaderSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Daily Macros',
+                      context.l10n.dietDailyMacros,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.sp,
@@ -123,21 +131,33 @@ class DietPlanHeaderSection extends StatelessWidget {
                           children: [
                             SizedBox(height: 12.h),
                             _item(
-                              "Calories",
+                              context.l10n.statCalories,
                               calories,
                               caloriesGoal,
                               "kcal",
                               Colors.cyan,
                             ),
-                            _item("Carbs", carbs, carbsGoal, "g", Colors.green),
                             _item(
-                              "Protein",
+                              context.l10n.macroCarbs,
+                              carbs,
+                              carbsGoal,
+                              "g",
+                              Colors.green,
+                            ),
+                            _item(
+                              context.l10n.macroProtein,
                               protein,
                               proteinGoal,
                               "g",
                               Colors.blue,
                             ),
-                            _item("Fat", fat, fatGoal, "g", Colors.orange),
+                            _item(
+                              context.l10n.macroFat,
+                              fat,
+                              fatGoal,
+                              "g",
+                              Colors.orange,
+                            ),
                           ],
                         )
                       : const SizedBox.shrink(),
@@ -172,7 +192,7 @@ class DietPlanHeaderSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
             children: [
-              Text(label, style: TextStyle(color: Colors.white)),
+              Text(label, style: const TextStyle(color: Colors.white)),
 
               Text(
                 "${consumed.toStringAsFixed(1)} / ${goal.toStringAsFixed(1)} $unit",

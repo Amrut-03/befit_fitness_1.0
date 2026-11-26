@@ -60,6 +60,16 @@ class SetActiveDietPlanEvent extends DietEvent {
 
 class LoadDietHistory extends DietEvent {}
 
+/// A Firestore stream failed (e.g. permission denied after logout).
+class DietStreamFailed extends DietEvent {
+  final String message;
+
+  const DietStreamFailed(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class DietHistoryUpdated extends DietEvent {
   final List<DietHistoryEntity> history;
 

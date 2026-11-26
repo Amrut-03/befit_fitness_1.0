@@ -1,6 +1,11 @@
-import 'package:fitness_app/features/ai_insights/domain/entites/ai_insights_entity.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'dart:io';
+
+import 'package:fitness_app/features/ai_insights/domain/entities/ai_insights_entity.dart';
 import 'package:fitness_app/features/ai_insights/domain/usecases/generate_ai_insights.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+
 part 'ai_insights_event.dart';
 part 'ai_insights_state.dart';
 
@@ -13,7 +18,6 @@ class AIInsightsBloc extends Bloc<AIInsightsEvent, AIInsightsState> {
 
   Future<void> _onLoadAIInsights(
     LoadAIInsightsEvent event,
-
     Emitter<AIInsightsState> emit,
   ) async {
     emit(AIInsightsLoading());
@@ -21,17 +25,31 @@ class AIInsightsBloc extends Bloc<AIInsightsEvent, AIInsightsState> {
     try {
       final insights = await generateAIInsights(
         steps: event.steps,
-
         calories: event.calories,
-
         streak: event.streak,
-
         bmi: event.bmi,
+        forceRefresh: event.forceRefresh,
       );
 
-      emit(AIInsightsLoaded(insights));
+      if (insights.isEmpty) {
+        emit(AIInsightsError(AppLocale.l10n.insightsEmpty));
+      } else {
+        emit(AIInsightsLoaded(insights));
+      }
     } catch (e) {
-      emit(AIInsightsError(e.toString()));
+      if (isOfflineError(e)) {
+        emit(AIInsightsError(AppLocale.l10n.insightsOffline, offline: true));
+      } else {
+        emit(AIInsightsError(AppLocale.l10n.insightsFailed));
+      }
     }
+  }
+
+  static bool isOfflineError(Object e) {
+    if (e is SocketException || e is http.ClientException) return true;
+    final s = e.toString();
+    return s.contains('SocketException') ||
+        s.contains('Failed host lookup') ||
+        s.contains('Network is unreachable');
   }
 }

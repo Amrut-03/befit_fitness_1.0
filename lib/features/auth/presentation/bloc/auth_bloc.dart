@@ -1,16 +1,18 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../../domain/exceptions/account_deletion_exception.dart';
+import '../../domain/exceptions/account_link_exception.dart';
 import '../../domain/usecases/delete_account.dart';
-import '../../domain/usecases/get_current_user.dart';
+import '../../domain/usecases/link_guest_with_google.dart';
 import '../../domain/usecases/sign_in_as_guest.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_out.dart';
-import '../../domain/usecases/watch_auth_state.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -18,48 +20,24 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithGoogle signInWithGoogle;
   final SignInAsGuest signInAsGuest;
-  final GetCurrentUser getCurrentUser;
-  final WatchAuthState watchAuthState;
   final SignOut signOut;
   final DeleteAccount deleteAccount;
-
-  StreamSubscription<UserEntity?>? _authSubscription;
+  final LinkGuestWithGoogle? linkGuestWithGoogle;
+  final AppAnalytics analytics;
 
   AuthBloc({
     required this.signInWithGoogle,
     required this.signInAsGuest,
-    required this.getCurrentUser,
-    required this.watchAuthState,
     required this.signOut,
     required this.deleteAccount,
-  }) : super(AuthInitial()) {
-    on<AuthStarted>(_onStarted);
+    this.linkGuestWithGoogle,
+    this.analytics = const NoopAnalytics(),
+  }) : super(const AuthInitial()) {
     on<AuthGoogleSignInRequested>(_onGoogleSignIn);
     on<AuthGuestSignInRequested>(_onGuestSignIn);
     on<AuthLogoutRequested>(_onLogout);
     on<AuthDeleteRequested>(_onDeleteAccount);
-    on<_AuthUserChanged>(_onUserChanged);
-  }
-
-  Future<void> _onStarted(AuthStarted event, Emitter<AuthState> emit) async {
-    print("AuthStarted called");
-
-    emit(AuthLoading());
-
-    try {
-      final user = await getCurrentUser();
-
-      print("User result: $user");
-
-      if (user != null) {
-        emit(AuthAuthenticated(user));
-      } else {
-        emit(AuthUnauthenticated());
-      }
-    } catch (e) {
-      print("Auth error: $e");
-      emit(AuthUnauthenticated());
-    }
+    on<AuthLinkGoogleRequested>(_onLinkGoogle);
   }
 
   Future<void> _onGoogleSignIn(
@@ -67,20 +45,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      emit(AuthLoading());
+      emit(const AuthLoading());
 
       final user = await signInWithGoogle();
 
       if (user != null) {
         emit(AuthAuthenticated(user));
+        unawaited(analytics.logLogin(method: 'google'));
       } else {
-        emit(AuthUnauthenticated());
+        emit(const AuthUnauthenticated());
       }
-    } catch (e, stackTrace) {
-      print("GOOGLE SIGN IN ERROR: ${e.toString()}");
-      print(stackTrace);
-
-      emit(AuthError(e.toString()));
+    } catch (e) {
+      emit(AuthError(AppLocale.l10n.authGoogleFailed));
     }
   }
 
@@ -89,17 +65,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      emit(AuthLoading());
+      emit(const AuthLoading());
 
       final user = await signInAsGuest();
 
       if (user != null) {
         emit(AuthAuthenticated(user));
+        unawaited(analytics.logLogin(method: 'guest'));
       } else {
-        emit(AuthUnauthenticated());
+        emit(const AuthUnauthenticated());
       }
     } catch (e) {
-      emit(AuthError('Guest sign in failed'));
+      emit(AuthError(AppLocale.l10n.authGuestFailed));
     }
   }
 
@@ -108,11 +85,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      emit(AuthLoading());
+      emit(const AuthLoading());
       await signOut();
-      emit(AuthUnauthenticated());
+      emit(const AuthUnauthenticated());
     } catch (e) {
-      emit(AuthError('Logout failed'));
+      emit(AuthError(AppLocale.l10n.authLogoutFailed));
     }
   }
 
@@ -135,35 +112,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  Future<void> _onLinkGoogle(
+    AuthLinkGoogleRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    final link = linkGuestWithGoogle;
+    if (link == null) return;
+
+    final previous = state;
+    try {
+      emit(const AuthLinking());
+      final user = await link();
+      emit(AuthAuthenticated(user));
+      unawaited(analytics.logLogin(method: 'google_link'));
+    } catch (e) {
+      final reason = e is AccountLinkException
+          ? e.reason
+          : AccountLinkFailure.unknown;
+      if (reason == AccountLinkFailure.cancelled) {
+        emit(previous);
+        return;
+      }
+      emit(AuthError(linkErrorMessage(reason)));
+      // Still signed in as the same guest.
+      emit(previous);
+    }
+  }
+
+  static String linkErrorMessage(AccountLinkFailure reason) {
+    final l10n = AppLocale.l10n;
+    return switch (reason) {
+      AccountLinkFailure.alreadyInUse => l10n.linkAlreadyInUse,
+      AccountLinkFailure.network => l10n.linkNetwork,
+      AccountLinkFailure.notGuest => l10n.linkNotGuest,
+      AccountLinkFailure.cancelled ||
+      AccountLinkFailure.unknown => l10n.linkFailed,
+    };
+  }
+
   static String deletionErrorMessage(AccountDeletionFailure reason) {
-    switch (reason) {
-      case AccountDeletionFailure.cancelled:
-        return 'Account deletion cancelled.';
-      case AccountDeletionFailure.requiresRecentLogin:
-        return 'For your security, please log out, sign in again, and then '
-            'delete your account.';
-      case AccountDeletionFailure.wrongAccount:
-        return 'Please choose the Google account you signed in with.';
-      case AccountDeletionFailure.network:
-        return 'No internet connection. Nothing was deleted. Please try again.';
-      case AccountDeletionFailure.notSignedIn:
-        return 'You are not signed in.';
-      case AccountDeletionFailure.unknown:
-        return 'Could not delete your account. Please try again.';
-    }
-  }
-
-  void _onUserChanged(_AuthUserChanged event, Emitter<AuthState> emit) {
-    if (event.user != null) {
-      emit(AuthAuthenticated(event.user!));
-    } else {
-      emit(AuthUnauthenticated());
-    }
-  }
-
-  @override
-  Future<void> close() {
-    _authSubscription?.cancel();
-    return super.close();
+    final l10n = AppLocale.l10n;
+    return switch (reason) {
+      AccountDeletionFailure.cancelled => l10n.deleteCancelled,
+      AccountDeletionFailure.requiresRecentLogin => l10n.deleteRecentLogin,
+      AccountDeletionFailure.wrongAccount => l10n.deleteWrongAccount,
+      AccountDeletionFailure.network => l10n.deleteNetwork,
+      AccountDeletionFailure.notSignedIn => l10n.deleteNotSignedIn,
+      AccountDeletionFailure.unknown => l10n.deleteFailed,
+    };
   }
 }

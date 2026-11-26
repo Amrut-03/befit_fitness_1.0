@@ -1,11 +1,13 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/models/history_detail_data.dart';
 import 'package:fitness_app/core/models/history_item.dart';
 import 'package:fitness_app/core/widgets/history_page.dart';
-import 'package:fitness_app/core/widgets/showHistoryDetailBottomSheet.dart';
+import 'package:fitness_app/core/widgets/show_history_detail_bottom_sheet.dart';
 
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_state.dart';
+import 'package:fitness_app/features/workout/presentation/widgets/session/ticker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,9 +37,14 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
 
             title: history.workoutName,
 
-            subtitle: history.bodyPart,
+            subtitle: history.exerciseLogs.isEmpty
+                ? history.bodyPart
+                : context.l10n.workoutExercisesSets(
+                    history.exerciseLogs.length,
+                    history.totalSets,
+                  ),
 
-            value: "Completed",
+            value: context.l10n.workoutCompleted,
 
             date: history.completedAt,
 
@@ -46,7 +53,7 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
         }).toList();
 
         return HistoryListPage(
-          title: "Workout History",
+          title: context.l10n.historyWorkoutTitle,
 
           items: items,
 
@@ -60,8 +67,25 @@ class _WorkoutHistoryPageState extends State<WorkoutHistoryPage> {
               HistoryDetailData(
                 title: history.workoutName,
                 completedAt: history.completedAt,
-                items: history.exercises,
-                stats: {"Target": history.bodyPart},
+                items: history.exerciseLogs.isEmpty
+                    ? history.exercises
+                    : [
+                        for (final log in history.exerciseLogs)
+                          '${log.name} — ${log.summary}',
+                      ],
+                stats: {
+                  context.l10n.workoutTarget: history.bodyPart,
+                  if (history.durationSeconds != null)
+                    context.l10n.workoutDuration: formatDuration(
+                      Duration(seconds: history.durationSeconds!),
+                    ),
+                  if (history.totalSets > 0)
+                    context.l10n.workoutSets: '${history.totalSets}',
+                  if (history.volumeKg > 0)
+                    context.l10n.workoutVolume: context.l10n.unitKg(
+                      history.volumeKg.round().toString(),
+                    ),
+                },
               ),
             );
           },

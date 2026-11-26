@@ -1,6 +1,6 @@
 import 'package:fitness_app/features/streak/domain/entities/streak_entity.dart';
 
-import 'package:fitness_app/features/streak/domain/repository/streak_repository.dart';
+import 'package:fitness_app/features/streak/domain/repositories/streak_repository.dart';
 
 class GetStreak {
   final StreakRepository repository;

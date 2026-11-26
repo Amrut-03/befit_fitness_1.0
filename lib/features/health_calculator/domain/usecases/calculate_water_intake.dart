@@ -1,4 +1,5 @@
-import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_reposittory.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_repository.dart';
 
 import '../entities/calculator_result_entity.dart';
 
@@ -15,10 +16,9 @@ class CalculateWaterIntake {
     final result = CalculatorResultEntity(
       value: double.parse(liters.toStringAsFixed(1)),
 
-      title: "Daily Water Intake",
+      title: AppLocale.l10n.calcWaterResult,
 
-      description:
-          "General guideline: weight (kg) × 0.035 liters. Adjust for climate, activity, and personal needs.",
+      description: AppLocale.l10n.calcWaterDescription,
     );
 
     await repository.saveResult(result);

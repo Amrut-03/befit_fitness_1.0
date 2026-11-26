@@ -1,15 +1,13 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_event.dart';
-
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
 import 'package:fitness_app/features/onboarding/presentation/widgets/onboarding_step_guard.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:go_router/go_router.dart';
 
 class BodyMetricsPage extends StatelessWidget {
@@ -18,7 +16,7 @@ class BodyMetricsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: AppColors.background,
 
       body: Container(
         decoration: const BoxDecoration(
@@ -27,7 +25,11 @@ class BodyMetricsPage extends StatelessWidget {
 
             end: Alignment.bottomRight,
 
-            colors: [Color(0xFF050505), Color(0xFF09111F), Color(0xFF050505)],
+            colors: [
+              AppColors.background,
+              AppColors.surfaceNavy,
+              AppColors.background,
+            ],
           ),
         ),
 
@@ -42,10 +44,10 @@ class BodyMetricsPage extends StatelessWidget {
                 builder: (context, state) {
                   if (state.selectedGoal == null ||
                       state.selectedGender == null) {
-                    return OnboardingStepGuard(
+                    return const OnboardingStepGuard(
                       canProceed: false,
-                      fallbackRoute: '/gender-selection',
-                      child: const SizedBox.shrink(),
+                      fallbackRoute: Routes.genderSelection,
+                      child: SizedBox.shrink(),
                     );
                   }
 
@@ -57,7 +59,7 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// TITLE
                       Text(
-                        "Body Metrics",
+                        context.l10n.onbMetricsTitle,
 
                         textAlign: TextAlign.center,
 
@@ -74,12 +76,12 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// SUBTITLE
                       Text(
-                        "Help us calculate your fitness data",
+                        context.l10n.onbMetricsSubtitle,
 
                         textAlign: TextAlign.center,
 
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
 
                           fontSize: 15.sp,
                         ),
@@ -89,11 +91,11 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// WEIGHT
                       _MetricCard(
-                        title: "Weight",
+                        title: context.l10n.metricWeight,
 
                         value: state.weight.round(),
 
-                        unit: "kg",
+                        unit: context.l10n.unitKgShort,
 
                         icon: Icons.monitor_weight,
 
@@ -112,11 +114,11 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// HEIGHT
                       _MetricCard(
-                        title: "Height",
+                        title: context.l10n.metricHeight,
 
                         value: state.height.round(),
 
-                        unit: "cm",
+                        unit: context.l10n.unitCmShort,
 
                         icon: Icons.height,
 
@@ -135,11 +137,11 @@ class BodyMetricsPage extends StatelessWidget {
 
                       /// AGE
                       _MetricCard(
-                        title: "Age",
+                        title: context.l10n.metricAge,
 
                         value: state.age.round(),
 
-                        unit: "yrs",
+                        unit: context.l10n.unitYearsShort,
 
                         icon: Icons.cake,
 
@@ -164,13 +166,13 @@ class BodyMetricsPage extends StatelessWidget {
 
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00E5FF),
+                            backgroundColor: AppColors.primary,
 
                             elevation: 12,
 
-                            shadowColor: const Color(
-                              0xFF00E5FF,
-                            ).withOpacity(0.4),
+                            shadowColor: AppColors.primary.withValues(
+                              alpha: 0.4,
+                            ),
 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(22.r),
@@ -178,11 +180,11 @@ class BodyMetricsPage extends StatelessWidget {
                           ),
 
                           onPressed: () {
-                            context.push('/activity-level');
+                            context.push(Routes.activityLevel);
                           },
 
                           child: Text(
-                            "Continue",
+                            context.l10n.commonContinue,
 
                             style: TextStyle(
                               color: Colors.black,
@@ -249,42 +251,41 @@ class _MetricCard extends StatelessWidget {
 
         gradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.05),
+            Colors.white.withValues(alpha: 0.05),
 
-            Colors.white.withOpacity(0.02),
+            Colors.white.withValues(alpha: 0.02),
           ],
         ),
 
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
 
       child: Column(
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFF00E5FF), size: 28.sp),
+              Icon(icon, color: AppColors.primary, size: 28.sp),
 
               SizedBox(width: 12.w),
 
-              Text(
-                title,
-
-                style: TextStyle(
-                  color: Colors.white,
-
-                  fontSize: 18.sp,
-
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-
-              const Spacer(),
 
               Text(
                 "$value $unit",
 
                 style: TextStyle(
-                  color: const Color(0xFF00E5FF),
+                  color: AppColors.primary,
 
                   fontSize: 24.sp,
 
@@ -298,13 +299,13 @@ class _MetricCard extends StatelessWidget {
 
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFF00E5FF),
+              activeTrackColor: AppColors.primary,
 
-              inactiveTrackColor: Colors.white.withOpacity(0.08),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.08),
 
-              thumbColor: const Color(0xFF00E5FF),
+              thumbColor: AppColors.primary,
 
-              overlayColor: const Color(0xFF00E5FF).withOpacity(0.15),
+              overlayColor: AppColors.primary.withValues(alpha: 0.15),
             ),
 
             child: Slider(

@@ -1,3 +1,6 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
@@ -30,8 +33,8 @@ class _DietListPageState extends State<DietListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0B0B0B),
-      appBar: AppHeader(title: "Diet Planning"),
+      backgroundColor: AppColors.surfaceDim,
+      appBar: AppHeader(title: context.l10n.dietPlanningTitle),
       body: BlocBuilder<DietBloc, DietState>(
         builder: (context, state) {
           final visiblePlans = state.plans;
@@ -56,15 +59,15 @@ class _DietListPageState extends State<DietListPage> {
                   Icon(
                     Icons.restaurant_menu,
                     size: 80.sp,
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
 
                   SizedBox(height: 16.h),
 
                   Text(
-                    'No diet plans saved yet',
+                    context.l10n.dietNoPlans,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 18.sp,
                     ),
                   ),
@@ -72,9 +75,9 @@ class _DietListPageState extends State<DietListPage> {
                   SizedBox(height: 8.h),
 
                   Text(
-                    'Tap the button below to plan your diet',
+                    context.l10n.dietNoPlansHint,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       fontSize: 14.sp,
                     ),
                   ),
@@ -96,13 +99,16 @@ class _DietListPageState extends State<DietListPage> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: "plan_your_diet_button",
         onPressed: () async {
-          context.push('/plan-diet');
+          await context.push(Routes.planDiet);
         },
-        backgroundColor: Color(0xFF00E5FF),
-        icon: Icon(Icons.restaurant_menu, color: Colors.black),
+        backgroundColor: AppColors.primary,
+        icon: const Icon(Icons.restaurant_menu, color: Colors.black),
         label: Text(
-          'Plan Your Diet',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          context.l10n.dietPlanYourDiet,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -116,28 +122,31 @@ class _DietListPageState extends State<DietListPage> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF171717),
+          backgroundColor: AppColors.surfaceElevated,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
-          title: const Text(
-            "Delete Diet Plan",
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            context.l10n.dietDeleteTitle,
+            style: const TextStyle(color: Colors.white),
           ),
           content: Text(
-            'Are you sure you want to delete "${plan.name}"?',
+            context.l10n.dietDeleteConfirm(plan.name),
             style: const TextStyle(color: Colors.white70),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text("Cancel", style: TextStyle(color: Colors.white60)),
+              child: Text(
+                context.l10n.commonCancel,
+                style: const TextStyle(color: Colors.white60),
+              ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text(
-                "Delete",
-                style: TextStyle(color: Colors.redAccent),
+              child: Text(
+                context.l10n.commonDelete,
+                style: const TextStyle(color: Colors.redAccent),
               ),
             ),
           ],
@@ -145,12 +154,13 @@ class _DietListPageState extends State<DietListPage> {
       },
     );
 
-    if (confirmed == true) {
+    if (confirmed == true && context.mounted) {
       context.read<DietBloc>().add(DeleteDietPlanEvent(plan.id));
     }
   }
 
-  Widget _buildPlanCard(BuildContext context, dynamic plan) {    return GestureDetector(
+  Widget _buildPlanCard(BuildContext context, DietPlanEntity plan) {
+    return GestureDetector(
       onTap: () {
         showDietDetailBottomSheet(context, plan);
       },
@@ -164,19 +174,17 @@ class _DietListPageState extends State<DietListPage> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: plan.isActiveToday
-                ? [const Color(0xFF00E5FF).withOpacity(0.15), Colors.black]
-                : [const Color(0xFF1A1A1A), Colors.black],
+                ? [AppColors.primary.withValues(alpha: 0.15), Colors.black]
+                : [AppColors.surfaceHigh, Colors.black],
           ),
           border: Border.all(
-            color: plan.isActiveToday
-                ? const Color(0xFF00E5FF)
-                : Colors.white10,
+            color: plan.isActiveToday ? AppColors.primary : Colors.white10,
             width: 1.2,
           ),
           boxShadow: [
             if (plan.isActiveToday)
               BoxShadow(
-                color: const Color(0xFF00E5FF).withOpacity(0.15),
+                color: AppColors.primary.withValues(alpha: 0.15),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -191,11 +199,11 @@ class _DietListPageState extends State<DietListPage> {
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF00E5FF).withOpacity(0.15),
+                    color: AppColors.primary.withValues(alpha: 0.15),
                   ),
                   child: Icon(
                     Icons.restaurant_menu,
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.primary,
                     size: 22.sp,
                   ),
                 ),
@@ -214,7 +222,7 @@ class _DietListPageState extends State<DietListPage> {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        "${plan.totalMeals} meals",
+                        context.l10n.dietMealsCount(plan.totalMeals),
                         style: TextStyle(
                           color: Colors.white60,
                           fontSize: 12.sp,
@@ -231,7 +239,7 @@ class _DietListPageState extends State<DietListPage> {
                   ),
                   decoration: BoxDecoration(
                     color: plan.isActiveToday
-                        ? Colors.green.withOpacity(0.15)
+                        ? Colors.green.withValues(alpha: 0.15)
                         : Colors.white10,
                     borderRadius: BorderRadius.circular(30.r),
                     border: Border.all(
@@ -239,7 +247,9 @@ class _DietListPageState extends State<DietListPage> {
                     ),
                   ),
                   child: Text(
-                    plan.isActiveToday ? "ACTIVE" : "INACTIVE",
+                    plan.isActiveToday
+                        ? context.l10n.dietCardActiveBadge
+                        : context.l10n.dietInactiveBadge,
                     style: TextStyle(
                       color: plan.isActiveToday
                           ? Colors.greenAccent
@@ -257,13 +267,13 @@ class _DietListPageState extends State<DietListPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Calories",
+                  context.l10n.statCalories,
                   style: TextStyle(color: Colors.white70, fontSize: 13.sp),
                 ),
                 Text(
-                  "${plan.totalCalories.toInt()} kcal",
+                  context.l10n.unitKcal(plan.totalCalories.toInt().toString()),
                   style: TextStyle(
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                     fontSize: 14.sp,
                   ),
@@ -277,9 +287,7 @@ class _DietListPageState extends State<DietListPage> {
                 value: plan.progress,
                 minHeight: 10.h,
                 backgroundColor: Colors.white10,
-                color: plan.isActiveToday
-                    ? const Color(0xFF00E5FF)
-                    : Colors.blue,
+                color: plan.isActiveToday ? AppColors.primary : Colors.blue,
               ),
             ),
             SizedBox(height: 10.h),
@@ -287,7 +295,10 @@ class _DietListPageState extends State<DietListPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${plan.consumedMeals}/${plan.totalMeals} meals completed",
+                  context.l10n.dietMealsCompleted(
+                    plan.consumedMeals,
+                    plan.totalMeals,
+                  ),
                   style: TextStyle(color: Colors.white60, fontSize: 12.sp),
                 ),
                 Text(
@@ -314,7 +325,7 @@ class _DietListPageState extends State<DietListPage> {
                       side: BorderSide(
                         color: plan.isActiveToday
                             ? Colors.green
-                            : const Color(0xFF00E5FF),
+                            : AppColors.primary,
                       ),
                       padding: EdgeInsets.symmetric(vertical: 12.h),
                       shape: RoundedRectangleBorder(
@@ -325,15 +336,17 @@ class _DietListPageState extends State<DietListPage> {
                       Icons.bolt,
                       color: plan.isActiveToday
                           ? Colors.green
-                          : const Color(0xFF00E5FF),
+                          : AppColors.primary,
                       size: 18.sp,
                     ),
                     label: Text(
-                      plan.isActiveToday ? "Activated" : "Set Active",
+                      plan.isActiveToday
+                          ? context.l10n.dietActivated
+                          : context.l10n.dietSetActive,
                       style: TextStyle(
                         color: plan.isActiveToday
                             ? Colors.green
-                            : const Color(0xFF00E5FF),
+                            : AppColors.primary,
                       ),
                     ),
                   ),
@@ -341,28 +354,33 @@ class _DietListPageState extends State<DietListPage> {
                 SizedBox(width: 12.w),
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF00E5FF).withOpacity(0.12),
+                    color: AppColors.primary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: IconButton(
+                    tooltip: context.l10n.commonEdit,
                     onPressed: () {
-                      context.push('/plan-diet', extra: plan);
+                      context.push(Routes.planDiet, extra: plan);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit_outlined,
-                      color: const Color(0xFF00E5FF),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
                 SizedBox(width: 12.w),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.12),
+                    color: Colors.red.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: IconButton(
+                    tooltip: context.l10n.commonDelete,
                     onPressed: () => _confirmDeletePlan(context, plan),
-                    icon: Icon(Icons.delete_outline, color: Colors.redAccent),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.redAccent,
+                    ),
                   ),
                 ),
               ],

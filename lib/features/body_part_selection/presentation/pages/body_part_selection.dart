@@ -1,5 +1,9 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/constants/education_data.dart';
+import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/education_bottom_sheet.dart';
+import 'package:fitness_app/core/widgets/info_button.dart';
 import 'package:fitness_app/features/body_part_selection/presentation/bloc/body_part_selection_bloc.dart';
 import 'package:fitness_app/features/body_part_selection/presentation/bloc/body_part_selection_event.dart';
 import 'package:fitness_app/features/body_part_selection/presentation/bloc/body_part_selection_state.dart';
@@ -10,9 +14,23 @@ import 'package:flutter_body_part_selector/feature/flutter_body_part_selector/pr
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyChartWidget extends StatelessWidget {
-  final Function(String bodyPart)? onSearchWorkout;
+  final void Function(String bodyPart)? onSearchWorkout;
 
   const BodyChartWidget({super.key, this.onSearchWorkout});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<BodySelectionBloc>(),
+      child: _BodyChart(onSearchWorkout: onSearchWorkout),
+    );
+  }
+}
+
+class _BodyChart extends StatelessWidget {
+  final void Function(String bodyPart)? onSearchWorkout;
+
+  const _BodyChart({this.onSearchWorkout});
 
   @override
   Widget build(BuildContext context) {
@@ -23,42 +41,30 @@ class BodyChartWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: Colors.white.withOpacity(0.08)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Text(
-                    'Body Chart',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      context.l10n.bodyChartTitle,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
+                  InfoButton(
+                    onPressed: () {
                       EducationBottomSheet.show(
                         context,
-                        EducationData.bodyChart,
+                        EducationData.bodyChart(context.l10n),
                       );
                     },
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.info_outline,
-                        color: Colors.white,
-                        size: 18.sp,
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -88,48 +94,51 @@ class BodyChartWidget extends StatelessWidget {
   }
 
   Widget _buildSelectedHeader(BuildContext context, BodySelectionState state) {
-    return GestureDetector(
-      onTap: () {
-        final bodyPart = getPrimaryBodyPart(state.selectedMuscles);
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          final bodyPart = getPrimaryBodyPart(state.selectedMuscles);
 
-        if (bodyPart != null) {
-          debugPrint("Selected Body Part: $bodyPart");
+          if (bodyPart != null) {
+            debugPrint("Selected Body Part: $bodyPart");
 
-          onSearchWorkout?.call(bodyPart);
-        }
-      },
+            onSearchWorkout?.call(bodyPart);
+          }
+        },
 
-      child: Container(
-        width: double.infinity,
+        child: Container(
+          width: double.infinity,
 
-        padding: EdgeInsets.symmetric(vertical: 12.h),
+          padding: EdgeInsets.symmetric(vertical: 12.h),
 
-        decoration: BoxDecoration(
-          color: const Color(0xFF00E5FF),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
 
-          borderRadius: BorderRadius.circular(8.r),
-        ),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
 
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
 
-          children: [
-            Icon(Icons.search, color: Colors.black, size: 18.sp),
+            children: [
+              Icon(Icons.search, color: Colors.black, size: 18.sp),
 
-            SizedBox(width: 8.w),
+              SizedBox(width: 8.w),
 
-            Text(
-              'Search Workouts',
+              Text(
+                context.l10n.bodySearchWorkouts,
 
-              style: TextStyle(
-                color: Colors.black,
+                style: TextStyle(
+                  color: Colors.black,
 
-                fontSize: 14.sp,
+                  fontSize: 14.sp,
 
-                fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -142,7 +151,7 @@ class BodyChartWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                state.isFront ? 'Front' : 'Back',
+                state.isFront ? context.l10n.bodyFront : context.l10n.bodyBack,
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 12.sp,
@@ -151,8 +160,11 @@ class BodyChartWidget extends StatelessWidget {
               ),
             ),
             IconButton(
+              tooltip: state.isFront
+                  ? context.l10n.bodyShowBack
+                  : context.l10n.bodyShowFront,
               onPressed: () {
-                context.read<BodySelectionBloc>().add(ToggleView());
+                context.read<BodySelectionBloc>().add(const ToggleView());
               },
               icon: Icon(Icons.flip, color: Colors.white, size: 20.sp),
             ),
@@ -160,26 +172,30 @@ class BodyChartWidget extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
 
+        // The muscle list beside it offers the same choices as an accessible
+        // list, so screen readers skip the drawing.
         Expanded(
-          child: InteractiveBodySvg(
-            isFront: state.isFront,
-            selectedMuscles: state.selectedMuscles,
-            disabledMuscles: state.disabledMuscles,
-            highlightColor: const Color(0xFF00E5FF),
-            disabledColor: Colors.grey,
-            selectedStrokeWidth: 2.5,
-            unselectedStrokeWidth: 1.0,
-            fit: BoxFit.contain,
-            width: double.infinity,
-            height: double.infinity,
-            hitTestPadding: 5,
-            tooltipBuilder: (muscle) => muscle.displayName,
-            onMuscleTap: (m) {
-              context.read<BodySelectionBloc>().add(ToggleMuscle(m));
-            },
-            onMuscleLongPress: (m) {
-              context.read<BodySelectionBloc>().add(ToggleDisableMuscle(m));
-            },
+          child: ExcludeSemantics(
+            child: InteractiveBodySvg(
+              isFront: state.isFront,
+              selectedMuscles: state.selectedMuscles,
+              disabledMuscles: state.disabledMuscles,
+              highlightColor: AppColors.primary,
+              disabledColor: Colors.grey,
+              selectedStrokeWidth: 2.5,
+              unselectedStrokeWidth: 1.0,
+              fit: BoxFit.contain,
+              width: double.infinity,
+              height: double.infinity,
+              hitTestPadding: 5,
+              tooltipBuilder: (muscle) => muscle.displayName,
+              onMuscleTap: (m) {
+                context.read<BodySelectionBloc>().add(ToggleMuscle(m));
+              },
+              onMuscleLongPress: (m) {
+                context.read<BodySelectionBloc>().add(ToggleDisableMuscle(m));
+              },
+            ),
           ),
         ),
       ],
@@ -189,16 +205,16 @@ class BodyChartWidget extends StatelessWidget {
   Widget _buildPickerSection(BuildContext context, BodySelectionState state) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.25),
+        color: Colors.black.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Column(
         children: [
           Padding(
             padding: EdgeInsets.all(8.w),
             child: Text(
-              'Muscles',
+              context.l10n.bodyMuscles,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 12.sp,
@@ -213,7 +229,7 @@ class BodyChartWidget extends StatelessWidget {
   }
 
   Widget _buildMusclePicker(BuildContext context, BodySelectionState state) {
-    final all = Muscle.values;
+    const all = Muscle.values;
 
     final frontMuscles = all
         .where(
@@ -273,59 +289,68 @@ class BodyChartWidget extends StatelessWidget {
 
         return Padding(
           padding: EdgeInsets.only(bottom: 6.h),
-          child: GestureDetector(
-            onTap: () {
-              context.read<BodySelectionBloc>().add(ToggleMuscle(muscle));
-            },
-            onLongPress: () {
-              context.read<BodySelectionBloc>().add(
-                ToggleDisableMuscle(muscle),
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: disabled
-                    ? Colors.grey.withOpacity(0.15)
-                    : selected
-                    ? const Color(0xFF00E5FF).withOpacity(0.3)
-                    : Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(6.r),
-                border: Border.all(
+          child: Semantics(
+            button: true,
+            selected: selected,
+            label: muscle.displayName,
+            value: disabled ? context.l10n.bodyExcluded : null,
+            onLongPressHint: context.l10n.bodyExcludeHint,
+            excludeSemantics: true,
+            child: GestureDetector(
+              onTap: () {
+                context.read<BodySelectionBloc>().add(ToggleMuscle(muscle));
+              },
+              onLongPress: () {
+                context.read<BodySelectionBloc>().add(
+                  ToggleDisableMuscle(muscle),
+                );
+              },
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 48),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                decoration: BoxDecoration(
                   color: disabled
-                      ? Colors.grey
+                      ? Colors.grey.withValues(alpha: 0.15)
                       : selected
-                      ? const Color(0xFF00E5FF)
-                      : Colors.white10,
+                      ? AppColors.primary.withValues(alpha: 0.3)
+                      : Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(6.r),
+                  border: Border.all(
+                    color: disabled
+                        ? Colors.grey
+                        : selected
+                        ? AppColors.primary
+                        : Colors.white10,
+                  ),
                 ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      muscle.displayName,
-                      style: TextStyle(
-                        color: disabled
-                            ? Colors.grey
-                            : selected
-                            ? const Color(0xFF00E5FF)
-                            : Colors.white,
-                        fontSize: 11.sp,
-                        fontWeight: selected
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        muscle.displayName,
+                        style: TextStyle(
+                          color: disabled
+                              ? Colors.grey
+                              : selected
+                              ? AppColors.primary
+                              : Colors.white,
+                          fontSize: 11.sp,
+                          fontWeight: selected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                  if (selected)
-                    Icon(
-                      Icons.check_circle,
-                      color: const Color(0xFF00E5FF),
-                      size: 16.sp,
-                    ),
-                  if (disabled)
-                    Icon(Icons.lock, color: Colors.grey, size: 14.sp),
-                ],
+                    if (selected)
+                      Icon(
+                        Icons.check_circle,
+                        color: AppColors.primary,
+                        size: 16.sp,
+                      ),
+                    if (disabled)
+                      Icon(Icons.lock, color: Colors.grey, size: 14.sp),
+                  ],
+                ),
               ),
             ),
           ),
@@ -367,9 +392,12 @@ class BodyChartWidget extends StatelessWidget {
       case Muscle.bicepsRight:
       case Muscle.tricepsLeft:
       case Muscle.tricepsRight:
+        return 'upper arms';
+
+      // Values must match ExerciseDB's body parts (GET /bodyparts).
       case Muscle.forearmsLeft:
       case Muscle.forearmsRight:
-        return 'upper arms';
+        return 'lower arms';
 
       case Muscle.latsBackLeft:
       case Muscle.latsBackRight:
@@ -384,11 +412,13 @@ class BodyChartWidget extends StatelessWidget {
       case Muscle.quadsRight:
       case Muscle.hamstringsLeft:
       case Muscle.hamstringsRight:
-      case Muscle.calvesLeft:
-      case Muscle.calvesRight:
       case Muscle.glutesLeft:
       case Muscle.glutesRight:
         return 'upper legs';
+
+      case Muscle.calvesLeft:
+      case Muscle.calvesRight:
+        return 'lower legs';
     }
   }
 }

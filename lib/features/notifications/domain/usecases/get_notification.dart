@@ -1,5 +1,5 @@
 import 'package:fitness_app/features/notifications/domain/entities/notification_entity.dart';
-import 'package:fitness_app/features/notifications/domain/repositories/notifation_repository.dart';
+import 'package:fitness_app/features/notifications/domain/repositories/notification_repository.dart';
 
 class GetNotifications {
   final NotificationRepository repository;

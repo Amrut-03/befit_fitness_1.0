@@ -1,100 +1,106 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:fitness_app/features/ai_coach/presentation/pages/coach_page.dart';
+import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/routes/session_redirect.dart';
+import 'package:fitness_app/core/session/session_notifier.dart';
+import 'package:fitness_app/features/progress_report/presentation/bloc/weekly_report_bloc.dart';
+import 'package:fitness_app/features/progress_report/presentation/pages/weekly_report_page.dart';
+import 'package:fitness_app/features/water_intake/presentation/pages/water_intake_page.dart';
+import 'package:fitness_app/features/auth/presentation/pages/login_page.dart';
+import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
+import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
 import 'package:fitness_app/features/diet/presentation/pages/diet_history_page.dart';
-import 'package:fitness_app/features/diet/presentation/pages/diet_planing_page.dart';
+import 'package:fitness_app/features/diet/presentation/pages/diet_list_page.dart';
+import 'package:fitness_app/features/diet/presentation/pages/diet_planning_page.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:fitness_app/features/food_item/presentation/pages/food_item_page.dart';
 import 'package:fitness_app/features/food_item/presentation/pages/manual_food_entry_page.dart';
+import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_bloc.dart';
 import 'package:fitness_app/features/food_scanner/presentation/pages/barcode_scanner_page.dart';
 import 'package:fitness_app/features/health_calculator/presentation/pages/health_calculator_list_page.dart';
 import 'package:fitness_app/features/health_calculator/presentation/pages/health_calculator_page.dart';
 import 'package:fitness_app/features/home/presentation/pages/home_page.dart';
 import 'package:fitness_app/features/notifications/presentation/pages/notification_page.dart';
+import 'package:fitness_app/features/notifications/presentation/pages/notification_settings_page.dart';
 import 'package:fitness_app/features/onboarding/presentation/pages/activity_level_page.dart';
 import 'package:fitness_app/features/onboarding/presentation/pages/body_metrics_page.dart';
 import 'package:fitness_app/features/onboarding/presentation/pages/gender_selection.dart';
 import 'package:fitness_app/features/onboarding/presentation/pages/goal_selection_page.dart';
+import 'package:fitness_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:fitness_app/features/profile/domain/entities/profile_entity.dart';
 import 'package:fitness_app/features/profile/presentation/pages/edit_profile_screen.dart';
 import 'package:fitness_app/features/profile/presentation/pages/history_screen.dart';
-import 'package:fitness_app/features/profile/presentation/pages/notification_page.dart';
 import 'package:fitness_app/features/profile/presentation/pages/profile_screen.dart';
-import 'package:fitness_app/features/workout/presentation/pages/workout_history_page.dart';
-import 'package:fitness_app/features/workout/presentation/pages/workout_list_page.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fitness_app/features/startup/presentation/pages/startup_page.dart';
-import 'package:fitness_app/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:fitness_app/features/auth/presentation/pages/login_page.dart';
-import 'package:fitness_app/features/diet/domain/entities/diet_plan_entity.dart';
-import 'package:fitness_app/features/diet/presentation/pages/diet_list_page.dart';
-import 'package:fitness_app/features/diet/presentation/bloc/diet_bloc.dart';
-
-class _AuthStateNotifier extends ChangeNotifier {
-  StreamSubscription? _subscription;
-
-  _AuthStateNotifier() {
-    _subscription = FirebaseAuth.instance.authStateChanges().listen((_) {
-      notifyListeners();
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
-}
+import 'package:fitness_app/features/workout/presentation/pages/workout_history_page.dart';
+import 'package:fitness_app/features/workout/presentation/pages/workout_session_page.dart';
+import 'package:fitness_app/features/workout/presentation/pages/workout_list_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AppRouter {
-  static const _publicLocations = {'/', '/onboarding', '/login'};
-
-  static const _onboardingLocations = {
-    '/goal-selection',
-    '/gender-selection',
-    '/body-metrics',
-    '/activity-level',
-  };
-
-  static final _authStateNotifier = _AuthStateNotifier();
+  static SessionNotifier get _session => sl<SessionNotifier>();
 
   static final router = GoRouter(
-    initialLocation: '/',
-    refreshListenable: _authStateNotifier,
-    redirect: _redirect,
+    initialLocation: Routes.splash,
+    refreshListenable: _session,
+    redirect: (context, state) =>
+        SessionRedirect.resolve(_session.status, state.matchedLocation),
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const StartupPage()),
+      GoRoute(
+        path: Routes.splash,
+        builder: (context, state) => const StartupPage(),
+      ),
 
       GoRoute(
-        path: '/onboarding',
+        path: Routes.intro,
         builder: (context, state) => const OnboardingScreen(),
       ),
 
-      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(
+        path: Routes.login,
+        builder: (context, state) => const LoginPage(),
+      ),
 
-      GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+      GoRoute(path: Routes.home, builder: (context, state) => const HomePage()),
 
       GoRoute(
-        path: '/profile',
+        path: Routes.weeklyReport,
+        builder: (context, state) => BlocProvider(
+          create: (_) =>
+              sl<WeeklyReportBloc>()..add(const WeeklyReportRequested()),
+          child: const WeeklyReportPage(),
+        ),
+      ),
+
+      GoRoute(
+        path: Routes.coach,
+        builder: (context, state) => const CoachPage(),
+      ),
+
+      GoRoute(
+        path: Routes.water,
+        builder: (context, state) => const WaterIntakePage(),
+      ),
+
+      GoRoute(
+        path: Routes.profile,
         builder: (context, state) {
           return const ProfilePage();
         },
       ),
 
       GoRoute(
-        path: '/diet-list',
+        path: Routes.dietList,
         builder: (context, state) {
           return const DietListPage();
         },
       ),
 
       GoRoute(
-        path: '/plan-diet',
+        path: Routes.planDiet,
         builder: (context, state) {
-          final plan = state.extra as DietPlanEntity?;
+          final plan = _extra<DietPlanEntity>(state);
           return BlocProvider.value(
             value: context.read<DietBloc>(),
             child: PlanDietPage(existingPlan: plan),
@@ -103,160 +109,116 @@ class AppRouter {
       ),
 
       GoRoute(
-        path: '/health-calculator',
-
-        builder: (context, state) {
-          final type = state.extra as String;
-
-          return HealthCalculatorPage(type: type);
-        },
+        path: Routes.healthCalculatorPath,
+        redirect: (context, state) => state.uri.queryParameters['type'] == null
+            ? Routes.healthCalculators
+            : null,
+        builder: (context, state) =>
+            HealthCalculatorPage(type: state.uri.queryParameters['type']!),
       ),
 
       GoRoute(
-        path: '/health-calculators',
+        path: Routes.healthCalculators,
         builder: (context, state) {
           return const HealthCalculatorListPage();
         },
       ),
 
       GoRoute(
-        path: "/history",
+        path: Routes.history,
         builder: (context, state) => const HistoryPage(),
       ),
 
       GoRoute(
-        path: "/workout-history",
+        path: Routes.workoutHistory,
         builder: (context, state) => const WorkoutHistoryPage(),
       ),
 
       GoRoute(
-        path: "/diet-history",
+        path: Routes.dietHistory,
         builder: (context, state) => const DietHistoryPage(),
       ),
 
       GoRoute(
-        path: '/food-items',
+        path: Routes.foodItems,
         builder: (context, state) => const FoodItemsPage(),
       ),
 
       GoRoute(
-        path: '/manual-food-entry',
+        path: Routes.manualFoodEntry,
         builder: (context, state) {
-          return ManualFoodEntryPage(item: state.extra as FoodItemEntity?);
+          return ManualFoodEntryPage(item: _extra<FoodItemEntity>(state));
         },
       ),
 
       GoRoute(
-        path: "/barcode-food-entry",
-        builder: (context, state) => const BarcodeScannerPage(),
+        path: Routes.barcodeScanner,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<FoodScannerBloc>(),
+          child: const BarcodeScannerPage(),
+        ),
       ),
 
       GoRoute(
-        path: '/workout',
+        path: Routes.workoutSession,
+        builder: (context, state) => const WorkoutSessionPage(),
+      ),
+
+      GoRoute(
+        path: Routes.workout,
         builder: (context, state) {
-          final bodyPart = state.extra as String?;
+          final bodyPart = _extra<String>(state);
           return WorkoutListPage(bodyPart: bodyPart);
         },
       ),
 
       GoRoute(
-        path: '/goal-selection',
-        builder: (_, __) => const GoalSelectionPage(),
+        path: Routes.goalSelection,
+        builder: (_, _) => const GoalSelectionPage(),
       ),
 
       GoRoute(
-        path: '/gender-selection',
-        builder: (_, __) => const GenderSelectionPage(),
+        path: Routes.genderSelection,
+        builder: (_, _) => const GenderSelectionPage(),
       ),
 
       GoRoute(
-        path: '/body-metrics',
-        builder: (_, __) => const BodyMetricsPage(),
+        path: Routes.bodyMetrics,
+        builder: (_, _) => const BodyMetricsPage(),
       ),
 
       GoRoute(
-        path: '/activity-level',
-        builder: (_, __) => const ActivityLevelPage(),
+        path: Routes.activityLevel,
+        builder: (_, _) => const ActivityLevelPage(),
       ),
 
       GoRoute(
-        path: '/edit-profile',
-
-        builder: (context, state) {
-          final profile = state.extra as ProfileEntity;
-          return EditProfilePage(profile: profile);
-        },
+        path: Routes.editProfile,
+        // The profile is passed in memory; on a deep link or restored state
+        // there's nothing to edit, so go back to the profile screen.
+        redirect: (context, state) =>
+            state.extra is ProfileEntity ? null : Routes.profile,
+        builder: (context, state) =>
+            EditProfilePage(profile: state.extra! as ProfileEntity),
       ),
 
       GoRoute(
-        path: '/notification-setting-page',
-        builder: (context, state) => const NotificationSettingPage(),
+        path: Routes.notificationSettings,
+        builder: (context, state) => const NotificationSettingsPage(),
       ),
 
       GoRoute(
-        path: '/notification-page',
+        path: Routes.notifications,
         builder: (context, state) => const NotificationPage(),
       ),
     ],
   );
 
-  static Future<String?> _redirect(
-    BuildContext context,
-    GoRouterState state,
-  ) async {
-    final location = state.matchedLocation;
-
-    final loggedIn = FirebaseAuth.instance.currentUser != null;
-
-    if (!loggedIn) {
-      if (!_publicLocations.contains(location)) {
-        return '/login';
-      }
-
-      return null;
-    }
-
-    /// Onboarding steps are only valid for users who have not completed
-    /// their profile yet. Returning users skip straight to home.
-    if (_onboardingLocations.contains(location)) {
-      final completed = await _hasCompletedProfile();
-
-      if (completed == true) {
-        return '/home';
-      }
-
-      return null;
-    }
-
-    if (location == '/login') {
-      final completed = await _hasCompletedProfile();
-
-      if (completed == true) {
-        return '/home';
-      }
-
-      return '/goal-selection';
-    }
-
-    return null;
-  }
-
-  static Future<bool?> _hasCompletedProfile() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-
-    if (uid == null) {
-      return null;
-    }
-
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
-
-      return doc.exists && doc.data()?['profileCompleted'] == true;
-    } catch (_) {
-      return null;
-    }
+  /// `state.extra` as [T], or null if it's missing or another type. A plain
+  /// `as` cast crashes on deep links and restored state, where extra is null
+  /// or a decoded JSON value.
+  static T? _extra<T>(GoRouterState state) {
+    final extra = state.extra;
+    return extra is T ? extra : null;
   }
 }

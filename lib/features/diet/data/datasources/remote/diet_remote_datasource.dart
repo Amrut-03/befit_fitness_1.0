@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app/core/error/exceptions.dart';
 import 'package:fitness_app/features/diet/data/models/diet_history_model.dart';
 import 'package:fitness_app/features/diet/data/models/diet_plan_model.dart';
 import 'package:fitness_app/features/diet/data/models/meal_model.dart';
@@ -10,31 +11,30 @@ class DietRemoteDataSource {
 
   DietRemoteDataSource({required this.firestore, required this.auth});
 
-  CollectionReference<Map<String, dynamic>> get dietPlansRef => firestore
-      .collection('users')
-      .doc(auth.currentUser?.uid)
-      .collection('dietPlans');
+  String get _uid {
+    final uid = auth.currentUser?.uid;
+    if (uid == null) throw const UnauthenticatedException();
+    return uid;
+  }
+
+  /// Builds the query when the stream is listened to, so a missing user
+  /// surfaces as a stream error instead of a synchronous throw.
+  Stream<T> _userStream<T>(Stream<T> Function() build) =>
+      Stream<void>.value(null).asyncExpand((_) => build());
+
+  CollectionReference<Map<String, dynamic>> get dietPlansRef =>
+      firestore.collection('users').doc(_uid).collection('dietPlans');
 
   Stream<List<DietPlanModel>> getDietPlans() {
-    return dietPlansRef.snapshots().map((snapshot) {
-      print("DOC COUNT: ${snapshot.docs.length}");
-
-      for (final doc in snapshot.docs) {
-        print("RAW FIRESTORE DOC = ${doc.data()}");
-      }
-
-      return snapshot.docs.map((doc) {
-        final model = DietPlanModel.fromJson(doc.data());
-
-        print("DATASOURCE MODEL ${model.name} ACTIVE=${model.activeDate}");
-
-        return model;
-      }).toList();
+    return _userStream(() => dietPlansRef.snapshots()).map((snapshot) {
+      return snapshot.docs
+          .map((doc) => DietPlanModel.fromJson(doc.data()))
+          .toList();
     });
   }
 
   Stream<DietPlanModel?> getActivePlan() {
-    return dietPlansRef.snapshots().map((snapshot) {
+    return _userStream(() => dietPlansRef.snapshots()).map((snapshot) {
       final now = DateTime.now();
 
       for (final doc in snapshot.docs) {
@@ -63,24 +63,20 @@ class DietRemoteDataSource {
   Future<void> saveDietHistory(DietHistoryModel history) async {
     await firestore
         .collection('users')
-        .doc(auth.currentUser!.uid)
+        .doc(_uid)
         .collection('dietHistory')
         .doc(history.id)
         .set(history.toJson());
   }
 
   Stream<List<DietHistoryModel>> getDietHistory() {
-    return firestore
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .collection('dietHistory')
-        .orderBy('completedAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => DietHistoryModel.fromJson(doc.data()))
-              .toList();
-        });
+    return _userStream(
+      () => historyRef.orderBy('completedAt', descending: true).snapshots(),
+    ).map(
+      (snapshot) => snapshot.docs
+          .map((doc) => DietHistoryModel.fromJson(doc.data()))
+          .toList(),
+    );
   }
 
   Future<void> savePlan(DietPlanModel plan) async {
@@ -135,10 +131,8 @@ class DietRemoteDataSource {
     await batch.commit();
   }
 
-  CollectionReference<Map<String, dynamic>> get historyRef => firestore
-      .collection('users')
-      .doc(auth.currentUser!.uid)
-      .collection('dietHistory');
+  CollectionReference<Map<String, dynamic>> get historyRef =>
+      firestore.collection('users').doc(_uid).collection('dietHistory');
 
   Future<void> saveHistory(DietHistoryModel model) async {
     await historyRef.doc(model.id).set(model.toJson());

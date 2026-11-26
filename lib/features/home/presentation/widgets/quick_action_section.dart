@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,52 +11,69 @@ class QuickActionsSection extends StatelessWidget {
   final List<Map<String, dynamic>> _actions = const [
     {
       'icon': Icons.restaurant_menu,
-      'title': 'Diet Plan',
-      'subtitle': 'Track your macros',
+      'title': 'qaDietPlan',
+      'subtitle': 'qaDietPlanSub',
       'key': 'diet',
-      'color': Color(0xFF00E5FF),
+      'color': AppColors.primary,
     },
 
     {
       'icon': Icons.fitness_center,
-      'title': 'Workout',
-      'subtitle': 'Training plans',
+      'title': 'qaWorkout',
+      'subtitle': 'qaWorkoutSub',
       'key': 'workout',
-      'color': Color(0xFFFF6B35),
+      'color': AppColors.accentOrange,
     },
 
     {
       'icon': Icons.calculate,
-      'title': 'Health Calculator',
-      'subtitle': 'BMI & nutrition',
+      'title': 'qaCalculator',
+      'subtitle': 'qaCalculatorSub',
       'key': 'calculator',
-      'color': Color(0xFF00E5FF),
+      'color': AppColors.primary,
     },
 
     {
       'icon': Icons.qr_code_scanner,
-      'title': 'Scan Food',
-      'subtitle': 'Barcode scanner',
+      'title': 'qaScanFood',
+      'subtitle': 'qaScanFoodSub',
       'key': 'scanner',
       'color': Color(0xFF8338EC),
     },
 
     {
       'icon': Icons.fastfood,
-      'title': 'My Foods',
-      'subtitle': 'Manage items',
+      'title': 'qaMyFoods',
+      'subtitle': 'qaMyFoodsSub',
       'key': 'food',
       'color': Color(0xFFFB5607),
     },
 
     {
       'icon': Icons.history,
-      'title': 'History',
-      'subtitle': 'Diet & workouts',
+      'title': 'historyTitle',
+      'subtitle': 'qaHistorySub',
       'key': 'history',
-      'color': Color(0xFF06D6A0),
+      'color': AppColors.success,
     },
   ];
+
+  /// Card texts are stored as l10n keys (the list is const).
+  static String _text(AppLocalizations l10n, String key) => switch (key) {
+    'qaDietPlan' => l10n.qaDietPlan,
+    'qaDietPlanSub' => l10n.qaDietPlanSub,
+    'qaWorkout' => l10n.qaWorkout,
+    'qaWorkoutSub' => l10n.qaWorkoutSub,
+    'qaCalculator' => l10n.qaCalculator,
+    'qaCalculatorSub' => l10n.qaCalculatorSub,
+    'qaScanFood' => l10n.qaScanFood,
+    'qaScanFoodSub' => l10n.qaScanFoodSub,
+    'qaMyFoods' => l10n.qaMyFoods,
+    'qaMyFoodsSub' => l10n.qaMyFoodsSub,
+    'historyTitle' => l10n.historyTitle,
+    'qaHistorySub' => l10n.qaHistorySub,
+    _ => key,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +81,7 @@ class QuickActionsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Quick Actions",
+          context.l10n.homeQuickActions,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -85,8 +104,8 @@ class QuickActionsSection extends StatelessWidget {
 
             return _ActionCard(
               icon: item['icon'],
-              title: item['title'],
-              subtitle: item['subtitle'],
+              title: _text(context.l10n, item['title']),
+              subtitle: _text(context.l10n, item['subtitle']),
               color: item['color'],
               onTap: () async {
                 await onCardTap?.call(item['key']);
@@ -132,13 +151,15 @@ class _ActionCard extends StatelessWidget {
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
               ),
               child: Icon(icon, color: color, size: 20.sp),
             ),
             SizedBox(height: 10.h),
             Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
@@ -146,11 +167,17 @@ class _ActionCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4.h),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: Colors.white.withOpacity(0.6),
+            // Grid cells have a fixed aspect ratio, so the subtitle gives way
+            // on narrow screens or large text instead of overflowing.
+            Flexible(
+              child: Text(
+                subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
               ),
             ),
           ],

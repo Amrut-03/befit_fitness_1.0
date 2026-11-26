@@ -1,17 +1,20 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
 import 'package:fitness_app/features/profile/domain/usecases/get_profile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetProfile getProfile;
+  final GetCurrentUser getCurrentUser;
 
   HomeLoaded? _lastLoaded;
 
-  HomeBloc({required this.getProfile}) : super(HomeInitial()) {
+  HomeBloc({required this.getProfile, required this.getCurrentUser})
+    : super(HomeInitial()) {
     on<LoadHomeDashboard>(_onLoadHomeDashboard);
     on<RefreshHomeDashboard>(_onRefreshHomeDashboard);
   }
@@ -28,7 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (_lastLoaded != null) {
         emit(_lastLoaded!);
       } else {
-        emit(const HomeError(message: 'Failed to load dashboard'));
+        emit(HomeError(message: AppLocale.l10n.homeLoadFailed));
       }
     }
   }
@@ -49,11 +52,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _emitLoaded(Emitter<HomeState> emit) async {
     final profile = await getProfile();
 
-    final authUser = FirebaseAuth.instance.currentUser;
-
     final name = profile.name.isNotEmpty
         ? profile.name
-        : (authUser?.displayName ?? '');
+        : ((await getCurrentUser())?.name ?? '');
 
     _lastLoaded = HomeLoaded(userName: name, weight: profile.weight);
 

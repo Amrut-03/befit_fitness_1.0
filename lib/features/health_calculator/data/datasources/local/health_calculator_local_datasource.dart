@@ -34,12 +34,7 @@ class HealthCalculatorLocalDatasourceImpl
         Map<String, dynamic>.from(data as Map),
       );
     } catch (_) {
-      return CalculatorResultModel(
-        value: 0,
-
-        title: '',
-        description: '',
-      );
+      return const CalculatorResultModel(value: 0, title: '', description: '');
     }
   }
 }

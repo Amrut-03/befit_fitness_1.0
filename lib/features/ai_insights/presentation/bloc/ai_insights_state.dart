@@ -14,6 +14,7 @@ class AIInsightsLoaded extends AIInsightsState {
 
 class AIInsightsError extends AIInsightsState {
   final String message;
+  final bool offline;
 
-  AIInsightsError(this.message);
+  AIInsightsError(this.message, {this.offline = false});
 }

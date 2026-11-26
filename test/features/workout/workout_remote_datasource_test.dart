@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/features/workout/data/datasources/remote/workout_remote_datasource.dart';
 import 'package:fitness_app/features/workout/data/models/exercise_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fitness_app/core/error/exceptions.dart';
+import 'package:fitness_app/core/network/api_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -62,10 +64,12 @@ void main() {
       return WorkoutRemoteDatasource(
         firestore: _FakeFirestore(),
         auth: _FakeAuth(),
-        client: MockClient((request) async {
-          requested = request.url;
-          return response;
-        }),
+        api: ApiClient(
+          client: MockClient((request) async {
+            requested = request.url;
+            return response;
+          }),
+        ),
       );
     }
 
@@ -118,10 +122,10 @@ void main() {
       expect(page.hasMore, isFalse);
     });
 
-    test('throws on non-200', () async {
+    test('throws a ServerException on non-200', () async {
       final ds = buildWith(http.Response('nope', 503));
 
-      expect(ds.getExercises(), throwsException);
+      expect(ds.getExercises(), throwsA(isA<ServerException>()));
     });
   });
 }

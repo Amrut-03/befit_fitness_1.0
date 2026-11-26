@@ -4,9 +4,11 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   cloud_firestore
+  connectivity_plus
   firebase_app_check
   firebase_auth
   firebase_core
+  flutter_edge_ai
   flutter_secure_storage_windows
   flutter_timezone
   permission_handler_windows

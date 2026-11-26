@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_bloc.dart';
 import 'package:fitness_app/features/food_scanner/presentation/bloc/food_scanner_event.dart';
@@ -98,17 +100,17 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                   child: Icon(
                     Icons.camera_alt_rounded,
-                    color: const Color(0xFF00E5FF),
+                    color: AppColors.primary,
                     size: 60.sp,
                   ),
                 ),
                 SizedBox(height: 28.h),
                 Text(
-                  "Camera Permission Required",
+                  context.l10n.scanCameraTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -118,7 +120,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  "Please allow camera access to scan food barcodes.",
+                  context.l10n.scanCameraBody,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white60,
@@ -133,13 +135,13 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   child: ElevatedButton(
                     onPressed: _requestCameraPermission,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E5FF),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.r),
                       ),
                     ),
                     child: Text(
-                      "Grant Permission",
+                      context.l10n.scanGrant,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,
@@ -152,7 +154,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 TextButton(
                   onPressed: () => context.pop(),
                   child: Text(
-                    "Go Back",
+                    context.l10n.scanGoBack,
                     style: TextStyle(color: Colors.white54, fontSize: 14.sp),
                   ),
                 ),
@@ -200,7 +202,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               MobileScanner(controller: _controller, onDetect: _onDetect),
               ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.45),
+                  Colors.black.withValues(alpha: 0.45),
                   BlendMode.srcOut,
                 ),
                 child: Stack(
@@ -233,13 +235,10 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   height: 180.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24.r),
-                    border: Border.all(
-                      color: const Color(0xFF00E5FF),
-                      width: 3,
-                    ),
+                    border: Border.all(color: AppColors.primary, width: 3),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF00E5FF).withOpacity(0.5),
+                        color: AppColors.primary.withValues(alpha: 0.5),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -258,12 +257,16 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                     children: [
                       _circleButton(
                         icon: Icons.arrow_back_ios_new,
+                        label: MaterialLocalizations.of(
+                          context,
+                        ).backButtonTooltip,
                         onTap: () {
                           Navigator.pop(context);
                         },
                       ),
                       _circleButton(
                         icon: Icons.flash_on_rounded,
+                        label: context.l10n.a11yTorch,
                         onTap: () async {
                           await _controller.toggleTorch();
                           setState(() {});
@@ -280,7 +283,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Scan Food Barcode",
+                      context.l10n.scanTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -290,7 +293,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                     ),
                     SizedBox(height: 10.h),
                     Text(
-                      "Align barcode inside the frame",
+                      context.l10n.scanAlign,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white70, fontSize: 14.sp),
                     ),
@@ -299,7 +302,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               ),
               if (state.isLoading)
                 Container(
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                   child: const Center(child: AppLoader()),
                 ),
             ],
@@ -309,18 +312,28 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
     );
   }
 
-  Widget _circleButton({required IconData icon, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 48.w,
-        height: 48.w,
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.45),
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white24),
+  Widget _circleButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 48.w,
+          height: 48.w,
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.45),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white24),
+          ),
+          child: Icon(icon, color: Colors.white, size: 20.sp),
         ),
-        child: Icon(icon, color: Colors.white, size: 20.sp),
       ),
     );
   }

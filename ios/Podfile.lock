@@ -1,0 +1,52 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_edge_ai_mediapipe (1.3.0):
+    - Flutter
+    - MediaPipeTasksGenAI (= 0.10.35)
+    - MediaPipeTasksGenAIC (= 0.10.35)
+  - MediaPipeTasksGenAI (0.10.35):
+    - MediaPipeTasksGenAIC (= 0.10.35)
+  - MediaPipeTasksGenAIC (0.10.35)
+  - pedometer_2 (0.0.1):
+    - Flutter
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - vision_gallery_saver (1.0.0):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_edge_ai_mediapipe (from `.symlinks/plugins/flutter_edge_ai_mediapipe/ios`)
+  - pedometer_2 (from `.symlinks/plugins/pedometer_2/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - vision_gallery_saver (from `.symlinks/plugins/vision_gallery_saver/ios`)
+
+SPEC REPOS:
+  trunk:
+    - MediaPipeTasksGenAI
+    - MediaPipeTasksGenAIC
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_edge_ai_mediapipe:
+    :path: ".symlinks/plugins/flutter_edge_ai_mediapipe/ios"
+  pedometer_2:
+    :path: ".symlinks/plugins/pedometer_2/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  vision_gallery_saver:
+    :path: ".symlinks/plugins/vision_gallery_saver/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  flutter_edge_ai_mediapipe: b9416109334adbdddc607134fab1a808896abb6f
+  MediaPipeTasksGenAI: e311d919ab79b2e615e381b65ad271b2c2617312
+  MediaPipeTasksGenAIC: fee4ffd93e57fd2022287bcce0340b3c68b537be
+  pedometer_2: dbedf4f42eb698358d1f6231ef97e29ae6b0411f
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  vision_gallery_saver: 19f6a4c05a3590c9fe74ca938e964e67f6ea70b3
+
+PODFILE CHECKSUM: 7c5fd471befe2845d2d562b8d2c0d36d942fb709
+
+COCOAPODS: 1.17.0

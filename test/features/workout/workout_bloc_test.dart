@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/error/result.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_page_entity.dart';
 import 'package:fitness_app/features/workout/domain/entities/workout_history_entity.dart';
@@ -22,19 +23,18 @@ class _FakeRepo implements WorkoutRepository {
   final calls = <({String? cursor, String? bodyPart})>[];
 
   @override
-  Future<ExercisePageEntity> getExercises({
+  Future<Result<ExercisePageEntity>> getExercises({
     int limit = 20,
     String? cursor,
     String? bodyPart,
   }) async {
     calls.add((cursor: cursor, bodyPart: bodyPart));
     if (cursor == null) {
-      return ExercisePageEntity(
-        exercises: [_ex('1'), _ex('2')],
-        nextCursor: 'c2',
+      return Ok(
+        ExercisePageEntity(exercises: [_ex('1'), _ex('2')], nextCursor: 'c2'),
       );
     }
-    return ExercisePageEntity(exercises: [_ex('3')]);
+    return Ok(ExercisePageEntity(exercises: [_ex('3')]));
   }
 
   @override

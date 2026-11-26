@@ -10,3 +10,6 @@ abstract class HealthEvent extends Equatable {
 class LoadHealthData extends HealthEvent {}
 
 class RefreshHealthData extends HealthEvent {}
+
+/// The user tapped "Connect" on the Health Connect / Apple Health prompt.
+class ConnectHealthPlatformRequested extends HealthEvent {}

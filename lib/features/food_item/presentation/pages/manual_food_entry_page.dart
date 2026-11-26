@@ -1,3 +1,7 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/features/food_item/presentation/widgets/food_form_fields.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_bloc.dart';
@@ -71,26 +75,16 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
 
     final food = FoodItemEntity(
       id: widget.item?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-
       name: _nameController.text.trim(),
-
       brand: _brandController.text.trim(),
-
       calories: double.tryParse(_caloriesController.text) ?? 0,
-
       protein: double.tryParse(_proteinController.text) ?? 0,
-
       carbs: double.tryParse(_carbsController.text) ?? 0,
-
       fat: double.tryParse(_fatController.text) ?? 0,
-
       source: widget.item?.source ?? "manual",
-
       barcode: widget.item?.barcode,
-
       createdAt: widget.item?.createdAt ?? DateTime.now(),
       quantity: double.tryParse(_quantityController.text) ?? 100,
-
       unit: _selectedUnit,
     );
 
@@ -100,9 +94,9 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
       context.read<FoodItemsBloc>().add(SaveFoodItems(food));
     }
     context.pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Food item saved successfully')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.foodSaved)));
   }
 
   @override
@@ -110,7 +104,9 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppHeader(
-        title: widget.item != null ? 'Edit Food Item' : 'Manual Food Entry',
+        title: widget.item != null
+            ? context.l10n.foodEditTitle
+            : context.l10n.foodManualTitle,
       ),
       body: SafeArea(
         child: Form(
@@ -127,11 +123,13 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                     borderRadius: BorderRadius.circular(24.r),
                     gradient: LinearGradient(
                       colors: [
-                        const Color(0xFF00E5FF).withOpacity(0.20),
-                        const Color(0xFF00C2FF).withOpacity(0.10),
+                        AppColors.primary.withValues(alpha: 0.20),
+                        const Color(0xFF00C2FF).withValues(alpha: 0.10),
                       ],
                     ),
-                    border: Border.all(color: Colors.white.withOpacity(0.08)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.08),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -139,17 +137,17 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                         padding: EdgeInsets.all(18.w),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: const Color(0xFF00E5FF).withOpacity(0.15),
+                          color: AppColors.primary.withValues(alpha: 0.15),
                         ),
                         child: Icon(
                           Icons.restaurant_menu_rounded,
-                          color: const Color(0xFF00E5FF),
+                          color: AppColors.primary,
                           size: 34.sp,
                         ),
                       ),
                       SizedBox(height: 14.h),
                       Text(
-                        'Create Custom Food',
+                        context.l10n.foodCreateCustom,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20.sp,
@@ -158,7 +156,7 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        'Add your own food items with nutrition values',
+                        context.l10n.foodCreateCustomHint,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white60,
@@ -169,44 +167,39 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                   ),
                 ),
                 SizedBox(height: 28.h),
-                _sectionTitle('Food Information'),
+                _sectionTitle(context.l10n.foodInfoSection),
                 SizedBox(height: 14.h),
-                _buildTextField(
+                FoodTextField(
                   controller: _nameController,
-                  label: 'Food Name',
-                  hint: 'Enter food name',
+                  label: context.l10n.foodName,
+                  hint: context.l10n.foodNameHint,
                   icon: Icons.fastfood_rounded,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Food name is required';
+                      return context.l10n.foodNameRequired;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 16.h),
-                _buildTextField(
+                FoodTextField(
                   controller: _brandController,
-                  label: 'Brand (Optional)',
-                  hint: 'Ex. Homemade / Amul / Nestle',
+                  label: context.l10n.foodBrand,
+                  hint: context.l10n.foodBrandHint,
                   icon: Icons.business_rounded,
                 ),
                 SizedBox(height: 28.h),
-                _sectionTitle('Serving Information'),
+                _sectionTitle(context.l10n.foodServingSection),
                 SizedBox(height: 16.h),
                 Row(
                   children: [
                     Expanded(
                       flex: 2,
-
-                      child: _buildTextField(
+                      child: FoodTextField(
                         controller: _quantityController,
-
-                        label: 'Quantity',
-
+                        label: context.l10n.foodQuantity,
                         hint: '100',
-
                         icon: Icons.scale_rounded,
-
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return null;
@@ -215,62 +208,48 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                           final parsed = double.tryParse(value);
 
                           if (parsed == null || parsed <= 0) {
-                            return 'Enter a positive number';
+                            return context.l10n.foodPositiveNumber;
                           }
 
                           return null;
                         },
                       ),
                     ),
-
                     SizedBox(width: 14.w),
-
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: [
                           Text(
-                            'Unit',
-
+                            context.l10n.foodUnit,
                             style: TextStyle(
                               color: Colors.white70,
-
                               fontSize: 13.sp,
-
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-
                           SizedBox(height: 10.h),
-
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 14.w),
-
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.05),
-
+                              color: Colors.white.withValues(alpha: 0.05),
                               borderRadius: BorderRadius.circular(18.r),
                             ),
-
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 value: _selectedUnit,
-
                                 dropdownColor: Colors.black,
-
                                 style: const TextStyle(color: Colors.white),
-
                                 items: ['g', 'ml', 'piece', 'slice', 'cup'].map(
                                   (unit) {
                                     return DropdownMenuItem(
                                       value: unit,
-
-                                      child: Text(unit),
+                                      child: Text(
+                                        foodUnitLabel(context.l10n, unit),
+                                      ),
                                     );
                                   },
                                 ).toList(),
-
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedUnit = value!;
@@ -285,23 +264,23 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                   ],
                 ),
                 SizedBox(height: 16.h),
-                _sectionTitle('Nutrition Values'),
+                _sectionTitle(context.l10n.foodNutritionSection),
                 SizedBox(height: 16.h),
                 Row(
                   children: [
                     Expanded(
-                      child: _buildMacroField(
+                      child: MacroInputField(
                         controller: _caloriesController,
-                        label: 'Calories',
+                        label: context.l10n.statCalories,
                         suffix: 'kcal',
                         color: Colors.orangeAccent,
                       ),
                     ),
                     SizedBox(width: 14.w),
                     Expanded(
-                      child: _buildMacroField(
+                      child: MacroInputField(
                         controller: _proteinController,
-                        label: 'Protein',
+                        label: context.l10n.macroProtein,
                         suffix: 'g',
                         color: Colors.greenAccent,
                       ),
@@ -312,18 +291,18 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildMacroField(
+                      child: MacroInputField(
                         controller: _carbsController,
-                        label: 'Carbs',
+                        label: context.l10n.macroCarbs,
                         suffix: 'g',
                         color: Colors.blueAccent,
                       ),
                     ),
                     SizedBox(width: 14.w),
                     Expanded(
-                      child: _buildMacroField(
+                      child: MacroInputField(
                         controller: _fatController,
-                        label: 'Fat',
+                        label: context.l10n.macroFat,
                         suffix: 'g',
                         color: Colors.pinkAccent,
                       ),
@@ -337,15 +316,15 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
                   child: ElevatedButton(
                     onPressed: _saveFoodItem,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E5FF),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.r),
                       ),
                     ),
                     child: Text(
                       widget.item != null
-                          ? 'Update Food Item'
-                          : 'Save Food Item',
+                          ? context.l10n.foodUpdate
+                          : context.l10n.foodSave,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,
@@ -370,130 +349,6 @@ class _ManualFoodEntryPageState extends State<ManualFoodEntryPage> {
         color: Colors.white,
         fontSize: 18.sp,
         fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    String? Function(String?)? validator,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-
-        SizedBox(height: 10.h),
-
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white38),
-            prefixIcon: Icon(icon, color: Colors.white54),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.05),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.05)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
-              borderSide: const BorderSide(color: Color(0xFF00E5FF)),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
-              borderSide: const BorderSide(color: Colors.redAccent),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMacroField({
-    required TextEditingController controller,
-    required String label,
-    required String suffix,
-    required Color color,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
-        color: Colors.white.withOpacity(0.05),
-        border: Border.all(color: color.withOpacity(0.25)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 10.w,
-                height: 10.w,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 14.h),
-          TextFormField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return null;
-              }
-
-              final parsed = double.tryParse(value);
-
-              if (parsed == null || parsed < 0) {
-                return 'Enter a valid number';
-              }
-
-              return null;
-            },
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-            decoration: InputDecoration(
-              hintText: '0',
-              hintStyle: const TextStyle(color: Colors.white24),
-              suffixText: suffix,
-              suffixStyle: TextStyle(color: color, fontWeight: FontWeight.bold),
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-            ),
-          ),
-        ],
       ),
     );
   }

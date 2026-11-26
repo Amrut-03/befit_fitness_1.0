@@ -1,11 +1,16 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
+
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_state.dart';
+import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
 import 'package:fitness_app/features/workout/presentation/widgets/exercise_detail_bottom_sheet.dart';
+import 'package:fitness_app/features/workout/presentation/widgets/session/session_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,7 +67,10 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppHeader(title: "Workouts"),
+      appBar: AppHeader(title: context.l10n.workoutsTitle),
+      bottomNavigationBar: SafeArea(
+        child: SessionBar(margin: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h)),
+      ),
       body: BlocBuilder<WorkoutBloc, WorkoutState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -91,7 +99,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                         const LoadExercisesEvent(),
                       );
                     },
-                    child: const Text("Retry"),
+                    child: Text(context.l10n.commonRetry),
                   ),
                 ],
               ),
@@ -104,12 +112,14 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                 child: Container(
                   height: 58.h,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF111111),
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(color: Colors.white.withOpacity(0.06)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.06),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
+                        color: Colors.black.withValues(alpha: 0.25),
                         blurRadius: 18.r,
                         offset: const Offset(0, 8),
                       ),
@@ -122,34 +132,35 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w500,
                     ),
-                    cursorColor: const Color(0xFF00E5FF),
+                    cursorColor: AppColors.primary,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(vertical: 18.h),
                       prefixIcon: Container(
                         margin: EdgeInsets.all(10.w),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00E5FF).withOpacity(0.12),
+                          color: AppColors.primary.withValues(alpha: 0.12),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.search_rounded,
-                          color: const Color(0xFF00E5FF),
+                          color: AppColors.primary,
                           size: 22.sp,
                         ),
                       ),
-                      hintText: "Search workouts...",
+                      hintText: context.l10n.workoutSearch,
                       hintStyle: TextStyle(
-                        color: Colors.white38,
+                        color: AppColors.textMuted,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                       ),
                       suffixIcon: state.searchQuery.isNotEmpty
-                          ? GestureDetector(
-                              onTap: () => _onSearchChanged(''),
-                              child: Icon(
+                          ? IconButton(
+                              onPressed: () => _onSearchChanged(''),
+                              tooltip: context.l10n.a11yClearSearch,
+                              icon: Icon(
                                 Icons.close_rounded,
-                                color: Colors.white38,
+                                color: AppColors.textMuted,
                                 size: 20.sp,
                               ),
                             )
@@ -164,7 +175,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
                   child: state.exercises.isEmpty
                       ? Center(
                           child: Text(
-                            "No exercises found",
+                            context.l10n.workoutNoExercises,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 16.sp,
@@ -210,8 +221,8 @@ class _ExerciseCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.r),
-          color: const Color(0xFF111111),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          color: AppColors.surface,
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +235,7 @@ class _ExerciseCard extends StatelessWidget {
                       height: 200.h,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) {
+                      errorBuilder: (_, _, _) {
                         return _placeholder();
                       },
                     )
@@ -235,15 +246,22 @@ class _ExerciseCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    exercise.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          exercise.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      AddToSessionButton(exercise: exercise),
+                    ],
                   ),
                   SizedBox(height: 10.h),
                   Wrap(
@@ -267,7 +285,7 @@ class _ExerciseCard extends StatelessWidget {
   Widget _placeholder() {
     return Container(
       height: 200.h,
-      color: Colors.white.withOpacity(0.05),
+      color: Colors.white.withValues(alpha: 0.05),
       child: Center(
         child: Icon(Icons.fitness_center, color: Colors.white24, size: 60.sp),
       ),
@@ -278,12 +296,39 @@ class _ExerciseCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
+        color: Colors.white.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Text(
         text,
         style: TextStyle(color: Colors.white70, fontSize: 11.sp),
+      ),
+    );
+  }
+}
+
+/// Adds the exercise to the workout session (starting one if needed), or
+/// shows that it's already in it.
+class AddToSessionButton extends StatelessWidget {
+  const AddToSessionButton({super.key, required this.exercise});
+
+  final ExerciseEntity exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final added = context.select(
+      (WorkoutSessionCubit c) => c.state.contains(exercise.id),
+    );
+    return IconButton(
+      tooltip: added
+          ? context.l10n.workoutInYourWorkout
+          : context.l10n.workoutAddTo,
+      onPressed: added
+          ? null
+          : () => context.read<WorkoutSessionCubit>().addExercise(exercise),
+      icon: Icon(
+        added ? Icons.check_circle_rounded : Icons.add_circle_outline,
+        color: added ? AppColors.success : AppColors.primary,
       ),
     );
   }

@@ -1,53 +1,34 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+
 import '../models/education_info.dart';
 
-class EducationData {
-  static const overallHealth = EducationInfo(
-    emoji: "❤️",
-
-    title: "Overall Health Score",
-
-    description:
-        "This score combines your daily activity metrics including steps, calories burned, and movement minutes.",
-
-    whyImportant:
-        "A higher score means you're consistently achieving your daily fitness goals and maintaining an active lifestyle.",
-
+abstract final class EducationData {
+  static EducationInfo overallHealth(AppLocalizations l10n) => EducationInfo(
+    emoji: '❤️',
+    title: l10n.eduHealthTitle,
+    description: l10n.eduHealthDescription,
+    whyImportant: l10n.eduHealthWhy,
     tips: [
-      "Walk regularly throughout the day",
-
-      "Aim for your daily step target",
-
-      "Increase active movement minutes",
-
-      "Stay consistent every day",
-
-      "Combine cardio and strength training",
+      l10n.eduHealthTip1,
+      l10n.eduHealthTip2,
+      l10n.eduHealthTip3,
+      l10n.eduHealthTip4,
+      l10n.eduHealthTip5,
     ],
   );
 
-  static const bodyChart = EducationInfo(
-    emoji: "💪",
-
-    title: "Interactive Body Chart",
-
-    description:
-        "The Body Chart helps you visually select muscle groups and discover workouts tailored to those muscles.",
-
-    whyImportant:
-        "Targeting specific muscle groups helps you train more effectively, maintain balance in your physique, and avoid neglecting important muscles.",
-
+  static EducationInfo bodyChart(AppLocalizations l10n) => EducationInfo(
+    emoji: '💪',
+    title: l10n.eduBodyTitle,
+    description: l10n.eduBodyDescription,
+    whyImportant: l10n.eduBodyWhy,
     tips: [
-      "Tap a muscle to select it",
-
-      "Select multiple muscles to focus on a workout area",
-
-      "Use Front and Back views to access all muscle groups",
-
-      "Press 'Search Workouts' to find exercises for selected muscles",
-
-      "Long press a muscle to temporarily disable it",
-
-      "Train all major muscle groups throughout the week",
+      l10n.eduBodyTip1,
+      l10n.eduBodyTip2,
+      l10n.eduBodyTip3,
+      l10n.eduBodyTip4,
+      l10n.eduBodyTip5,
+      l10n.eduBodyTip6,
     ],
   );
 }

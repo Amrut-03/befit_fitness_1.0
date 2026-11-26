@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f.apps.googleusercontent.com</string>
+	<string>475383477382-ueali1i7rui0akne1ntsda6ln6vnajtl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.475383477382-d7tk9mn61l925i8qgrklfmkknf274u0f</string>
+	<string>com.googleusercontent.apps.475383477382-ueali1i7rui0akne1ntsda6ln6vnajtl</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>475383477382-b8mh63e8tfffmlm82lrb7k9t4dnp6qpa.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.fitnessApp</string>
+	<string>com.befitfitness.app</string>
 	<key>PROJECT_ID</key>
 	<string>fitness-app-9dac8</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:475383477382:ios:c0436844b8d6b8e9c44d07</string>
+	<string>1:475383477382:ios:bf9952cf7dd07a86c44d07</string>
 </dict>
 </plist>

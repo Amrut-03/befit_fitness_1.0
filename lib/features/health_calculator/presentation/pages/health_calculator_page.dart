@@ -1,9 +1,16 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/features/health_calculator/presentation/widgets/calculator_inputs.dart';
+import 'package:fitness_app/features/health_calculator/presentation/widgets/calculator_result_card.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/features/health_calculator/presentation/bloc/health_calculator_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+
+import '../calculator_labels.dart';
 
 class HealthCalculatorPage extends StatefulWidget {
   final String type;
@@ -31,31 +38,21 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<HealthCalculatorBloc>(),
-
       child: Scaffold(
-        backgroundColor: const Color(0xFF050505),
-
-        appBar: AppHeader(title: widget.type),
-
+        backgroundColor: AppColors.background,
+        appBar: AppHeader(
+          title: calculatorTypeLabel(context.l10n, widget.type),
+        ),
         // AppBar(
-
         //   backgroundColor:
         //       Colors.transparent,
-
         //   elevation: 0,
-
         //   centerTitle: true,
-
         //   title: Text(
-
         //     widget.type,
-
         //     style: TextStyle(
-
         //       color: Colors.white,
-
         //       fontSize: 20.sp,
-
         //       fontWeight:
         //           FontWeight.bold,
         //     ),
@@ -65,40 +62,35 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
           builder: (context, state) {
             return SingleChildScrollView(
               padding: EdgeInsets.all(20.w),
-
               child: Column(
                 children: [
                   _buildHeader(),
-
                   SizedBox(height: 24.h),
-
                   if (_needsWeight())
-                    _buildTextField(
+                    CalculatorTextField(
                       controller: weightController,
-                      hint: "Weight (kg)",
+                      hint: context.l10n.calcWeightHint,
                     ),
-
                   if (_needsHeight()) ...[
                     SizedBox(height: 16.h),
-
-                    _buildTextField(
+                    CalculatorTextField(
                       controller: heightController,
-                      hint: "Height (cm)",
+                      hint: context.l10n.calcHeightHint,
                     ),
                   ],
-
                   if (_needsAge()) ...[
                     SizedBox(height: 16.h),
-
-                    _buildTextField(controller: ageController, hint: "Age"),
+                    CalculatorTextField(
+                      controller: ageController,
+                      hint: context.l10n.statAge,
+                    ),
                   ],
-
                   if (_needsGender()) ...[
                     SizedBox(height: 16.h),
-
-                    _buildDropdown(
+                    CalculatorDropdown(
                       value: gender,
                       items: const ["Male", "Female"],
+                      labelOf: (v) => genderLabel(context.l10n, v),
                       onChanged: (v) {
                         setState(() {
                           gender = v!;
@@ -106,13 +98,12 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                       },
                     ),
                   ],
-
                   if (_needsGoal()) ...[
                     SizedBox(height: 16.h),
-
-                    _buildDropdown(
+                    CalculatorDropdown(
                       value: goal,
                       items: const ["Maintain", "Fat Loss", "Muscle Gain"],
+                      labelOf: (v) => proteinGoalLabel(context.l10n, v),
                       onChanged: (v) {
                         setState(() {
                           goal = v!;
@@ -120,33 +111,23 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                       },
                     ),
                   ],
-
                   if (_needsActivity()) ...[
                     SizedBox(height: 20.h),
-
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-
                       children: [
                         Text(
-                          "Activity Level",
-
+                          context.l10n.calcActivityLevel,
                           style: TextStyle(
                             color: Colors.white,
-
                             fontSize: 14.sp,
                           ),
                         ),
-
                         Slider(
                           value: activity,
-
                           min: 1.2,
-
                           max: 1.9,
-
-                          activeColor: const Color(0xFF00E5FF),
-
+                          activeColor: AppColors.primary,
                           onChanged: (v) {
                             setState(() {
                               activity = v;
@@ -156,106 +137,89 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
                       ],
                     ),
                   ],
-
                   SizedBox(height: 30.h),
-
                   SizedBox(
                     width: double.infinity,
-
                     height: 55.h,
-
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF00E5FF),
-
+                        backgroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.r),
                         ),
                       ),
-
                       onPressed: () {
                         final bloc = context.read<HealthCalculatorBloc>();
 
                         if (widget.type == "BMI") {
                           final weight = double.tryParse(weightController.text);
                           final height = double.tryParse(heightController.text);
-                          if (weight == null || height == null || weight <= 0 || height <= 0) {
-                            _showError(context, 'Please enter valid positive weight and height');
+                          if (weight == null ||
+                              height == null ||
+                              weight <= 0 ||
+                              height <= 0) {
+                            _showError(
+                              context,
+                              context.l10n.calcErrWeightHeight,
+                            );
                             return;
                           }
                           bloc.add(
-                            CalculateBMIEvent(
-                              weight: weight,
-
-                              height: height,
-                            ),
+                            CalculateBMIEvent(weight: weight, height: height),
                           );
                         } else if (widget.type == "Water Intake") {
                           final weight = double.tryParse(weightController.text);
                           if (weight == null || weight <= 0) {
-                            _showError(context, 'Please enter valid positive weight');
+                            _showError(context, context.l10n.calcErrWeight);
                             return;
                           }
-                          bloc.add(
-                            CalculateWaterEvent(
-                              weight: weight,
-                            ),
-                          );
+                          bloc.add(CalculateWaterEvent(weight: weight));
                         } else if (widget.type == "Protein") {
                           final weight = double.tryParse(weightController.text);
                           if (weight == null || weight <= 0) {
-                            _showError(context, 'Please enter valid positive weight');
+                            _showError(context, context.l10n.calcErrWeight);
                             return;
                           }
                           bloc.add(
-                            CalculateProteinEvent(
-                              weight: weight,
-
-                              goal: goal,
-                            ),
+                            CalculateProteinEvent(weight: weight, goal: goal),
                           );
                         } else {
                           final weight = double.tryParse(weightController.text);
                           final height = double.tryParse(heightController.text);
                           final age = int.tryParse(ageController.text);
-                          if (weight == null || height == null || weight <= 0 || height <= 0 ||
-                              age == null || age <= 0) {
-                            _showError(context, 'Please enter valid positive weight, height and age');
+                          if (weight == null ||
+                              height == null ||
+                              weight <= 0 ||
+                              height <= 0 ||
+                              age == null ||
+                              age <= 0) {
+                            _showError(context, context.l10n.calcErrAll);
                             return;
                           }
                           bloc.add(
                             CalculateCaloriesEvent(
                               weight: weight,
-
                               height: height,
-
                               age: age,
-
                               gender: gender,
-
                               activity: activity,
                             ),
                           );
                         }
                       },
-
                       child: Text(
-                        "Calculate",
-
+                        context.l10n.calcCalculate,
                         style: TextStyle(
                           color: Colors.black,
-
                           fontSize: 16.sp,
-
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-
                   SizedBox(height: 30.h),
-
-                  if (state is HealthCalculatorLoaded) _buildResultCard(state),
+                  if (state is HealthCalculatorLoaded)
+                    CalculatorResultCard(state),
                 ],
               ),
             );
@@ -268,111 +232,33 @@ class _HealthCalculatorPageState extends State<HealthCalculatorPage> {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-
       padding: EdgeInsets.all(20.w),
-
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24.r),
-
         gradient: const LinearGradient(
-          colors: [Color(0xFF00E5FF), Color.fromARGB(255, 0, 160, 128)],
+          colors: [AppColors.primary, Color.fromARGB(255, 0, 160, 128)],
         ),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
           Text(
-            widget.type,
-
+            calculatorTypeLabel(context.l10n, widget.type),
             style: TextStyle(
               color: Colors.black,
-
               fontSize: 24.sp,
-
               fontWeight: FontWeight.bold,
             ),
           ),
-
           SizedBox(height: 6.h),
-
           Text(
-            "Track your fitness smarter",
-
+            context.l10n.calcTagline,
             style: TextStyle(
-              color: Colors.black.withOpacity(0.7),
-
+              color: Colors.black.withValues(alpha: 0.7),
               fontSize: 13.sp,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-
-    required String hint,
-  }) {
-    return TextField(
-      controller: controller,
-
-      keyboardType: TextInputType.number,
-
-      style: const TextStyle(color: Colors.white),
-
-      decoration: InputDecoration(
-        hintText: hint,
-
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-
-        filled: true,
-
-        fillColor: Colors.white.withOpacity(0.05),
-
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18.r),
-
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
-
-Widget _buildDropdown({
-    required String value,
-
-    required List<String> items,
-
-    required Function(String?) onChanged,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-
-        borderRadius: BorderRadius.circular(18.r),
-      ),
-
-      child: DropdownButton<String>(
-        dropdownColor: const Color(0xFF111111),
-
-        value: value,
-
-        isExpanded: true,
-
-        underline: const SizedBox(),
-
-        style: const TextStyle(color: Colors.white),
-
-        items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
-
-        onChanged: onChanged,
       ),
     );
   }
@@ -381,68 +267,8 @@ Widget _buildDropdown({
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-
         behavior: SnackBarBehavior.floating,
-
         backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  Widget _buildResultCard(HealthCalculatorLoaded state) {
-    return Container(
-      width: double.infinity,
-
-      padding: EdgeInsets.all(24.w),
-
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24.r),
-
-        color: Colors.white.withOpacity(0.05),
-      ),
-
-      child: Column(
-        children: [
-          Text(
-            state.result.value.toString(),
-
-            style: TextStyle(
-              color: const Color(0xFF00E5FF),
-
-              fontSize: 40.sp,
-
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          SizedBox(height: 10.h),
-
-          Text(
-            state.result.title,
-
-            style: TextStyle(
-              color: Colors.white,
-
-              fontSize: 18.sp,
-
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-
-          SizedBox(height: 8.h),
-
-          Text(
-            state.result.description,
-
-            textAlign: TextAlign.center,
-
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-
-              fontSize: 13.sp,
-            ),
-          ),
-        ],
       ),
     );
   }

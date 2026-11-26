@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/error/failures.dart';
 import 'package:fitness_app/features/notifications/domain/usecases/clear_notification.dart';
 import 'package:fitness_app/features/notifications/domain/usecases/get_notification.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +33,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       emit(state.copyWith(isLoading: false, notifications: notifications));
     } catch (e) {
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: Failure.fromException(e).message,
+        ),
+      );
     }
   }
 
@@ -47,7 +53,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       emit(state.copyWith(notifications: []));
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(state.copyWith(error: Failure.fromException(e).message));
     }
   }
 }

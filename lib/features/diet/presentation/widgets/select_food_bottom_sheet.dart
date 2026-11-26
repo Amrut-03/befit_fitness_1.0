@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
@@ -40,7 +41,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
   void initState() {
     super.initState();
 
-    context.read<FoodItemsBloc>().add(LoadFoodItems());
+    context.read<FoodItemsBloc>().add(const LoadFoodItems());
   }
 
   void toggle(MealEntity meal) {
@@ -99,7 +100,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Select Food items",
+                context.l10n.dietSelectFood,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20.sp,
@@ -107,6 +108,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
                 ),
               ),
               IconButton(
+                tooltip: context.l10n.commonClose,
                 icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -117,7 +119,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
             style: const TextStyle(color: Colors.white),
             onChanged: (val) => setState(() => search = val),
             decoration: InputDecoration(
-              hintText: "Search food...",
+              hintText: context.l10n.dietSearchFood,
               hintStyle: const TextStyle(color: Colors.white54),
               filled: true,
               fillColor: Colors.white10,
@@ -144,10 +146,10 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
                 }).toList();
 
                 if (foods.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
-                      'No food items found',
-                      style: TextStyle(color: Colors.white),
+                      context.l10n.dietNoFoodFound,
+                      style: const TextStyle(color: Colors.white),
                     ),
                   );
                 }
@@ -165,8 +167,8 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
 
                       decoration: BoxDecoration(
                         color: selected
-                            ? Colors.teal.withOpacity(0.2)
-                            : Colors.white.withOpacity(0.05),
+                            ? Colors.teal.withValues(alpha: 0.2)
+                            : Colors.white.withValues(alpha: 0.05),
 
                         borderRadius: BorderRadius.circular(12),
 
@@ -183,7 +185,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
                         ),
 
                         subtitle: Text(
-                          "${item.calories ?? 0} kcal",
+                          context.l10n.unitKcal("${item.calories ?? 0}"),
 
                           style: const TextStyle(color: Colors.white70),
                         ),
@@ -232,7 +234,7 @@ class _AddFoodSheetState extends State<_AddFoodSheet> {
                   padding: EdgeInsets.symmetric(vertical: 14.h),
                 ),
                 child: Text(
-                  "Add ${selectedIds.length} Food",
+                  context.l10n.dietAddNFood(selectedIds.length),
                   style: const TextStyle(color: Colors.black),
                 ),
               ),

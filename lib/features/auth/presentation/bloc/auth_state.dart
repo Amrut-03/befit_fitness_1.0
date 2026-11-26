@@ -34,6 +34,10 @@ class AuthDeleting extends AuthState {
 }
 
 /// The account and all its data were deleted. The user is signed out.
+class AuthLinking extends AuthState {
+  const AuthLinking();
+}
+
 class AuthAccountDeleted extends AuthUnauthenticated {
   const AuthAccountDeleted();
 }

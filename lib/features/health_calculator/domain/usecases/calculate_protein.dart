@@ -1,4 +1,5 @@
-import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_reposittory.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_repository.dart';
 
 import '../entities/calculator_result_entity.dart';
 
@@ -27,9 +28,9 @@ class CalculateProtein {
     final result = CalculatorResultEntity(
       value: double.parse(protein.toStringAsFixed(0)),
 
-      title: "Protein Intake",
+      title: AppLocale.l10n.calcProteinResult,
 
-      description: "Recommended protein intake per day.",
+      description: AppLocale.l10n.calcProteinDescription,
     );
 
     await repository.saveResult(result);

@@ -1,10 +1,14 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'dart:async';
 
+import 'package:fitness_app/core/error/failures.dart';
 import 'package:fitness_app/features/workout/domain/entities/workout_history_entity.dart';
-import 'package:fitness_app/features/workout/domain/usecases/get_workout_history.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fitness_app/features/workout/domain/usecases/save_workout_history.dart';
 import 'package:fitness_app/features/workout/domain/usecases/get_exercises.dart';
+import 'package:fitness_app/features/workout/domain/usecases/get_workout_history.dart';
+import 'package:fitness_app/features/workout/domain/usecases/save_workout_history.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'workout_event.dart';
 import 'workout_state.dart';
 
@@ -15,6 +19,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
 
   final GetWorkoutHistory getWorkoutHistory;
 
+  final AppAnalytics analytics;
   StreamSubscription? _historySubscription;
 
   WorkoutBloc({
@@ -23,6 +28,7 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
     required this.saveWorkoutHistory,
 
     required this.getWorkoutHistory,
+    this.analytics = const NoopAnalytics(),
   }) : super(WorkoutState.initial()) {
     on<LoadExercisesEvent>(_onLoadExercises);
 
@@ -33,6 +39,11 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
     on<SaveWorkoutHistoryEvent>(_onSaveWorkoutHistory);
 
     on<WorkoutHistoryUpdated>(_onWorkoutHistoryUpdated);
+
+    on<WorkoutHistoryFailed>(
+      (event, emit) =>
+          emit(state.copyWith(error: AppLocale.l10n.workoutHistoryFailed)),
+    );
   }
 
   /// SEARCH
@@ -77,8 +88,14 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
           completedAt: DateTime.now(),
         ),
       );
+      unawaited(
+        analytics.logWorkoutSaved(
+          bodyPart: event.bodyPart,
+          exerciseCount: event.exercises.length,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(state.copyWith(error: Failure.fromException(e).message));
     }
   }
 
@@ -89,9 +106,10 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
   ) async {
     await _historySubscription?.cancel();
 
-    _historySubscription = getWorkoutHistory().listen((history) {
-      add(WorkoutHistoryUpdated(history));
-    });
+    _historySubscription = getWorkoutHistory().listen(
+      (history) => add(WorkoutHistoryUpdated(history)),
+      onError: (_) => add(const WorkoutHistoryFailed()),
+    );
   }
 
   void _onWorkoutHistoryUpdated(
@@ -134,36 +152,37 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
       );
     }
 
-    try {
-      final page = await getExercises(
-        limit: 20,
-        cursor: event.loadMore ? state.nextCursor : null,
-        bodyPart: state.bodyPart,
-      );
+    final result = await getExercises(
+      limit: 20,
+      cursor: event.loadMore ? state.nextCursor : null,
+      bodyPart: state.bodyPart,
+    );
 
-      final updated = event.loadMore
-          ? [...state.allExercises, ...page.exercises]
-          : page.exercises;
-
-      emit(
+    result.fold(
+      (failure) => emit(
         state.copyWith(
           isLoading: false,
           isLoadingMore: false,
-          exercises: updated,
-          allExercises: updated,
-          nextCursor: page.nextCursor,
-          hasReachedMax: !page.hasMore,
+          error: failure.message,
         ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          isLoadingMore: false,
-          error: 'Failed to load exercises',
-        ),
-      );
-    }
+      ),
+      (page) {
+        final updated = event.loadMore
+            ? [...state.allExercises, ...page.exercises]
+            : page.exercises;
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            isLoadingMore: false,
+            exercises: updated,
+            allExercises: updated,
+            nextCursor: page.nextCursor,
+            hasReachedMax: !page.hasMore,
+          ),
+        );
+      },
+    );
   }
 
   @override

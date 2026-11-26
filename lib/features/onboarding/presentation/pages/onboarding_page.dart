@@ -1,3 +1,6 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
 import 'package:flutter/material.dart';
@@ -20,29 +23,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int currentPage = 0;
 
   final List<Map<String, String>> items = [
-    {
-      "title": "Track Workouts",
-
-      "description": "Monitor your daily fitness journey.",
-
-      "image": "assets/lotties/self_work_out.json",
-    },
-
-    {
-      "title": "Healthy Nutrition",
-
-      "description": "Plan meals and calories smartly.",
-
-      "image": "assets/lotties/nutrition.json",
-    },
-
-    {
-      "title": "Stay Consistent",
-
-      "description": "Build habits and reach your goals.",
-
-      "image": "assets/lotties/consistent.json",
-    },
+    {"image": "assets/lotties/self_work_out.json"},
+    {"image": "assets/lotties/nutrition.json"},
+    {"image": "assets/lotties/consistent.json"},
   ];
 
   @override
@@ -65,11 +48,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 end: Alignment.bottomRight,
 
                 colors: [
-                  Color(0xFF050505),
+                  AppColors.background,
 
-                  Color(0xFF09111F),
+                  AppColors.surfaceNavy,
 
-                  Color(0xFF050505),
+                  AppColors.background,
                 ],
               ),
             ),
@@ -105,8 +88,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                               decoration: BoxDecoration(
                                 color: isActive
-                                    ? const Color(0xFF00E5FF)
-                                    : Colors.white.withOpacity(0.15),
+                                    ? AppColors.primary
+                                    : Colors.white.withValues(alpha: 0.15),
 
                                 borderRadius: BorderRadius.circular(30.r),
                               ),
@@ -117,11 +100,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         /// SKIP
                         TextButton(
                           onPressed: () {
-                            context.go('/login');
+                            context.go(Routes.login);
                           },
 
                           child: Text(
-                            "Skip",
+                            context.l10n.commonSkip,
 
                             style: TextStyle(
                               color: Colors.white,
@@ -149,8 +132,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       itemCount: items.length,
 
-                      itemBuilder: (_, index) {
+                      itemBuilder: (context, index) {
                         final item = items[index];
+                        final l10n = context.l10n;
+                        final (title, description) = switch (index) {
+                          0 => (l10n.onbTrackTitle, l10n.onbTrackBody),
+                          1 => (l10n.onbNutritionTitle, l10n.onbNutritionBody),
+                          _ => (
+                            l10n.onbConsistentTitle,
+                            l10n.onbConsistentBody,
+                          ),
+                        };
 
                         return AnimatedSwitcher(
                           duration: const Duration(milliseconds: 500),
@@ -171,9 +163,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   decoration: BoxDecoration(
                                     gradient: RadialGradient(
                                       colors: [
-                                        const Color(
-                                          0xFF00E5FF,
-                                        ).withOpacity(0.15),
+                                        AppColors.primary.withValues(
+                                          alpha: 0.15,
+                                        ),
 
                                         Colors.transparent,
                                       ],
@@ -191,7 +183,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                                 /// TITLE
                                 Text(
-                                  item['title'] ?? '',
+                                  title,
 
                                   textAlign: TextAlign.center,
 
@@ -210,12 +202,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                                 /// DESCRIPTION
                                 Text(
-                                  item['description'] ?? '',
+                                  description,
 
                                   textAlign: TextAlign.center,
 
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.65),
+                                    color: Colors.white.withValues(alpha: 0.65),
 
                                     fontSize: 15.sp,
 
@@ -241,11 +233,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00E5FF),
+                          backgroundColor: AppColors.primary,
 
                           elevation: 12,
 
-                          shadowColor: const Color(0xFF00E5FF).withOpacity(0.4),
+                          shadowColor: AppColors.primary.withValues(alpha: 0.4),
 
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(22.r),
@@ -255,7 +247,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onPressed: () {
                           /// LAST PAGE
                           if (currentPage == items.length - 1) {
-                            context.go("/login");
+                            context.go(Routes.login);
 
                             return;
                           }
@@ -270,8 +262,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         child: Text(
                           currentPage == items.length - 1
-                              ? "Get Started"
-                              : "Continue",
+                              ? context.l10n.onbGetStarted
+                              : context.l10n.commonContinue,
 
                           style: TextStyle(
                             color: Colors.black,

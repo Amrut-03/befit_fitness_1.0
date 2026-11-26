@@ -21,6 +21,11 @@ class LoadExercisesEvent extends WorkoutEvent {
 
 class LoadWorkoutHistory extends WorkoutEvent {}
 
+/// The workout history stream failed (e.g. permission denied after logout).
+class WorkoutHistoryFailed extends WorkoutEvent {
+  const WorkoutHistoryFailed();
+}
+
 class WorkoutHistoryUpdated extends WorkoutEvent {
   final List<WorkoutHistoryEntity> history;
 

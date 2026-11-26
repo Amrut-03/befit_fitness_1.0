@@ -1,14 +1,21 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
+import 'package:fitness_app/features/streak/presentation/bloc/streak_bloc.dart';
+import 'package:fitness_app/features/streak/presentation/bloc/streak_event.dart';
 import 'package:fitness_app/features/workout/domain/entities/exercise_entity.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_bloc.dart';
 import 'package:fitness_app/features/workout/presentation/bloc/workout_event.dart';
+import 'package:fitness_app/features/workout/presentation/cubit/workout_session_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
   showModalBottomSheet(
     context: context,
-    backgroundColor: const Color(0xFF111111),
+    backgroundColor: AppColors.surface,
     isScrollControlled: true,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
@@ -44,11 +51,11 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                       height: 220.h,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) {
+                      errorBuilder: (_, _, _) {
                         return Container(
                           height: 220.h,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
+                            color: Colors.white.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(22.r),
                           ),
                           child: Icon(
@@ -81,7 +88,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                 ),
                 SizedBox(height: 28.h),
                 Text(
-                  "Instructions",
+                  context.l10n.workoutInstructions,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.sp,
@@ -91,7 +98,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                 SizedBox(height: 16.h),
                 if (exercise.instructions.isEmpty)
                   Text(
-                    "No instructions available",
+                    context.l10n.workoutNoInstructions,
                     style: TextStyle(color: Colors.white60, fontSize: 14.sp),
                   ),
 
@@ -105,7 +112,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                           width: 28.w,
                           height: 28.w,
                           decoration: const BoxDecoration(
-                            color: Color(0xFF00E5FF),
+                            color: AppColors.primary,
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -136,6 +143,10 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                 }),
                 SizedBox(height: 30.h),
 
+                _AddToSessionAction(exercise: exercise),
+
+                SizedBox(height: 12.h),
+
                 SizedBox(
                   width: double.infinity,
 
@@ -143,11 +154,11 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
 
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00E5FF),
+                      backgroundColor: AppColors.primary,
 
                       elevation: 12,
 
-                      shadowColor: const Color(0xFF00E5FF).withOpacity(0.4),
+                      shadowColor: AppColors.primary.withValues(alpha: 0.4),
 
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.r),
@@ -165,11 +176,14 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                         ),
                       );
 
+                      // A saved workout counts as today's activity.
+                      context.read<StreakBloc>().add(UpdateStreakEvent());
+
                       Navigator.pop(context);
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          backgroundColor: const Color(0xFF00E5FF),
+                          backgroundColor: AppColors.primary,
 
                           behavior: SnackBarBehavior.floating,
 
@@ -178,7 +192,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                           ),
 
                           content: Text(
-                            "Workout Completed 🔥",
+                            context.l10n.workoutCompletedToast,
 
                             style: TextStyle(
                               color: Colors.black,
@@ -207,7 +221,7 @@ void showExerciseDetails(ExerciseEntity exercise, BuildContext context) {
                         SizedBox(width: 10.w),
 
                         Text(
-                          "Complete Workout",
+                          context.l10n.workoutLogAsDone,
 
                           style: TextStyle(
                             color: Colors.black,
@@ -236,13 +250,13 @@ Widget _infoChip(String text, IconData icon) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
     decoration: BoxDecoration(
-      color: const Color(0xFF00E5FF).withOpacity(0.12),
+      color: AppColors.primary.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(30.r),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: const Color(0xFF00E5FF), size: 18.sp),
+        Icon(icon, color: AppColors.primary, size: 18.sp),
         SizedBox(width: 8.w),
         Text(
           text,
@@ -255,4 +269,45 @@ Widget _infoChip(String text, IconData icon) {
       ],
     ),
   );
+}
+
+/// Adds the exercise to the workout session and opens it.
+class _AddToSessionAction extends StatelessWidget {
+  const _AddToSessionAction({required this.exercise});
+
+  final ExerciseEntity exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final added = context.select(
+      (WorkoutSessionCubit c) => c.state.contains(exercise.id),
+    );
+    return SizedBox(
+      width: double.infinity,
+      height: 52.h,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          side: const BorderSide(color: AppColors.primary),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+        ),
+        onPressed: () async {
+          if (!added) {
+            await context.read<WorkoutSessionCubit>().addExercise(exercise);
+          }
+          if (!context.mounted) return;
+          // The sheet's context is gone once it closes.
+          final router = GoRouter.of(context);
+          Navigator.pop(context);
+          await router.push(Routes.workoutSession);
+        },
+        icon: Icon(added ? Icons.play_arrow_rounded : Icons.add),
+        label: Text(
+          added ? context.l10n.workoutOpen : context.l10n.workoutAddAndStart,
+        ),
+      ),
+    );
+  }
 }

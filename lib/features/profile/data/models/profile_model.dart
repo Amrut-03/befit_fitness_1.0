@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/utils/json_read.dart';
 import '../../domain/entities/profile_entity.dart';
 
 class ProfileModel extends ProfileEntity {
@@ -37,24 +38,24 @@ class ProfileModel extends ProfileEntity {
 
       goal: json['goal'] ?? 'Fitness Goal',
 
-      streak: json['streak'] ?? 0,
+      streak: asInt(json['streak']),
 
-      weight: (json['weight'] ?? 0).toDouble(),
+      weight: asDouble(json['weight']),
 
-      height: (json['height'] ?? 0).toDouble(),
+      height: asDouble(json['height']),
 
-      age: (json['age'] ?? 0).toDouble(),
+      age: asDouble(json['age']),
 
       gender: json['gender'] ?? 'Male',
 
       photoUrl: json['photoUrl'],
 
-      dailyStepGoal: json['dailyStepGoal'] ?? 0,
+      dailyStepGoal: asInt(json['dailyStepGoal']),
 
-      dailyCalorieGoal: json['dailyCalorieGoal'] ?? 0,
-      proteinGoal: json['proteinGoal'] ?? 0,
-      carbsGoal: json['carbsGoal'] ?? 0,
-      fatGoal: json['fatGoal'] ?? 0,
+      dailyCalorieGoal: asInt(json['dailyCalorieGoal']),
+      proteinGoal: asInt(json['proteinGoal']),
+      carbsGoal: asInt(json['carbsGoal']),
+      fatGoal: asInt(json['fatGoal']),
       activityLevel: json['activityLevel'] ?? 'Sedentary',
     );
   }

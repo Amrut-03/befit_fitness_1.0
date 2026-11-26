@@ -1,0 +1,4 @@
+tags:
+  # Pixel snapshots; regenerate with `flutter test --update-goldens --tags golden`.
+  # Rendering differs slightly between macOS and Linux, so CI skips them.
+  golden:

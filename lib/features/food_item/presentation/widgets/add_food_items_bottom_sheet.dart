@@ -1,3 +1,6 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -34,7 +37,7 @@ class _AddFoodItemsSheet extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             Text(
-              "Add Food Item",
+              context.l10n.foodAddTitle,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22.sp,
@@ -43,29 +46,29 @@ class _AddFoodItemsSheet extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              "Choose how you want to add food",
+              context.l10n.foodAddHow,
               style: TextStyle(color: Colors.white54, fontSize: 13.sp),
             ),
             SizedBox(height: 28.h),
             _OptionCard(
               icon: Icons.qr_code_scanner_rounded,
-              title: "Scan Barcode",
-              subtitle: "Quickly scan packaged food items",
-              color: const Color(0xFF00E5FF),
+              title: context.l10n.foodScanBarcode,
+              subtitle: context.l10n.foodScanBarcodeHint,
+              color: AppColors.primary,
               onTap: () {
                 Navigator.pop(context);
-                context.push('/barcode-food-entry');
+                context.push(Routes.barcodeScanner);
               },
             ),
             SizedBox(height: 16.h),
             _OptionCard(
               icon: Icons.edit_note_rounded,
-              title: "Add Manually",
-              subtitle: "Create your own custom food item",
+              title: context.l10n.foodAddManually,
+              subtitle: context.l10n.foodAddManuallyHint,
               color: Colors.greenAccent,
               onTap: () {
                 Navigator.pop(context);
-                context.push('/manual-food-entry');
+                context.push(Routes.manualFoodEntry);
               },
             ),
             SizedBox(height: 12.h),
@@ -101,16 +104,16 @@ class _OptionCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.all(18.w),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: color.withOpacity(0.5)),
+            border: Border.all(color: color.withValues(alpha: 0.5)),
           ),
           child: Row(
             children: [
               Container(
                 padding: EdgeInsets.all(14.w),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 26.sp),

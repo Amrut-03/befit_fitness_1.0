@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/features/diet/domain/entities/meal_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +57,7 @@ class FoodEntryCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,12 +66,15 @@ class FoodEntryCard extends StatelessWidget {
                 children: [
                   ReorderableDragStartListener(
                     index: index,
-                    child: Icon(Icons.drag_handle, color: Colors.cyanAccent),
+                    child: const Icon(
+                      Icons.drag_handle,
+                      color: Colors.cyanAccent,
+                    ),
                   ),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
-                      entry.name,
+                      mealLabel(context.l10n, entry.name),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -78,6 +83,7 @@ class FoodEntryCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
+                    tooltip: context.l10n.commonDelete,
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: onDelete,
                   ),
@@ -95,13 +101,16 @@ class FoodEntryCard extends StatelessWidget {
                           (e) => PopupMenuItem(
                             value: e,
                             child: Text(
-                              e,
+                              mealLabel(context.l10n, e),
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         )
                         .toList(),
-                    child: _chip(entry.name, Colors.green),
+                    child: _chip(
+                      mealLabel(context.l10n, entry.name),
+                      Colors.green,
+                    ),
                   ),
                   // PopupMenuButton<String>(
                   //   onSelected: onAlarmAction,
@@ -130,24 +139,30 @@ class FoodEntryCard extends StatelessWidget {
               SizedBox(height: 12.h),
               Row(
                 children: [
-                  _macro("Cal", entry.calories),
-                  _macro("Carb", entry.carbs),
-                  _macro("Prot", entry.protein),
-                  _macro("Fat", entry.fat),
+                  _macro(context.l10n.macroCalShort, entry.calories),
+                  _macro(context.l10n.macroCarbShort, entry.carbs),
+                  _macro(context.l10n.macroProtShort, entry.protein),
+                  _macro(context.l10n.macroFat, entry.fat),
                 ],
               ),
               SizedBox(height: 12.h),
-              GestureDetector(
-                onTap: onQuantityTap,
-                child: Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.cyanAccent),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Text(
-                    "${entry.quantity.toStringAsFixed(0)} ${entry.unit}",
-                    style: TextStyle(color: Colors.cyanAccent),
+              Semantics(
+                button: true,
+                child: GestureDetector(
+                  onTap: onQuantityTap,
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.cyanAccent),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      "${entry.quantity.toStringAsFixed(0)} "
+                      "${foodUnitLabel(context.l10n, entry.unit)}",
+                      style: const TextStyle(color: Colors.cyanAccent),
+                    ),
                   ),
                 ),
               ),
@@ -162,7 +177,7 @@ class FoodEntryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Text(
@@ -182,7 +197,10 @@ class FoodEntryCard extends StatelessWidget {
           ),
           Text(
             "$value",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

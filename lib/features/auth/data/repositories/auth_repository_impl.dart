@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/features/auth/data/datasources/local/auth_local_datasource.dart';
 import 'package:fitness_app/features/auth/data/datasources/local/user_data_local_datasource.dart';
-import 'package:fitness_app/features/auth/data/datasources/remote/user_data_remote_datasource.dart';
-import 'package:fitness_app/features/auth/domain/exceptions/account_deletion_exception.dart';
-import 'package:flutter/services.dart';
 import 'package:fitness_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
+import 'package:fitness_app/features/auth/data/datasources/remote/user_data_remote_datasource.dart';
 import 'package:fitness_app/features/auth/domain/entities/user_entity.dart';
+import 'package:fitness_app/features/auth/data/models/user_model.dart';
+import 'package:fitness_app/features/auth/domain/exceptions/account_deletion_exception.dart';
+import 'package:fitness_app/features/auth/domain/exceptions/account_link_exception.dart';
 import 'package:fitness_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter/services.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -44,15 +46,53 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserEntity> linkGuestWithGoogle() async {
+    final UserModel user;
+    try {
+      user = await remoteDataSource.linkGuestWithGoogle();
+    } on AccountLinkException {
+      rethrow;
+    } on PlatformException catch (e) {
+      // google_sign_in reports a closed picker as a PlatformException.
+      throw AccountLinkException(
+        e.code == 'sign_in_canceled'
+            ? AccountLinkFailure.cancelled
+            : e.code == 'network_error'
+            ? AccountLinkFailure.network
+            : AccountLinkFailure.unknown,
+        e,
+      );
+    } catch (e) {
+      throw AccountLinkException(AccountLinkFailure.unknown, e);
+    }
+
+    await localDataSource.cacheUser(user);
+
+    // The account is already linked at this point; failing to copy the name
+    // and email onto the profile is not worth failing the upgrade for.
+    try {
+      await userDataRemoteDataSource.saveIdentity(
+        user.uid,
+        name: user.name,
+        email: user.email,
+        photoUrl: user.photoUrl,
+      );
+    } catch (_) {}
+
+    return user;
+  }
+
+  @override
   Future<UserEntity?> getCurrentUser() async {
     final remoteUser = await remoteDataSource.getCurrentUser();
 
     if (remoteUser != null) {
       await localDataSource.cacheUser(remoteUser);
-      return remoteUser;
     }
 
-    return await localDataSource.getCachedUser();
+    // No fallback to the cached user: without a Firebase session the app
+    // must treat the user as signed out.
+    return remoteUser;
   }
 
   @override
@@ -63,6 +103,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signOut() async {
     await remoteDataSource.signOut();
+    // Hive boxes aren't keyed by uid, so clear them or the next user on this
+    // device would see this user's diet, food, profile, etc.
+    await userDataLocalDataSource.clearAll();
     await localDataSource.clearCache();
   }
 

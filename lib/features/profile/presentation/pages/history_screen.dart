@@ -1,3 +1,6 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -10,9 +13,9 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0B0B0B),
+      backgroundColor: AppColors.surfaceDim,
 
-      appBar: const AppHeader(title: "History"),
+      appBar: AppHeader(title: context.l10n.historyTitle),
 
       body: Padding(
         padding: EdgeInsets.all(16.w),
@@ -21,11 +24,11 @@ class HistoryPage extends StatelessWidget {
           children: [
             _HistoryCard(
               icon: Icons.restaurant_menu,
-              title: "Diet History",
-              subtitle: "View completed diet plans",
-              color: const Color(0xFF00E5FF),
+              title: context.l10n.historyDietTitle,
+              subtitle: context.l10n.historyDietSubtitle,
+              color: AppColors.primary,
               onTap: () {
-                context.push('/diet-history');
+                context.push(Routes.dietHistory);
               },
             ),
 
@@ -33,11 +36,11 @@ class HistoryPage extends StatelessWidget {
 
             _HistoryCard(
               icon: Icons.fitness_center,
-              title: "Workout History",
-              subtitle: "View completed workouts",
-              color: const Color(0xFFFF6B35),
+              title: context.l10n.historyWorkoutTitle,
+              subtitle: context.l10n.historyWorkoutSubtitle,
+              color: AppColors.accentOrange,
               onTap: () {
-                context.push('/workout-history');
+                context.push(Routes.workoutHistory);
               },
             ),
           ],
@@ -98,7 +101,7 @@ class _HistoryCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
 
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
               ),
 
               child: Icon(icon, color: color, size: 26.sp),

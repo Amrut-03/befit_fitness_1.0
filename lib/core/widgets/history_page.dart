@@ -1,4 +1,7 @@
+import 'package:intl/intl.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/models/history_item.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -28,7 +31,7 @@ class HistoryListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0B0B0B),
+      backgroundColor: AppColors.surfaceDim,
 
       appBar: AppHeader(title: title),
 
@@ -39,7 +42,7 @@ class HistoryListPage extends StatelessWidget {
 
               itemCount: items.length,
 
-              separatorBuilder: (_, __) => SizedBox(height: 12.h),
+              separatorBuilder: (_, _) => SizedBox(height: 12.h),
 
               itemBuilder: (context, index) {
                 final item = items[index];
@@ -93,8 +96,8 @@ class _HistoryCard extends StatelessWidget {
                 shape: BoxShape.circle,
 
                 color: item.completed
-                    ? Colors.green.withOpacity(0.15)
-                    : Colors.orange.withOpacity(0.15),
+                    ? Colors.green.withValues(alpha: 0.15)
+                    : Colors.orange.withValues(alpha: 0.15),
               ),
 
               child: Icon(
@@ -153,9 +156,9 @@ class _HistoryCard extends StatelessWidget {
                 SizedBox(height: 4.h),
 
                 Text(
-                  "${item.date.day}/${item.date.month}/${item.date.year}",
+                  DateFormat.yMd().format(item.date),
 
-                  style: TextStyle(color: Colors.white38, fontSize: 11.sp),
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 11.sp),
                 ),
               ],
             ),
@@ -183,7 +186,7 @@ class _EmptyState extends StatelessWidget {
           SizedBox(height: 12.h),
 
           Text(
-            "No History Yet",
+            context.l10n.historyEmptyTitle,
 
             style: TextStyle(
               color: Colors.white,
@@ -197,9 +200,9 @@ class _EmptyState extends StatelessWidget {
           SizedBox(height: 6.h),
 
           Text(
-            "Complete workouts or diets to see history",
+            context.l10n.historyEmptyBody,
 
-            style: TextStyle(color: Colors.white54),
+            style: const TextStyle(color: Colors.white54),
           ),
         ],
       ),

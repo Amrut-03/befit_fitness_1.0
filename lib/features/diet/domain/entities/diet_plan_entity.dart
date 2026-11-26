@@ -17,9 +17,7 @@ class DietPlanEntity {
     required this.meals,
 
     this.activeDate,
-  }) : assert(true) {
-    print("CONSTRUCTOR ACTIVE DATE = $activeDate");
-  }
+  });
 
   int get totalMeals => meals.length;
 

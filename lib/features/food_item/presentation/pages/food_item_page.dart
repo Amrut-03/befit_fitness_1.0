@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'package:fitness_app/core/widgets/app_header.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/food_item/presentation/bloc/food_item_bloc.dart';
@@ -21,14 +22,14 @@ class _FoodItemsPageState extends State<FoodItemsPage> {
   void initState() {
     super.initState();
 
-    context.read<FoodItemsBloc>().add(LoadFoodItems());
+    context.read<FoodItemsBloc>().add(const LoadFoodItems());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppHeader(title: "My Food Items"),
+      appBar: AppHeader(title: context.l10n.foodItemsTitle),
       body: BlocBuilder<FoodItemsBloc, FoodItemsState>(
         builder: (context, state) {
           if (state.isLoading) {

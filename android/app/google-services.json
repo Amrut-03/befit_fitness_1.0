@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "475383477382-bpj6lh8591plfgvpphac22ge5umnfktt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.befit_fitness.app",
+            "certificate_hash": "7a6873dce707eadf4b959be97558bd5ad00497f9"
+          }
+        },
+        {
           "client_id": "475383477382-gl82kjrfkp36b29t9jp9t6h6g3cte1mf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

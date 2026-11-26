@@ -1,5 +1,8 @@
+import 'package:fitness_app/core/error/result.dart';
+
 import '../entities/scanned_food_entity.dart';
 
 abstract class FoodScannerRepository {
-  Future<FoodItemEntity?> scanBarcode(String barcode);
+  /// `Ok(null)` means the barcode isn't in Open Food Facts.
+  Future<Result<FoodItemEntity?>> scanBarcode(String barcode);
 }

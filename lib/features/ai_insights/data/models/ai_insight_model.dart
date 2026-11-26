@@ -1,4 +1,4 @@
-import 'package:fitness_app/features/ai_insights/domain/entites/ai_insights_entity.dart';
+import 'package:fitness_app/features/ai_insights/domain/entities/ai_insights_entity.dart';
 
 class AIInsightModel extends AIInsightEntity {
   const AIInsightModel({

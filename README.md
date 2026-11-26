@@ -1,47 +1,55 @@
 # BeFit — Fitness & Nutrition App
 
-A cross-platform Flutter fitness app for tracking workouts, planning meals, monitoring health metrics. Built with **Clean Architecture**, **BLoC** state management, and **Firebase** backend.
+A Flutter fitness app for Android and iOS: workouts, meal plans, health metrics and an AI coach that runs **on the device** (Gemma) with a cloud fallback (Gemini). Built with **Clean Architecture**, **BLoC** state management and a **Firebase** backend.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.11+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
-[![Firebase](https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore%20%7C%20FCM-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
+[![Firebase](https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore%20%7C%20FCM%20%7C%20AI%20Logic-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
 [![BLoC](https://img.shields.io/badge/State%20Management-BLoC-8B5CF6)](https://bloclibrary.dev)
+[![CI](https://github.com/Amrut-03/befit_fitness_1.0/actions/workflows/ci.yml/badge.svg)](https://github.com/Amrut-03/befit_fitness_1.0/actions/workflows/ci.yml)
 
 ---
 
 ## Features
 
+### AI Coach (on-device first)
+- Chat coach that streams answers token by token, grounded in the user's own goals, diet and activity
+- Runs **Gemma 3 1B (int4)** on the device through MediaPipe LLM Inference (`flutter_edge_ai`): no network, no API key
+- Model is downloaded on demand (with progress and cancel) and only offered on devices with enough RAM
+- Falls back to **Gemini via Firebase AI Logic** when the on-device model isn't installed, isn't supported or fails
+- Safety layer: emergency and medical questions (English, Hindi, Marathi) get a fixed safe reply instead of generated text
+- AI insights on the Home dashboard, using the same on-device → cloud strategy
+
 ### Authentication & Onboarding
-- Google Sign-In and guest login via Firebase Auth
+- Google Sign-In and guest login via Firebase Auth, with guest → Google account upgrade
 - Guided onboarding flow (goals, gender, body metrics, activity level)
-- Secure local session storage
+- Account deletion removes all of the user's data
 
 ### Home Dashboard
-- Overall health overview with streak tracking
-- Active diet plan summary
-- Quick actions for core features
+- Health overview with streak tracking, active diet plan summary and quick actions
 - Pull-to-refresh data sync
 
 ### Workouts
-- Browse 1,500+ exercises from the open-source [ExerciseDB API](https://docs.exercisedb.dev) (no API key)
-- Filter workouts by body part with an interactive body selector
-- Exercise details and workout history stored in Firestore
+- Browse 1,500+ exercises from the open-source [ExerciseDB API](https://docs.exercisedb.dev)
+- Filter by muscle with an interactive body diagram ([`flutter_body_part_selector`](https://pub.dev/packages/flutter_body_part_selector), my own package)
+- Workout session mode: sets, rest timer and workout streak
+- Workout history stored in Firestore
 
 ### Diet & Nutrition
-- Create and manage custom diet plans
-- Track daily macros (protein, carbs, fats, calories)
-- Mark meals as completed
-- View diet history
-
-### Food Tracking
+- Create and manage diet plans, track daily macros, mark meals as completed, view history
 - Barcode scanner powered by [Open Food Facts](https://world.openfoodfacts.org)
-- Manual food entry and food library management
-- Local caching with Hive
+- Food library with local caching in Hive
 
-### Health Tools
-- BMI, water intake, protein, and calorie calculators
-- Health metrics charts with `fl_chart`
-- Step tracking with daily calories and move minutes estimation
+### Health
+- **Health Connect** (Android) and **Apple Health** (iOS) integration for steps and activity
+- Water intake tracker with goal-aware reminders
+- BMI, water, protein and calorie calculators
+- Health metric charts with `fl_chart`
+- Weekly progress report with weight trend and macro adherence
+
+### Localization & Accessibility
+- English, Hindi and Marathi with an in-app language picker
+- Text scaling up to the largest system size without overflow, contrast checks and screen-reader labels (verified in widget tests)
 
 ---
 
@@ -50,101 +58,115 @@ A cross-platform Flutter fitness app for tracking workouts, planning meals, moni
 | Category | Technologies |
 |----------|-------------|
 | **Framework** | Flutter, Dart |
-| **State Management** | flutter_bloc, equatable |
-| **Navigation** | go_router |
-| **Backend** | Firebase Auth, Cloud Firestore |
-| **Local Storage** | Hive, flutter_secure_storage |
+| **Architecture** | Clean Architecture, feature-first |
+| **State Management** | flutter_bloc (BLoC + Cubit), equatable |
 | **DI** | get_it |
+| **Navigation** | go_router |
+| **Backend** | Firebase Auth, Cloud Firestore (security rules), FCM, App Check |
+| **AI** | Gemma on-device (flutter_edge_ai + MediaPipe), Gemini via Firebase AI Logic |
+| **Observability** | Firebase Crashlytics, Firebase Analytics |
+| **Local Storage** | Hive, flutter_secure_storage |
+| **Health** | health (Health Connect / HealthKit), pedometer_2 |
 | **UI** | flutter_screenutil, lottie, flutter_animate, fl_chart, flutter_svg |
-| **APIs** | ExerciseDB (open source), Open Food Facts, Gemini via Firebase AI Logic |
+| **APIs** | ExerciseDB (open source), Open Food Facts |
+| **Testing** | flutter_test, bloc_test, mocktail, fake_cloud_firestore, golden tests, Firestore emulator rule tests |
 
 ---
 
 ## Architecture
 
-The project follows **Clean Architecture** with a feature-first folder structure:
+Clean Architecture with a feature-first folder structure:
 
 ```
 lib/
-├── core/                  # Shared config, DI, routes, widgets, services
+├── core/                  # DI, routes, theme, l10n, AI runtime, health, observability, shared widgets
 ├── features/
 │   ├── auth/              # Google & guest authentication
 │   ├── onboarding/        # First-time user setup
 │   ├── home/              # Dashboard
-│   ├── workout/           # Exercises & workout history
+│   ├── ai_coach/          # On-device / cloud AI coach chat
+│   ├── ai_insights/       # AI insights on Home
+│   ├── workout/           # Exercises, sessions & history
+│   ├── streak/            # Workout streak tracking
+│   ├── body_part_selection/
 │   ├── diet/              # Diet plans & macro tracking
 │   ├── food_item/         # Food library management
 │   ├── food_scanner/      # Barcode scanning
-│   ├── health/            # Health data overview
+│   ├── health/            # Health Connect / Apple Health
 │   ├── health_calculator/ # BMI, protein, water, calories
-│   ├── health_metrics/    # Metrics charts
-│   ├── ai_insights/       # Gemini-powered insights
-│   ├── streak/            # Workout streak tracking
-│   ├── profile/           # User profile & settings
+│   ├── health_metrics/    # Metric charts
+│   ├── water_intake/      # Water tracker & reminders
+│   ├── progress_report/   # Weekly report
 │   ├── notifications/     # Local & push notifications
-│   └── body_part_selection/
+│   └── profile/           # Profile, language & settings
 └── main.dart
 ```
 
-Each feature is organized into:
+Each feature is split into:
 
 - `data/` — models, datasources, repository implementations
-- `domain/` — entities, repositories (interfaces), use cases
-- `presentation/` — BLoC, pages, widgets
+- `domain/` — entities, repository interfaces, use cases
+- `presentation/` — BLoC/Cubit, pages, widgets
+
+### On-device AI design
+
+- `OnDeviceLlm` (domain-facing interface) is implemented by `GemmaOnDeviceLlm`; the coach repository tries it first and falls back to Gemini.
+- MediaPipe instead of LiteRT-LM because LiteRT-LM needs Android minSdk 30 and BeFit supports API 29.
+- The engine initialises lazily, so app start-up pays nothing until AI is used.
+- Generation is serialised (one session at a time) so the coach and Home insights never overlap.
+- Android loads the model on the GPU and retries on CPU; iOS uses CPU, since GPU loading exceeds the iOS memory limit.
+
+---
+
+## Quality
+
+- **Tests:** unit, BLoC, widget, golden and accessibility tests (`flutter test`), plus Firestore security-rule tests against the emulator (`firestore_tests/`)
+- **CI:** GitHub Actions runs format check, `flutter analyze --fatal-infos`, tests with coverage, a debug APK build and the rules tests on every PR
+- **Release:** obfuscated builds with Dart symbols kept for Crashlytics (`tool/build_release.sh`, see `docs/RELEASE.md`)
+- **Security:** no API keys in the app binary; AI goes through Firebase AI Logic protected by App Check
 
 ---
 
 ## Prerequisites
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) `^3.11.3`
-- [Dart SDK](https://dart.dev/get-sdk) `^3.11.3`
-- Android Studio / VS Code with Flutter extensions
+- Android Studio / Xcode
 - A [Firebase](https://console.firebase.google.com/) project
-- No third-party API keys are needed. AI insights go through Firebase AI Logic, and exercises come from the free ExerciseDB API.
+- No third-party API keys are needed.
 
 ---
 
 ## Getting Started
 
-### 1. Clone the repository
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/Amrut-03/befit_fitness_1.0.git
 cd befit_fitness_1.0
-```
-
-### 2. Install dependencies
-
-```bash
 flutter pub get
 ```
 
-### 3. Set up Firebase
+### 2. Set up Firebase
 
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+1. Create a Firebase project
 2. Enable **Authentication** (Google Sign-In provider)
-3. Create a **Cloud Firestore** database
-4. Enable **AI Logic**: Firebase Console → AI Logic → Get started → choose **Gemini Developer API** (works on the free Spark plan)
-5. Install the [FlutterFire CLI](https://firebase.flutter.dev/docs/cli/):
+3. Create a **Cloud Firestore** database and deploy `firestore.rules`
+4. Enable **AI Logic** → **Gemini Developer API** (works on the free Spark plan)
+5. Run `flutterfire configure` to generate `lib/firebase_options.dart` and the platform config files
 
-```bash
-dart pub global activate flutterfire_cli
-flutterfire configure
-```
-
-This generates `lib/firebase_options.dart` and platform config files (`google-services.json`, etc.).
-
-### 4. Generate Hive adapters (if needed)
-
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
-
-### 5. Run the app
+### 3. Run
 
 ```bash
 flutter run
 ```
+
+To enable the on-device coach, upload a Gemma `.task` model and pass its URL:
+
+```bash
+flutter run --dart-define=GEMMA_MODEL_URL=https://.../gemma3-1b-it-int4.task
+```
+
+Without it the coach uses Gemini in the cloud.
 
 ---
 
@@ -152,21 +174,8 @@ flutter run
 
 | Platform | Status |
 |----------|--------|
-| Android | Supported |
+| Android | Supported (API 29+) |
 | iOS | Supported |
-| Windows | Supported |
-| macOS | Supported |
-| Linux | Supported |
-| Web | Not configured |
-
----
-
-## Environment Notes
-
-- **Android package**: `com.befit_fitness.app`
-- **Design size**: 375 × 812 (iPhone X baseline via `flutter_screenutil`)
-- **Minimum Android SDK**: Configured in `android/app/build.gradle.kts`
-- Camera permission is required for the barcode scanner feature
 
 ---
 
@@ -174,47 +183,13 @@ flutter run
 
 | Command | Description |
 |---------|-------------|
-| `flutter pub get` | Install dependencies |
-| `flutter run` | Run on connected device/emulator |
-| `flutter build apk` | Build Android APK |
-| `flutter build appbundle` | Build Android App Bundle |
-| `flutter analyze` | Run static analysis |
-| `dart run build_runner build` | Generate Hive type adapters |
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Commit your changes (`git commit -m 'Add my feature'`)
-4. Push to the branch (`git push origin feature/my-feature`)
-5. Open a Pull Request
+| `flutter run` | Run on a connected device/emulator |
+| `flutter test` | Run the test suite |
+| `flutter analyze` | Static analysis |
+| `tool/build_release.sh` | Release AAB + per-ABI APKs, obfuscated |
 
 ---
 
 ## Author
 
-**Amrut** — [GitHub](https://github.com/Amrut-03)
-
----
-
-## Acknowledgements
-
-- [ExerciseDB](https://docs.exercisedb.dev) (open source) for workout data
-- [Open Food Facts](https://world.openfoodfacts.org) for nutrition data
-
-## App Screenshots
-
-<table>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/08d9246e-d0d7-4f35-9345-50c4a37db609" width="250"/></td>
-    <td><img src="https://github.com/user-attachments/assets/24b94609-531f-4b97-b1e1-65a7de154515" width="250"/></td>
-    <td><img src="https://github.com/user-attachments/assets/8208a1eb-d1d7-40c0-8eb9-94d500263dc5" width="250"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/40417eb1-6544-4bc8-b99f-f5e0507fe470" width="250"/></td>
-    <td><img src="https://github.com/user-attachments/assets/13e03828-7655-4e8d-9ae6-f09c0c29b9ff" width="250"/></td>
-    <td><img src="https://github.com/user-attachments/assets/f615861a-171c-40fe-8fc6-e97943e48946" width="250"/></td>
-  </tr>
-</table>
+**Amrut Khochikar** — [GitHub](https://github.com/Amrut-03) · [LinkedIn](https://www.linkedin.com/in/amrut-khochikar/)

@@ -7,11 +7,9 @@ import 'package:fitness_app/features/auth/data/repositories/auth_repository_impl
 import 'package:fitness_app/features/auth/domain/entities/user_entity.dart';
 import 'package:fitness_app/features/auth/domain/exceptions/account_deletion_exception.dart';
 import 'package:fitness_app/features/auth/domain/usecases/delete_account.dart';
-import 'package:fitness_app/features/auth/domain/usecases/get_current_user.dart';
 import 'package:fitness_app/features/auth/domain/usecases/sign_in_as_guest.dart';
 import 'package:fitness_app/features/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:fitness_app/features/auth/domain/usecases/sign_out.dart';
-import 'package:fitness_app/features/auth/domain/usecases/watch_auth_state.dart';
 import 'package:fitness_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,16 +80,19 @@ void main() {
   );
 
   group('AuthRepositoryImpl.deleteAccount', () {
-    test('reauth → delete data → delete user → clear local, in order', () async {
-      await repo.deleteAccount();
-      expect(calls, [
-        'reauth',
-        'deleteData:alice',
-        'deleteUser',
-        'clearBoxes',
-        'clearCache',
-      ]);
-    });
+    test(
+      'reauth → delete data → delete user → clear local, in order',
+      () async {
+        await repo.deleteAccount();
+        expect(calls, [
+          'reauth',
+          'deleteData:alice',
+          'deleteUser',
+          'clearBoxes',
+          'clearCache',
+        ]);
+      },
+    );
 
     test('not signed in: nothing happens', () async {
       remote.uid = null;
@@ -142,24 +143,25 @@ void main() {
       expect(calls, ['reauth', 'deleteData:alice']);
     });
 
-    test('requires-recent-login on user.delete is surfaced, local kept', () async {
-      remote.deleteUserError = FirebaseAuthException(
-        code: 'requires-recent-login',
-      );
-      await expectLater(
-        repo.deleteAccount(),
-        failsWith(AccountDeletionFailure.requiresRecentLogin),
-      );
-      expect(calls, isNot(contains('clearBoxes')));
-    });
+    test(
+      'requires-recent-login on user.delete is surfaced, local kept',
+      () async {
+        remote.deleteUserError = FirebaseAuthException(
+          code: 'requires-recent-login',
+        );
+        await expectLater(
+          repo.deleteAccount(),
+          failsWith(AccountDeletionFailure.requiresRecentLogin),
+        );
+        expect(calls, isNot(contains('clearBoxes')));
+      },
+    );
   });
 
   group('AuthBloc AuthDeleteRequested', () {
     AuthBloc buildBloc() => AuthBloc(
       signInWithGoogle: SignInWithGoogle(repo),
       signInAsGuest: SignInAsGuest(repo),
-      getCurrentUser: GetCurrentUser(repo),
-      watchAuthState: WatchAuthState(repo),
       signOut: SignOut(repo),
       deleteAccount: DeleteAccount(repo),
     );
@@ -177,27 +179,30 @@ void main() {
       expect(states, [const AuthDeleting(), const AuthAccountDeleted()]);
     });
 
-    test('failure emits an error message, then restores authenticated', () async {
-      remote.reauthError = const AccountDeletionException(
-        AccountDeletionFailure.network,
-      );
-      const user = UserEntity(uid: 'alice', isGuest: false);
-      final bloc = buildBloc()..emit(const AuthAuthenticated(user));
-      final states = <AuthState>[];
-      final sub = bloc.stream.listen(states.add);
+    test(
+      'failure emits an error message, then restores authenticated',
+      () async {
+        remote.reauthError = const AccountDeletionException(
+          AccountDeletionFailure.network,
+        );
+        const user = UserEntity(uid: 'alice', isGuest: false);
+        final bloc = buildBloc()..emit(const AuthAuthenticated(user));
+        final states = <AuthState>[];
+        final sub = bloc.stream.listen(states.add);
 
-      bloc.add(const AuthDeleteRequested());
-      await Future<void>.delayed(Duration.zero);
-      await bloc.close();
-      await sub.cancel();
+        bloc.add(const AuthDeleteRequested());
+        await Future<void>.delayed(Duration.zero);
+        await bloc.close();
+        await sub.cancel();
 
-      expect(states, [
-        const AuthDeleting(),
-        AuthError(
-          AuthBloc.deletionErrorMessage(AccountDeletionFailure.network),
-        ),
-        const AuthAuthenticated(user),
-      ]);
-    });
+        expect(states, [
+          const AuthDeleting(),
+          AuthError(
+            AuthBloc.deletionErrorMessage(AccountDeletionFailure.network),
+          ),
+          const AuthAuthenticated(user),
+        ]);
+      },
+    );
   });
 }

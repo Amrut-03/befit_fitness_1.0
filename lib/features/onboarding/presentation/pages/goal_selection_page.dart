@@ -1,14 +1,14 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_event.dart';
 import 'package:fitness_app/features/onboarding/presentation/bloc/onboarding_state.dart';
 import 'package:fitness_app/features/onboarding/presentation/pages/onboarding_option_card.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:go_router/go_router.dart';
 
 class GoalSelectionPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class GoalSelectionPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF050505),
+      backgroundColor: AppColors.background,
 
       body: Container(
         decoration: const BoxDecoration(
@@ -36,7 +36,11 @@ class GoalSelectionPage extends StatelessWidget {
 
             end: Alignment.bottomRight,
 
-            colors: [Color(0xFF050505), Color(0xFF09111F), Color(0xFF050505)],
+            colors: [
+              AppColors.background,
+              AppColors.surfaceNavy,
+              AppColors.background,
+            ],
           ),
         ),
 
@@ -59,7 +63,7 @@ class GoalSelectionPage extends StatelessWidget {
 
                       /// TITLE
                       Text(
-                        "What's Your Goal?",
+                        context.l10n.onbGoalTitle,
 
                         textAlign: TextAlign.center,
 
@@ -76,12 +80,12 @@ class GoalSelectionPage extends StatelessWidget {
 
                       /// SUBTITLE
                       Text(
-                        "Personalize your fitness experience",
+                        context.l10n.onbGoalSubtitle,
 
                         textAlign: TextAlign.center,
 
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
 
                           fontSize: 15.sp,
                         ),
@@ -96,7 +100,10 @@ class GoalSelectionPage extends StatelessWidget {
                               state.selectedGoal == goal["title"];
 
                           return OnboardingOptionCard(
-                            title: goal["title"].toString(),
+                            title: goalLabel(
+                              context.l10n,
+                              goal["title"].toString(),
+                            ),
 
                             emoji: goal["emoji"].toString(),
 
@@ -122,20 +129,20 @@ class GoalSelectionPage extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: state.selectedGoal != null
-                                ? const Color(0xFF00E5FF)
-                                : Colors.grey.withOpacity(0.25),
+                                ? AppColors.primary
+                                : Colors.grey.withValues(alpha: 0.25),
 
-                            disabledBackgroundColor: Colors.grey.withOpacity(
-                              0.25,
+                            disabledBackgroundColor: Colors.grey.withValues(
+                              alpha: 0.25,
                             ),
 
                             disabledForegroundColor: Colors.white,
 
                             elevation: 12,
 
-                            shadowColor: const Color(
-                              0xFF00E5FF,
-                            ).withOpacity(0.4),
+                            shadowColor: AppColors.primary.withValues(
+                              alpha: 0.4,
+                            ),
 
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(22.r),
@@ -145,11 +152,11 @@ class GoalSelectionPage extends StatelessWidget {
                           onPressed: state.selectedGoal == null
                               ? null
                               : () {
-                                  context.push("/gender-selection");
+                                  context.push(Routes.genderSelection);
                                 },
 
                           child: Text(
-                            "Continue",
+                            context.l10n.commonContinue,
 
                             style: TextStyle(
                               color: state.selectedGoal != null

@@ -1,3 +1,5 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/health_metrics/domain/entities/health_metrics_entity.dart';
 import 'package:fitness_app/features/health_metrics/presentation/bloc/health_metric_bloc.dart';
 import 'package:fitness_app/features/health_metrics/presentation/bloc/health_metric_event.dart';
@@ -22,13 +24,13 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
   String get title {
     switch (widget.type) {
       case MetricType.weight:
-        return "Add Weight";
+        return context.l10n.metricAddWeight;
 
       case MetricType.heartRate:
-        return "Add Heart Rate";
+        return context.l10n.metricAddHeartRate;
 
       case MetricType.sleep:
-        return "Add Sleep";
+        return context.l10n.metricAddSleep;
     }
   }
 
@@ -38,10 +40,10 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
         return "KG";
 
       case MetricType.heartRate:
-        return "BPM";
+        return context.l10n.metricUnitBpm;
 
       case MetricType.sleep:
-        return "Hours";
+        return context.l10n.metricUnitHours;
     }
   }
 
@@ -61,10 +63,10 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
   Color get color {
     switch (widget.type) {
       case MetricType.weight:
-        return const Color(0xFF00E5FF);
+        return AppColors.primary;
 
       case MetricType.heartRate:
-        return const Color(0xFFFF006E);
+        return AppColors.accentPink;
 
       case MetricType.sleep:
         return const Color(0xFF5B8CFF);
@@ -77,7 +79,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
       padding: EdgeInsets.all(20.w),
 
       decoration: BoxDecoration(
-        color: const Color(0xFF111111),
+        color: AppColors.surface,
 
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
@@ -97,7 +99,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
               height: 4.h,
 
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
 
                 borderRadius: BorderRadius.circular(100.r),
               ),
@@ -111,7 +113,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
                   padding: EdgeInsets.all(12.w),
 
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
 
                     shape: BoxShape.circle,
                   ),
@@ -145,9 +147,9 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
               style: const TextStyle(color: Colors.white),
 
               decoration: InputDecoration(
-                hintText: "Enter $unit",
+                hintText: context.l10n.metricEnter(unit),
 
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
+                hintStyle: const TextStyle(color: AppColors.textMuted),
 
                 suffixText: unit,
 
@@ -155,7 +157,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
 
                 filled: true,
 
-                fillColor: Colors.white.withOpacity(0.05),
+                fillColor: Colors.white.withValues(alpha: 0.05),
 
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.r),
@@ -167,46 +169,52 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
 
             SizedBox(height: 16.h),
 
-            InkWell(
-              onTap: () async {
-                final picked = await showDatePicker(
-                  context: context,
+            Semantics(
+              button: true,
+              child: InkWell(
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
 
-                  initialDate: selectedDate,
+                    initialDate: selectedDate,
 
-                  firstDate: DateTime(2020),
+                    firstDate: DateTime(2020),
 
-                  lastDate: DateTime.now(),
-                );
+                    lastDate: DateTime.now(),
+                  );
 
-                if (picked != null) {
-                  setState(() {
-                    selectedDate = picked;
-                  });
-                }
-              },
+                  if (picked != null) {
+                    setState(() {
+                      selectedDate = picked;
+                    });
+                  }
+                },
 
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
 
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
 
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
 
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today, color: Colors.white),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.calendar_today, color: Colors.white),
 
-                    SizedBox(width: 12.w),
+                      SizedBox(width: 12.w),
 
-                    Text(
-                      "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                      Text(
+                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
 
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -252,7 +260,7 @@ class _AddMetricBottomSheetState extends State<AddMetricBottomSheet> {
                 },
 
                 child: Text(
-                  "Save",
+                  context.l10n.commonSave,
 
                   style: TextStyle(
                     fontSize: 16.sp,

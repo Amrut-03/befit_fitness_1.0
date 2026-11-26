@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BeFit Privacy Policy</title>
+  <style>
+    :root { --bg: #ffffff; --fg: #1d1d1f; --muted: #5f6368; --rule: #e3e3e3; --accent: #2e7d32; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #121212; --fg: #ececec; --muted: #a0a0a0; --rule: #2c2c2c; --accent: #81c784; }
+    }
+    body { margin: 0; background: var(--bg); color: var(--fg);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.2rem; }
+    h2 { font-size: 1.2rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+    .meta { color: var(--muted); margin-top: 0; }
+    a { color: var(--accent); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--rule); }
+    .table-wrap { overflow-x: auto; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>BeFit Privacy Policy</h1>
+  <p class="meta">Effective 10 November 2026</p>
+
+  <p>This policy explains what the BeFit app ("BeFit", "we") collects, why, who
+  processes it, how long it is kept, and how you can delete it. It applies to
+  the BeFit apps for Android and iOS.</p>
+
+  <h2>1. Data you give us</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Data</th><th>Why</th><th>Where it's stored</th></tr>
+    <tr><td>Name and email address (from Google Sign-In; not collected for guests)</td>
+        <td>Create and manage your account</td><td>Firebase Authentication, Cloud Firestore</td></tr>
+    <tr><td>Profile: weight, height, age, gender, fitness goals</td>
+        <td>Personalise plans, goals and insights</td><td>Cloud Firestore and on your device</td></tr>
+    <tr><td>Workouts, meals, diet plans and metrics you enter manually</td>
+        <td>History, progress tracking and charts</td><td>Cloud Firestore and on your device</td></tr>
+  </table>
+  </div>
+
+  <h2>2. Health Connect and Apple Health</h2>
+  <p>If you choose to connect, BeFit asks for <strong>read-only</strong> access
+  to the following data in Health Connect (Android) or Apple Health (iOS):</p>
+  <ul>
+    <li><strong>Steps</strong> and <strong>active calories burned</strong>: shown in the Home activity rings and used to track your daily goals.</li>
+    <li><strong>Heart rate</strong>, <strong>sleep</strong> and <strong>weight</strong>: shown in the 7-day and 30-day charts.</li>
+  </ul>
+  <p>BeFit never writes to, changes or deletes anything in Health Connect or
+  Apple Health.</p>
+  <p>These readings are read live and shown on your device. <strong>BeFit does
+  not store Health Connect or Apple Health readings on its servers</strong>,
+  does not save them to its on-device database, and does not use them for
+  advertising. The only exception is the daily insights feature described in
+  section 4.</p>
+  <p>You can withdraw access at any time in Health Connect's settings (Android)
+  or in Settings → Health → Data Access &amp; Devices → BeFit (iOS). If you
+  don't connect, or you deny access, BeFit falls back to your phone's
+  pedometer to count steps.</p>
+  <p>BeFit's use of data received from Health Connect follows the
+  <a href="https://support.google.com/googleplay/android-developer/answer/12991134">Health Connect Permissions policy</a>,
+  including its Limited Use requirements. Data from Apple Health is not
+  shared with third parties for advertising or data-brokering purposes, and
+  is not used for anything other than the health and fitness features
+  described here.</p>
+
+  <h2>3. Data collected automatically</h2>
+  <ul>
+    <li><strong>App interactions</strong> (for example: signed in, workout saved, meal completed, barcode scanned), through Firebase Analytics, to understand how the app is used.</li>
+    <li><strong>Crash logs and diagnostics</strong>, through Firebase Crashlytics, in release builds only, to fix bugs.</li>
+    <li><strong>Device identifiers</strong>: the Firebase Analytics app-instance ID and a Firebase Cloud Messaging token, for analytics and to send notifications.</li>
+  </ul>
+  <p>The camera is used only to scan barcodes on your device. Progress cards
+  you create are saved on your device and are never uploaded. BeFit does not
+  collect your location.</p>
+
+  <h2>4. Daily insights (Google Gemini)</h2>
+  <p>To generate your daily insights, BeFit sends today's <strong>step
+  count</strong>, <strong>calories burned</strong>, your <strong>workout
+  streak</strong> and your <strong>BMI</strong> to Google's Gemini model
+  through Firebase AI Logic. When Health Connect or Apple Health is
+  connected, the steps and calories come from there. No name, email or
+  account ID is included in this request. Google processes it as our service
+  provider to return the insights, under the
+  <a href="https://firebase.google.com/terms/data-processing-terms">Firebase data processing terms</a>.
+  The generated insight text is cached on your device.</p>
+
+  <h2>5. Service providers</h2>
+  <p>BeFit is built on Google Firebase (Authentication, Cloud Firestore,
+  Analytics, Crashlytics, Cloud Messaging and AI Logic). Google processes data
+  on our behalf only to provide these services. See
+  <a href="https://firebase.google.com/support/privacy">Privacy and Security in Firebase</a>.</p>
+  <p>We do not sell your data and do not share it with anyone for
+  advertising.</p>
+
+  <h2>6. Security</h2>
+  <p>All data is encrypted in transit (HTTPS/TLS). Your data in Cloud
+  Firestore can only be read or written by your own signed-in account.</p>
+
+  <h2>7. Retention and deletion</h2>
+  <p>Account and profile data, workouts, meals and manual metrics are kept
+  until you delete your account. To delete your account, open
+  <strong>Profile → Delete Account</strong> in the app. This permanently
+  deletes your Firestore data and your sign-in account, revokes BeFit's Google
+  access and clears the data stored on your device. Analytics and crash data
+  are kept according to Firebase's standard retention periods.</p>
+  <p>If you no longer have the app, email us at the address below and we
+  will delete your account and data.</p>
+
+  <h2>8. Children</h2>
+  <p>BeFit is not directed at children under 13 and we do not knowingly
+  collect their data.</p>
+
+  <h2>9. Changes</h2>
+  <p>If this policy changes, we will update the date at the top of this page
+  and, for significant changes, tell you in the app.</p>
+
+  <h2>10. Contact</h2>
+  <p>Questions or deletion requests: <a href="mailto:adityakhochikar@gmail.com">adityakhochikar@gmail.com</a></p>
+</main>
+</body>
+</html>

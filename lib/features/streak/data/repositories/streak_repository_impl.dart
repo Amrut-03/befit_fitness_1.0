@@ -1,7 +1,7 @@
 import 'package:fitness_app/features/streak/data/datasources/remote/streak_remote_datasources.dart';
 import 'package:fitness_app/features/streak/domain/entities/streak_entity.dart';
-
-import 'package:fitness_app/features/streak/domain/repository/streak_repository.dart';
+import 'package:fitness_app/features/streak/domain/repositories/streak_repository.dart';
+import 'package:fitness_app/features/streak/domain/utils/streak_calculator.dart';
 
 class StreakRepositoryImpl implements StreakRepository {
   final StreakRemoteDatasource remoteDatasource;
@@ -15,6 +15,14 @@ class StreakRepositoryImpl implements StreakRepository {
 
   @override
   Future<StreakEntity> getStreak() async {
-    return await remoteDatasource.getStreak();
+    final stored = await remoteDatasource.getStreak();
+    return StreakEntity(
+      currentStreak: StreakCalculator.effective(
+        stored: stored.currentStreak,
+        lastActive: stored.lastActiveDate,
+        now: DateTime.now(),
+      ),
+      lastActiveDate: stored.lastActiveDate,
+    );
   }
 }

@@ -1,15 +1,18 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/observability/app_analytics.dart';
 import 'dart:async';
 
 import 'package:fitness_app/features/diet/domain/entities/diet_history_entity.dart';
-import 'package:fitness_app/features/diet/domain/usecases/get_diet_history.dart';
-import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:fitness_app/features/diet/domain/usecases/delete_diet_plan.dart';
+import 'package:fitness_app/features/diet/domain/usecases/get_diet_history.dart';
 import 'package:fitness_app/features/diet/domain/usecases/get_diet_plans.dart';
+import 'package:fitness_app/features/diet/domain/usecases/save_diet_history.dart';
 import 'package:fitness_app/features/diet/domain/usecases/save_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/set_active_diet_plan.dart';
 import 'package:fitness_app/features/diet/domain/usecases/update_meal_status.dart';
+import 'package:fitness_app/features/diet/domain/entities/daily_nutrition.dart';
+import 'package:fitness_app/features/diet/domain/usecases/nutrition_log_usecases.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'diet_event.dart';
 import 'diet_state.dart';
@@ -33,6 +36,12 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
   final SaveDietHistory saveDietHistory;
 
+  final AppAnalytics analytics;
+
+  /// Records today's eaten totals for the weekly report. Optional so the
+  /// bloc works without it (e.g. in tests).
+  final RecordDailyNutrition? recordDailyNutrition;
+
   DietBloc({
     required this.getDietPlans,
 
@@ -47,7 +56,15 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     required this.getDietHistory,
 
     required this.saveDietHistory,
+
+    this.analytics = const NoopAnalytics(),
+    this.recordDailyNutrition,
   }) : super(DietState.initial()) {
+    on<DietStreamFailed>(
+      (event, emit) =>
+          emit(state.copyWith(isLoading: false, error: event.message)),
+    );
+
     on<LoadDietPlans>(_onLoadDietPlans);
 
     on<SaveDietPlanEvent>(_onSavePlan);
@@ -81,18 +98,15 @@ class DietBloc extends Bloc<DietEvent, DietState> {
           add(DietPlansUpdated(plans));
         },
 
-        onError: (e) {
-          emit(
-            state.copyWith(
-              isLoading: false,
-              error: 'Failed to load diet plans',
-            ),
-          );
-        },
+        onError: (_) =>
+            add(DietStreamFailed(AppLocale.l10n.dietLoadPlansFailed)),
       );
     } catch (e) {
       emit(
-        state.copyWith(isLoading: false, error: 'Failed to load diet plans'),
+        state.copyWith(
+          isLoading: false,
+          error: AppLocale.l10n.dietLoadPlansFailed,
+        ),
       );
     }
   }
@@ -108,11 +122,8 @@ class DietBloc extends Bloc<DietEvent, DietState> {
       (history) {
         add(DietHistoryUpdated(history));
       },
-      onError: (e) {
-        emit(
-          state.copyWith(isLoading: false, error: 'Failed to load diet history'),
-        );
-      },
+      onError: (_) =>
+          add(DietStreamFailed(AppLocale.l10n.dietLoadHistoryFailed)),
     );
   }
 
@@ -126,14 +137,6 @@ class DietBloc extends Bloc<DietEvent, DietState> {
 
   /// STREAM UPDATE
   void _onDietPlansUpdated(DietPlansUpdated event, Emitter<DietState> emit) {
-    for (final plan in event.plans) {
-      print(
-        "BLOC PLAN ${plan.name}"
-        " activeDate=${plan.activeDate}"
-        " activeToday=${plan.isActiveToday}",
-      );
-    }
-
     emit(
       state.copyWith(
         isLoading: false,
@@ -154,7 +157,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await saveDietPlan(event.plan);
     } catch (e) {
-      emit(state.copyWith(error: "Failed to save plan"));
+      emit(state.copyWith(error: AppLocale.l10n.dietSaveFailed));
     }
   }
 
@@ -167,7 +170,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await setActiveDietPlan(event.planId);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to update active plan'));
+      emit(state.copyWith(error: AppLocale.l10n.dietActivateFailed));
     }
   }
 
@@ -180,7 +183,7 @@ class DietBloc extends Bloc<DietEvent, DietState> {
     try {
       await deleteDietPlan(event.id);
     } catch (e) {
-      emit(state.copyWith(error: "Failed to delete plan"));
+      emit(state.copyWith(error: AppLocale.l10n.dietDeleteFailed));
     }
   }
 
@@ -196,11 +199,32 @@ class DietBloc extends Bloc<DietEvent, DietState> {
       final planIndex = state.plans.indexWhere((e) => e.id == event.planId);
 
       if (planIndex == -1) {
-        emit(state.copyWith(error: "Failed to update meals"));
+        emit(state.copyWith(error: AppLocale.l10n.dietUpdateMealsFailed));
         return;
       }
 
       final updatedPlan = state.plans[planIndex].copyWith(meals: event.meals);
+
+      // Today's totals across every plan, re-recorded on each tick/un-tick.
+      final record = recordDailyNutrition;
+      if (record != null) {
+        final meals = [
+          for (final p in state.plans)
+            ...(p.id == updatedPlan.id ? updatedPlan.meals : p.meals),
+        ];
+        unawaited(
+          record(
+            DailyNutrition.fromMeals(DateTime.now(), meals),
+          ).catchError((_) {}),
+        );
+      }
+
+      final newlyConsumed =
+          event.meals.where((m) => m.isConsumedToday).length -
+          state.plans[planIndex].meals.where((m) => m.isConsumedToday).length;
+      for (var i = 0; i < newlyConsumed; i++) {
+        unawaited(analytics.logMealCompleted());
+      }
 
       if (updatedPlan.isCompletedToday) {
         final alreadySaved = state.history.any((h) {
@@ -215,10 +239,6 @@ class DietBloc extends Bloc<DietEvent, DietState> {
         });
 
         if (!alreadySaved) {
-          print(
-            "SAVING HISTORY MEALS = ${updatedPlan.meals.map((e) => e.name).toList()}",
-          );
-
           await saveDietHistory(
             DietHistoryEntity(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -249,10 +269,11 @@ class DietBloc extends Bloc<DietEvent, DietState> {
               meals: updatedPlan.meals.map((e) => e.name).toList(),
             ),
           );
+          unawaited(analytics.logDietPlanCompleted());
         }
       }
     } catch (e) {
-      emit(state.copyWith(error: "Failed to update meals"));
+      emit(state.copyWith(error: AppLocale.l10n.dietUpdateMealsFailed));
     }
   }
 

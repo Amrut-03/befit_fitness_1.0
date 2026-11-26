@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/error/result.dart';
 import 'package:fitness_app/features/food_scanner/data/datasources/remote/food_scanner_remote_datasource.dart';
 import 'package:fitness_app/features/food_scanner/domain/entities/scanned_food_entity.dart';
 import 'package:fitness_app/features/food_scanner/domain/repositories/food_scanner_repository.dart';
@@ -8,7 +9,7 @@ class FoodScannerRepositoryImpl implements FoodScannerRepository {
   FoodScannerRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<FoodItemEntity?> scanBarcode(String barcode) {
-    return remoteDataSource.getFoodByBarcode(barcode);
+  Future<Result<FoodItemEntity?>> scanBarcode(String barcode) {
+    return Result.guard(() => remoteDataSource.getFoodByBarcode(barcode));
   }
 }

@@ -1,3 +1,9 @@
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/di/injection_container.dart';
+import 'package:fitness_app/core/routes/routes.dart';
+import 'package:fitness_app/core/session/session_notifier.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/core/widgets/app_loader.dart';
 import 'package:fitness_app/features/onboarding/domain/utils/goal_calculator.dart';
 import 'package:fitness_app/features/onboarding/domain/utils/macros_calculator.dart';
@@ -9,7 +15,6 @@ import 'package:fitness_app/features/onboarding/presentation/widgets/onboarding_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class ActivityLevelPage extends StatelessWidget {
   const ActivityLevelPage({super.key});
@@ -26,7 +31,8 @@ class ActivityLevelPage extends StatelessWidget {
     return BlocListener<OnboardingProfileBloc, OnboardingProfileState>(
       listener: (context, state) {
         if (state.saveSuccess) {
-          context.go('/home');
+          // The router redirects to /home once the session is ready.
+          sl<SessionNotifier>().markProfileCompleted();
         }
 
         if (state.error != null) {
@@ -36,13 +42,17 @@ class ActivityLevelPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF050505),
+        backgroundColor: AppColors.background,
         body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF050505), Color(0xFF09111F), Color(0xFF050505)],
+              colors: [
+                AppColors.background,
+                AppColors.surfaceNavy,
+                AppColors.background,
+              ],
             ),
           ),
           child: SafeArea(
@@ -54,10 +64,10 @@ class ActivityLevelPage extends StatelessWidget {
                   builder: (context, state) {
                     if (state.selectedGoal == null ||
                         state.selectedGender == null) {
-                      return OnboardingStepGuard(
+                      return const OnboardingStepGuard(
                         canProceed: false,
-                        fallbackRoute: '/gender-selection',
-                        child: const SizedBox.shrink(),
+                        fallbackRoute: Routes.genderSelection,
+                        child: SizedBox.shrink(),
                       );
                     }
 
@@ -67,7 +77,7 @@ class ActivityLevelPage extends StatelessWidget {
                           height: MediaQuery.of(context).size.height * 0.12,
                         ),
                         Text(
-                          "Activity Level",
+                          context.l10n.onbActivityTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -77,10 +87,10 @@ class ActivityLevelPage extends StatelessWidget {
                         ),
                         SizedBox(height: 12.h),
                         Text(
-                          "Tell us about your daily activity",
+                          context.l10n.onbActivitySubtitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 15.sp,
                           ),
                         ),
@@ -91,7 +101,10 @@ class ActivityLevelPage extends StatelessWidget {
                                 state.activityLevel == level["title"];
 
                             return OnboardingOptionCard(
-                              title: level["title"].toString(),
+                              title: activityLabel(
+                                context.l10n,
+                                level["title"].toString(),
+                              ),
                               emoji: level["emoji"].toString(),
                               isSelected: isSelected,
                               onTap: () {
@@ -111,10 +124,10 @@ class ActivityLevelPage extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: state.activityLevel != null
-                                  ? const Color(0xFF00E5FF)
-                                  : Colors.grey.withOpacity(0.25),
-                              disabledBackgroundColor: Colors.grey.withOpacity(
-                                0.25,
+                                  ? AppColors.primary
+                                  : Colors.grey.withValues(alpha: 0.25),
+                              disabledBackgroundColor: Colors.grey.withValues(
+                                alpha: 0.25,
                               ),
                               disabledForegroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -172,9 +185,9 @@ class ActivityLevelPage extends StatelessWidget {
                                   },
 
                             child: state.isLoading
-                                ? AppLoader()
+                                ? const AppLoader()
                                 : Text(
-                                    "Continue",
+                                    context.l10n.commonContinue,
                                     style: TextStyle(
                                       color: state.activityLevel != null
                                           ? Colors.black

@@ -1,4 +1,5 @@
-import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_reposittory.dart';
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/features/health_calculator/domain/repositories/health_calculator_repository.dart';
 
 import '../entities/calculator_result_entity.dart';
 
@@ -31,9 +32,9 @@ class CalculateCalories {
     final result = CalculatorResultEntity(
       value: double.parse(maintenance.toStringAsFixed(0)),
 
-      title: "Maintenance Calories",
+      title: AppLocale.l10n.calcCaloriesResult,
 
-      description: "Calories needed to maintain your weight.",
+      description: AppLocale.l10n.calcCaloriesDescription,
     );
 
     await repository.saveResult(result);

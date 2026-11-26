@@ -2,7 +2,7 @@ name: fitness_app
 description: A comprehensive fitness and health tracking application for BeFit app.
 publish_to: 'none'
 
-version: 1.0.0+2
+version: 1.1.0+3
 
 # Environment configuration
 environment:
@@ -14,9 +14,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # Core dependencies
-  cupertino_icons: ^1.0.8
   flutter_bloc: ^9.1.1
   bloc: ^9.2.0
   flutter_screenutil: ^5.9.3
@@ -33,7 +34,7 @@ dependencies:
   flutter_body_part_selector: ^1.2.1
   fl_chart: ^1.2.0
   animated_reorderable_list: ^1.3.0
-  mobile_scanner: ^5.2.3
+  mobile_scanner: ^7.5.0
   permission_handler: ^12.0.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -45,36 +46,57 @@ dependencies:
   flutter_animate: ^4.5.2
   flutter_svg: ^2.3.0
   firebase_messaging: ^16.2.2
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.13
   intl: ^0.20.2
   timezone: ^0.11.0
   flutter_timezone: ^5.1.0
   pedometer_2: ^5.0.4
   firebase_ai: ^4.0.0
   firebase_app_check: ^0.4.9
-
+  firebase_crashlytics: ^5.4.1
+  firebase_analytics: ^12.6.1
+  health: ^13.3.2
+  device_info_plus: ^13.3.0
+  flutter_edge_ai: ^2.6.0
+  flutter_edge_ai_mediapipe: ^1.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   fake_cloud_firestore: ^4.4.0
-
+  mocktail: ^1.0.4
+  bloc_test: ^10.0.0
+  flutter_native_splash: ^2.4.0
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icons/app_icon.png"
+  # The App Store rejects icons with an alpha channel.
+  remove_alpha_ios: true
+
+# Regenerate with `dart run flutter_native_splash:create`. Afterwards keep
+# one image per density as WebP: android12splash and the night variants are
+# identical copies of splash, so the generated PNGs are converted to
+# drawable-*/splash.webp (quality 90) and the v31 styles point at @drawable/splash.
+flutter_native_splash:
+  color: "#050505"
+  image: assets/icons/app_icon.png
+  android_12:
+    color: "#050505"
+    image: assets/icons/app_icon.png
+  fullscreen: false
 
 flutter:
   # Enable Material Design visuals
   uses-material-design: true
+  generate: true
 
   # Assets configuration
   assets:
     - assets/lotties/
-    - assets/icons/
-    - assets/splash_screen/
+    # Only what the app draws. assets/icons/app_icon.png is the source for
+    # flutter_launcher_icons / flutter_native_splash, not a runtime asset.
+    - assets/icons/google.svg
 
   # Custom fonts configuration
   # fonts:

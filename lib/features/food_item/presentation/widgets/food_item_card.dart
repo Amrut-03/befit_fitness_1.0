@@ -1,3 +1,6 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
+import 'package:fitness_app/core/l10n/profile_labels.dart';
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:fitness_app/features/food_item/domain/entities/food_items_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,15 +28,15 @@ class FoodItemCard extends StatelessWidget {
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22.r),
-          gradient: LinearGradient(
-            colors: [const Color(0xFF1A1A1A), const Color(0xFF111111)],
+          gradient: const LinearGradient(
+            colors: [AppColors.surfaceHigh, AppColors.surface],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: Colors.black.withValues(alpha: 0.35),
               blurRadius: 14,
               offset: const Offset(0, 8),
             ),
@@ -48,14 +51,14 @@ class FoodItemCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18.r),
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFF00E5FF).withOpacity(0.25),
-                    const Color(0xFF00C2FF).withOpacity(0.15),
+                    AppColors.primary.withValues(alpha: 0.25),
+                    const Color(0xFF00C2FF).withValues(alpha: 0.15),
                   ],
                 ),
               ),
               child: Icon(
                 Icons.restaurant_menu_rounded,
-                color: const Color(0xFF00E5FF),
+                color: AppColors.primary,
                 size: 28.sp,
               ),
             ),
@@ -88,16 +91,19 @@ class FoodItemCard extends StatelessWidget {
                     ),
 
                     decoration: BoxDecoration(
-                      color: const Color(0xFF00E5FF).withOpacity(0.12),
+                      color: AppColors.primary.withValues(alpha: 0.12),
 
                       borderRadius: BorderRadius.circular(30.r),
                     ),
 
                     child: Text(
-                      "Per ${item.quantity?.toStringAsFixed(0)} ${item.unit}",
+                      context.l10n.foodPer(
+                        item.quantity?.toStringAsFixed(0) ?? '',
+                        foodUnitLabel(context.l10n, item.unit ?? ''),
+                      ),
 
                       style: TextStyle(
-                        color: const Color(0xFF00E5FF),
+                        color: AppColors.primary,
 
                         fontSize: 11.sp,
 
@@ -137,12 +143,14 @@ class FoodItemCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isManual
-                        ? Colors.green.withOpacity(0.15)
-                        : Colors.deepPurple.withOpacity(0.18),
+                        ? Colors.green.withValues(alpha: 0.15)
+                        : Colors.deepPurple.withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(30.r),
                   ),
                   child: Text(
-                    isManual ? "Manual" : "Scanned",
+                    isManual
+                        ? context.l10n.foodManual
+                        : context.l10n.foodScanned,
                     style: TextStyle(
                       color: isManual
                           ? Colors.greenAccent
@@ -153,19 +161,16 @@ class FoodItemCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 18.h),
-                GestureDetector(
-                  onTap: onDelete,
-                  child: Container(
-                    padding: EdgeInsets.all(8.w),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.delete_outline_rounded,
-                      color: Colors.redAccent,
-                      size: 20.sp,
-                    ),
+                IconButton(
+                  onPressed: onDelete,
+                  tooltip: context.l10n.commonDelete,
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.red.withValues(alpha: 0.12),
+                  ),
+                  icon: Icon(
+                    Icons.delete_outline_rounded,
+                    color: Colors.redAccent,
+                    size: 20.sp,
                   ),
                 ),
               ],
@@ -180,7 +185,7 @@ class FoodItemCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.14),
+        color: color.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(30.r),
       ),
       child: Text(

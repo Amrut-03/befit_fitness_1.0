@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -20,12 +21,19 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     this.saveFoodItem,
     this.deleteFoodItem,
     this.updateFoodItem,
-  ) : super(FoodItemsState()) {
+  ) : super(const FoodItemsState()) {
     on<LoadFoodItems>(_onLoad);
     on<SaveFoodItems>(_onSaveFoodItem);
     on<FoodItemsUpdated>(_onFoodItemsUpdated);
     on<DeleteFoodItem>(_onDeleteFoodItem);
     on<UpdateFoodItem>(_onUpdateFoodItem);
+    on<FoodItemsStreamFailed>((event, emit) async {
+      await _foodItemsSubscription?.cancel();
+      _foodItemsSubscription = null;
+      emit(
+        state.copyWith(isLoading: false, error: AppLocale.l10n.foodLoadFailed),
+      );
+    });
   }
 
   Future<void> _onDeleteFoodItem(
@@ -35,7 +43,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     try {
       await deleteFoodItem(event.id);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to delete food item'));
+      emit(state.copyWith(error: AppLocale.l10n.foodDeleteFailed));
     }
   }
 
@@ -56,20 +64,9 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
 
     emit(state.copyWith(isLoading: true));
 
-    _foodItemsSubscription = getFoodItems().listen(
-      (items) {
-        add(FoodItemsUpdated(items));
-      },
-
-      onError: (_) {
-        _foodItemsSubscription?.cancel();
-        _foodItemsSubscription = null;
-
-        emit(
-          state.copyWith(isLoading: false, error: 'Failed to load food items'),
-        );
-      },
-    );
+    _foodItemsSubscription = getFoodItems().listen((items) {
+      add(FoodItemsUpdated(items));
+    }, onError: (_) => add(const FoodItemsStreamFailed()));
   }
 
   Future<void> _onSaveFoodItem(
@@ -79,7 +76,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     try {
       await saveFoodItem(event.item);
     } catch (e) {
-      emit(state.copyWith(error: "Failed to save"));
+      emit(state.copyWith(error: AppLocale.l10n.foodSaveFailed));
     }
   }
 
@@ -90,7 +87,7 @@ class FoodItemsBloc extends Bloc<FoodItemsEvent, FoodItemsState> {
     try {
       await updateFoodItem(event.item);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to update food item'));
+      emit(state.copyWith(error: AppLocale.l10n.foodUpdateFailed));
     }
   }
 

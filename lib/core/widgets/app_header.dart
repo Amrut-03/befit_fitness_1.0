@@ -1,3 +1,4 @@
+import 'package:fitness_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -19,19 +20,25 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-        onPressed: () {
-          context.pop(context);
-        },
-      ),
+      leading:
+          leading ??
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: _onPrimary),
+            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+            onPressed: () => context.pop(),
+          ),
       centerTitle: centerTitle,
-      iconTheme: const IconThemeData(color: Colors.white),
-      backgroundColor: const Color(0xFF00E5FF),
+      // Dark on the bright cyan bar: white on it fails contrast (1.5:1).
+      iconTheme: const IconThemeData(color: _onPrimary),
+      actionsIconTheme: const IconThemeData(color: _onPrimary),
+      foregroundColor: _onPrimary,
+      backgroundColor: AppColors.primary,
       title: Text(
         title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          color: Colors.white,
+          color: _onPrimary,
           fontSize: 22.sp,
           fontWeight: FontWeight.w800,
 
@@ -42,6 +49,8 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
     );
   }
+
+  static const _onPrimary = AppColors.onPrimary;
 
   @override
   Size get preferredSize => Size.fromHeight(50.h);
