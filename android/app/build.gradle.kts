@@ -49,6 +49,21 @@ android {
         }
     }
 
+    packaging {
+        jniLibs {
+            // flutter_edge_ai_mediapipe depends on MediaPipe's image
+            // generator, which bundles vision/image-generation native code
+            // (~37 MB per ABI). BeFit only runs the LLM (tasks-genai), which
+            // loads libllm_inference_engine_jni alone, so these are dead
+            // weight. Re-check if the plugin starts using vision tasks.
+            excludes += listOf(
+                "**/libmediapipe_tasks_vision_jni.so",
+                "**/libmediapipe_tasks_vision_image_generator_jni.so",
+                "**/libimagegenerator_gpu.so",
+            )
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = if (keystorePropertiesFile.exists()) {

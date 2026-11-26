@@ -18,7 +18,6 @@ dependencies:
     sdk: flutter
 
   # Core dependencies
-  cupertino_icons: ^1.0.8
   flutter_bloc: ^9.1.1
   bloc: ^9.2.0
   flutter_screenutil: ^5.9.3
@@ -75,7 +74,10 @@ flutter_launcher_icons:
   # The App Store rejects icons with an alpha channel.
   remove_alpha_ios: true
 
-# Regenerate with `dart run flutter_native_splash:create`.
+# Regenerate with `dart run flutter_native_splash:create`. Afterwards keep
+# one image per density as WebP: android12splash and the night variants are
+# identical copies of splash, so the generated PNGs are converted to
+# drawable-*/splash.webp (quality 90) and the v31 styles point at @drawable/splash.
 flutter_native_splash:
   color: "#050505"
   image: assets/icons/app_icon.png
@@ -92,7 +94,9 @@ flutter:
   # Assets configuration
   assets:
     - assets/lotties/
-    - assets/icons/
+    # Only what the app draws. assets/icons/app_icon.png is the source for
+    # flutter_launcher_icons / flutter_native_splash, not a runtime asset.
+    - assets/icons/google.svg
 
   # Custom fonts configuration
   # fonts:

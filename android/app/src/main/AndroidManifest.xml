@@ -16,6 +16,12 @@
         android:label="BeFit"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Barcode model comes from Play services (unbundled ML Kit, see
+             gradle.properties); download it at install time so the scanner
+             works on first use. -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
